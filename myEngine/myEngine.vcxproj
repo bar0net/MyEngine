@@ -146,11 +146,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Utils\MovingArray.cpp" />
     <ClCompile Include="src\Module\ModuleEditor.cpp" />
     <ClCompile Include="src\Module\ModuleInput.cpp" />
     <ClCompile Include="src\Module\ModuleRenderer.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Module\ModuleTime.cpp" />
     <ClCompile Include="src\Utils\IndexBuffer.cpp" />
     <ClCompile Include="src\Utils\Render_Utils.cpp" />
     <ClCompile Include="src\Utils\Window_Utils.cpp" />
@@ -169,11 +171,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Utils\MovingArray.h" />
     <ClInclude Include="src\Module\ModuleEditor.h" />
     <ClInclude Include="src\Module\ModuleInput.h" />
     <ClInclude Include="src\Module\ModuleRenderer.h" />
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Module\Module.h" />
+    <ClInclude Include="src\Module\ModuleTime.h" />
     <ClInclude Include="src\Utils\IndexBuffer.h" />
     <ClInclude Include="src\Utils\Render_Utils.h" />
     <ClInclude Include="src\Utils\Window_Utils.h" />

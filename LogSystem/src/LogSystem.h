@@ -31,7 +31,7 @@ namespace MyEngine
 	public:
 		LogSystem() {}
 		LogSystem(LogLevel level) : level(level) {}
-		virtual ~LogSystem() {}
+		virtual ~LogSystem();
 
 		void Log(LogLevel level, const char* file, int line, const char* message...);
 		void Log(const char* message);

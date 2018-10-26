@@ -4,6 +4,10 @@
 #include <iostream>
 #include <stdarg.h>
 
+MyEngine::LogSystem::~LogSystem()
+{
+	while (!history.empty()) history.pop();
+}
 
 void  MyEngine::LogSystem::Print()
 {
@@ -50,6 +54,11 @@ void MyEngine::LogSystem::Log(LogLevel level, const char* file, int line, const 
 		{
 		case 's':
 			s = s.substr(0, i) + va_arg(args, char*) + s.substr(i + 2);
+			break;
+
+		case 'd':
+			s = s.substr(0, i) + std::to_string(va_arg(args, int)) + s.substr(i + 2);
+			break;
 		}
 	}
 	
