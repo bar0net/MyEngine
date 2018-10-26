@@ -31,7 +31,7 @@ namespace MyEngine {
 	void WindowUtils::DestroyWindow(WindowData* data)
 	{
 		SDL_GL_DeleteContext(data->context);
-		SDL_DestroyWindow( data->window);
+		SDL_DestroyWindow(data->window);
 		SDL_Quit();
 	}
 

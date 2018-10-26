@@ -20,12 +20,10 @@ public:
 	virtual bool Start()				{ return true; }
 	virtual UpdateState PreUpdate()		{ return UpdateState::Update_Continue; }
 	virtual UpdateState Update()		{ return UpdateState::Update_Continue; }
-	virtual UpdateState PostUpdate()	{ return UpdateState::Update_End; }
+	virtual UpdateState PostUpdate()	{ return UpdateState::Update_Continue; }
 	virtual bool End()					{ return true; }
 	virtual bool CleanUp()				{ return true; }
 };
-
-extern MyEngine::LogSystem* logger;
 
 #endif // !_MYENGINE_MODULE_H
 

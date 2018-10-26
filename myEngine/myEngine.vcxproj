@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Module\ModuleInput.cpp" />
     <ClCompile Include="src\Module\ModuleRenderer.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -161,6 +162,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Module\ModuleInput.h" />
     <ClInclude Include="src\Module\ModuleRenderer.h" />
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Module\Module.h" />

@@ -3,6 +3,8 @@
 #include "LogSystem.h"
 #include "Application.h"
 
+#define _DEV_MODE_ 1
+
 enum class AppStatus 
 { 
 	None = 0, 
@@ -48,12 +50,14 @@ int main()
 		}
 	}
 
+	LOGINFO("Application Clear.");
 
-	LOGINFO("Application Clear");
+	#if (_DEV_MODE_==1)
+		LOGINFO("Press Enter to close.");
+		std::cin.get();
+	#endif
 
 	delete(logger);
 	delete(App);
-	std::cin.get();
-
 	return 0;
 }

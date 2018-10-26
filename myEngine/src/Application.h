@@ -6,6 +6,7 @@
 #include "Module/Module.h"
 
 class ModuleRenderer;
+class ModuleInput;
 
 class Application
 {
@@ -18,6 +19,7 @@ public:
 	bool End();
 
 	ModuleRenderer* renderer;
+	ModuleInput* input;
 
 private:
 	std::list<Module *> modules;

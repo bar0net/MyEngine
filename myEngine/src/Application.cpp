@@ -1,10 +1,12 @@
 #include "Application.h"
 
 #include "Module/ModuleRenderer.h"
+#include "Module/ModuleInput.h"
 
 Application::Application()
 {
 	modules.push_back(renderer = new ModuleRenderer());
+	modules.push_back(input = new ModuleInput());
 }
 
 

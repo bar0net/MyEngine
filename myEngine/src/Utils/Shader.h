@@ -25,6 +25,5 @@ namespace MyEngine
 
 }
 
-extern MyEngine::LogSystem* logger;
 #endif // !_MYENGINE_SHADER_H
 

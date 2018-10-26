@@ -27,7 +27,5 @@ namespace MyEngine {
 	};
 }
 
-extern MyEngine::LogSystem* logger;
-
 #endif // !_MYENGINE_GRAPHICS_UTILS_H
 

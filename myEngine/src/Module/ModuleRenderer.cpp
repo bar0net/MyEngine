@@ -92,12 +92,13 @@ UpdateState ModuleRenderer::PostUpdate()
 
 bool ModuleRenderer::CleanUp()
 {
-	LOGINFO("Destroying window.");
-	MyEngine::WindowUtils::DestroyWindow(data);
-
 	delete(shader);
 	delete(vbo);
 
+	LOGINFO("Destroying window.");
+	MyEngine::WindowUtils::DestroyWindow(data);
+
 	delete data;
+	LOGINFO("Renderer closed.");
 	return true;
 }
