@@ -8,3 +8,4 @@ This project is concieved to be a companion of the work done in [https://github.
 
 - [SDL 2.0.8](https://www.libsdl.org)
 - [GLEW 2.1.0](http://glew.sourceforge.net)
+- [ImGui-Docking](https://github.com/ocornut/imgui/tree/docking)
