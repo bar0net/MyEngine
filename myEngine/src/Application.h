@@ -7,6 +7,7 @@
 
 class ModuleRenderer;
 class ModuleInput;
+class ModuleEditor;
 
 class Application
 {
@@ -20,10 +21,13 @@ public:
 
 	ModuleRenderer* renderer;
 	ModuleInput* input;
+	ModuleEditor* editor;
+
 
 private:
 	std::list<Module *> modules;
-
 };
+
+extern Application* App;
 
 #endif // !_MYENGINE_APPLICATION_H

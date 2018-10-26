@@ -15,13 +15,14 @@ enum class AppStatus
 };
 
 MyEngine::LogSystem* logger = nullptr;
+Application* App = nullptr;
 
 int main() 
 {
 	logger = new MyEngine::LogSystem(MyEngine::LogLevel::Debug);
 
 	LOGINFO("Begin Application");
-	Application* App = new Application();
+	App = new Application();
 	AppStatus status = AppStatus::Start;
 
 	while (status != AppStatus::Exit) {

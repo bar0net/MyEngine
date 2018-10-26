@@ -2,11 +2,13 @@
 
 #include "Module/ModuleRenderer.h"
 #include "Module/ModuleInput.h"
+#include "Module/ModuleEditor.h"
 
 Application::Application()
 {
 	modules.push_back(renderer = new ModuleRenderer());
 	modules.push_back(input = new ModuleInput());
+	modules.push_back(editor = new ModuleEditor());
 }
 
 

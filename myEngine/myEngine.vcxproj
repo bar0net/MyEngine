@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Module\ModuleEditor.cpp" />
     <ClCompile Include="src\Module\ModuleInput.cpp" />
     <ClCompile Include="src\Module\ModuleRenderer.cpp" />
     <ClCompile Include="src\Application.cpp" />
@@ -155,6 +156,12 @@
     <ClCompile Include="src\Utils\Window_Utils.cpp" />
     <ClCompile Include="src\Utils\Shader.cpp" />
     <ClCompile Include="src\Utils\VertexBuffer.cpp" />
+    <ClCompile Include="src\_Vendor\imgui-docking\imgui.cpp" />
+    <ClCompile Include="src\_Vendor\imgui-docking\imgui_demo.cpp" />
+    <ClCompile Include="src\_Vendor\imgui-docking\imgui_draw.cpp" />
+    <ClCompile Include="src\_Vendor\imgui-docking\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="src\_Vendor\imgui-docking\imgui_impl_sdl.cpp" />
+    <ClCompile Include="src\_Vendor\imgui-docking\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LogSystem\LogSystem.vcxproj">
@@ -162,6 +169,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Module\ModuleEditor.h" />
     <ClInclude Include="src\Module\ModuleInput.h" />
     <ClInclude Include="src\Module\ModuleRenderer.h" />
     <ClInclude Include="src\Application.h" />
@@ -171,6 +179,14 @@
     <ClInclude Include="src\Utils\Window_Utils.h" />
     <ClInclude Include="src\Utils\Shader.h" />
     <ClInclude Include="src\Utils\VertexBuffer.h" />
+    <ClInclude Include="src\_Vendor\imgui-docking\imconfig.h" />
+    <ClInclude Include="src\_Vendor\imgui-docking\imgui.h" />
+    <ClInclude Include="src\_Vendor\imgui-docking\imgui_impl_opengl3.h" />
+    <ClInclude Include="src\_Vendor\imgui-docking\imgui_impl_sdl.h" />
+    <ClInclude Include="src\_Vendor\imgui-docking\imgui_internal.h" />
+    <ClInclude Include="src\_Vendor\imgui-docking\imstb_rectpack.h" />
+    <ClInclude Include="src\_Vendor\imgui-docking\imstb_textedit.h" />
+    <ClInclude Include="src\_Vendor\imgui-docking\imstb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="files\default.fs" />
