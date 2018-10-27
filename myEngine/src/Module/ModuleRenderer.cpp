@@ -33,31 +33,6 @@ bool ModuleRenderer::Init()
 
 	MyEngine::RenderUtils::CreateViewport(width, height, { 0.3f, 0.3f, 0.3f, 1.0f }, 1.0);
 
-	// --
-	/*std::vector<float> triangle = {
-		 0.0f,  -0.33f,  0.5f,
-		-0.33f, -0.33f, -0.33f,
-		 0.33f, -0.33f, -0.33f,
-		 0.0f,  0.66f,  0.0f
-	};*/
-
-	std::vector<float> triangle = {
-		-0.5f, -0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f,
-		 0.5f,  0.5f, 0.0f,
-		-0.5f,  0.5f, 0.0f
-	};
-
-	std::vector<unsigned int> indices = {
-		0, 1, 2,
-		2, 3, 0
-	};
-
-	vbo = new MyEngine::VertexBuffer(&triangle);
-	ibo = new MyEngine::IndexBuffer(&indices);
-	shader = new MyEngine::Shader("default.vs", "default.fs");
-	//--
-
 	return true;
 }
 
@@ -71,14 +46,6 @@ UpdateState ModuleRenderer::PreUpdate()
 
 UpdateState ModuleRenderer::Update()
 {
-	shader->Bind();
-	vbo->Bind();
-	ibo->Bind();
-	ibo->Draw();
-	ibo->UnBind();
-	vbo->UnBind();
-	shader->UnBind();
-
 	return UpdateState::Update_Continue;
 }
 
@@ -92,13 +59,50 @@ UpdateState ModuleRenderer::PostUpdate()
 
 bool ModuleRenderer::CleanUp()
 {
-	delete(shader);
-	delete(vbo);
-
 	LOGINFO("Destroying window.");
 	MyEngine::WindowUtils::DestroyWindow(data);
 
 	delete data;
 	LOGINFO("Renderer closed.");
+
+	this->EmptyShaders();
+
 	return true;
+}
+
+void ModuleRenderer::CreateShader(const char* name, const char* vShader_file, const char* fShader_file)
+{
+	if (materials.find(name) == materials.end())
+		materials[name] = new MyEngine::Shader(vShader_file, fShader_file);
+	else
+		LOGWARNING("Trying to add a new shader %s but it already exists.", name);
+}
+
+MyEngine::Shader* ModuleRenderer::GetShader(const char* name)
+{
+	if (materials.find(name) != materials.end())
+		return materials[name];
+	else
+	{
+		if (materials.size() > 0)
+		{
+			LOGERROR("Trying to access shader %s but it doesn't exist. Using %s shader instead.", name, materials.begin()->first);
+			return materials.begin()->second;
+		}
+		else 
+		{
+			LOGERROR("Trying to access shader %s but the shader collection is empty.", name);
+			ASSERT(false);
+			return nullptr;
+		}
+	}
+}
+
+void ModuleRenderer::EmptyShaders()
+{
+	LOGINFO("Emptying the shaders collection");
+	//for (std::unordered_map<const char*, MyEngine::Shader*>::iterator it = materials.begin(); it != materials.end(); ++it)
+		//delete (it->second);
+
+	materials.empty();
 }

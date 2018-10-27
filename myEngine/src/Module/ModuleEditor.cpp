@@ -7,6 +7,9 @@
 #include "../Application.h"
 #include "../Utils/Window_Utils.h"
 #include "../Utils/MovingArray.h"
+#include "../Utils/VertexBuffer.h"
+#include "../Utils/Shader.h"
+#include "../Utils/IndexBuffer.h"
 
 #include "ModuleRenderer.h"
 #include "ModuleTime.h"
@@ -15,6 +18,7 @@
 
 bool ModuleEditor::Init()
 {
+	LOGINFO("Initializing Editor.");
 	fps = new MovingArray(300, 0);
 
 	IMGUI_CHECKVERSION();
@@ -28,11 +32,31 @@ bool ModuleEditor::Init()
 	ImGui_ImplOpenGL3_Init(GLSL_VERSION);
 	ImGui::StyleColorsDark();
 	
+	// GRID
+	std::vector<float> grid;
+	std::vector<unsigned int> grid_index;
+	unsigned int id = 0;
+	for (float i = -1.0f; i <= 1.0f; i += 0.1)
+	{
+		grid.push_back(-1.0f); grid.push_back(i); grid.push_back(0);
+		grid.push_back(1.0f); grid.push_back(i); grid.push_back(0);
+		grid_index.push_back(id++); grid_index.push_back(id++);
+
+		grid.push_back(i); grid.push_back(-1.0f); grid.push_back(0);
+		grid.push_back(i); grid.push_back(1.0f); grid.push_back(0);
+		grid_index.push_back(id++); grid_index.push_back(id++);
+	}
+	vbo_grid = new MyEngine::VertexBuffer(&grid);
+	ibo_grid = new MyEngine::IndexBuffer(&grid_index);
+	App->renderer->CreateShader("grid", "default.vs", "default.fs");
+	shader_grid = App->renderer->GetShader("grid");
+
 	return true;
 }
 
 bool ModuleEditor::CleanUp()
 {
+	LOGINFO("Destroying Editor.");
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
@@ -40,6 +64,19 @@ bool ModuleEditor::CleanUp()
 	delete(fps);
 
 	return true;
+}
+
+UpdateState ModuleEditor::PreUpdate()
+{
+	if (show_grid)
+	{
+		shader_grid->Bind();
+		vbo_grid->Bind();
+		ibo_grid->Bind();
+		ibo_grid->DrawLines();
+	}
+
+	return UpdateState::Update_Continue;
 }
 
 UpdateState ModuleEditor::Update()
@@ -53,6 +90,8 @@ UpdateState ModuleEditor::Update()
 		ImGui::Text("Frames per second");
 		ImGui::PlotHistogram("", MovingArray::Get, fps, fps->size, 0, "", 0, 120, ImVec2(0, 50));
 		ImGui::Text("Curent FPS: %i", (*fps)[1]);
+		ImGui::Separator();
+		ImGui::Checkbox("Show Grid", &show_grid);
 		ImGui::End();
 	}
 

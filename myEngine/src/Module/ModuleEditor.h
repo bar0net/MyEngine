@@ -6,10 +6,18 @@
 struct ImGuiIO;
 class MovingArray;
 
+namespace MyEngine
+{
+	class IndexBuffer;
+	class VertexBuffer;
+	class Shader;
+}
+
 class ModuleEditor : public Module
 {
 public:
 	bool Init();
+	UpdateState PreUpdate();
 	UpdateState Update();
 	bool CleanUp();
 	
@@ -21,6 +29,11 @@ private:
 
 	ImGuiIO* io;
 	MovingArray* fps;
+
+	MyEngine::IndexBuffer* ibo_grid = nullptr;
+	MyEngine::VertexBuffer* vbo_grid = nullptr;
+	MyEngine::Shader* shader_grid = nullptr;
+	bool show_grid = true;
 };
 
 

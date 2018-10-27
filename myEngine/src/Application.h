@@ -9,6 +9,7 @@ class ModuleRenderer;
 class ModuleInput;
 class ModuleEditor;
 class ModuleTime;
+class ModuleScene;
 
 class Application
 {
@@ -24,6 +25,8 @@ public:
 	ModuleInput* input;
 	ModuleEditor* editor;
 	ModuleTime* time;
+	ModuleScene* scene;
+
 
 private:
 	std::list<Module *> modules;

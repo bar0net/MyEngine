@@ -5,7 +5,7 @@
 
 namespace MyEngine
 {
-	VertexBuffer::VertexBuffer(std::vector<float>* vertex_buffer_data)
+	VertexBuffer::VertexBuffer(const std::vector<float>* vertex_buffer_data)
 	{
 		GLCall(glGenBuffers(1, &vbo));
 		GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));

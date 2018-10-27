@@ -146,6 +146,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\GameObject\Component.cpp" />
+    <ClCompile Include="src\GameObject\Components\MeshRenderer.cpp" />
+    <ClCompile Include="src\GameObject\GameObject.cpp" />
+    <ClCompile Include="src\Module\ModuleScene.cpp" />
     <ClCompile Include="src\Utils\MovingArray.cpp" />
     <ClCompile Include="src\Module\ModuleEditor.cpp" />
     <ClCompile Include="src\Module\ModuleInput.cpp" />
@@ -171,6 +175,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\GameObject\Component.h" />
+    <ClInclude Include="src\GameObject\Components\MeshRenderer.h" />
+    <ClInclude Include="src\GameObject\GameObject.h" />
+    <ClInclude Include="src\Module\ModuleScene.h" />
     <ClInclude Include="src\Utils\MovingArray.h" />
     <ClInclude Include="src\Module\ModuleEditor.h" />
     <ClInclude Include="src\Module\ModuleInput.h" />

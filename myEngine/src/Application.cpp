@@ -4,22 +4,21 @@
 #include "Module/ModuleInput.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleTime.h"
+#include "Module/ModuleScene.h"
 
 Application::Application()
 {
 	modules.push_back(renderer = new ModuleRenderer());
 	modules.push_back(input = new ModuleInput());
 	modules.push_back(time = new ModuleTime());
+	modules.push_back(scene = new ModuleScene());
 	modules.push_back(editor = new ModuleEditor());
 }
 
 
 Application::~Application()
 {
-	for (std::list<Module *>::reverse_iterator it = modules.rbegin(); it != modules.rend(); ++it)
-		delete(*it);
 
-	modules.clear();
 }
 
 bool Application::Start()
@@ -61,6 +60,10 @@ bool Application::End()
 	for (std::list<Module *>::reverse_iterator it = modules.rbegin(); it != modules.rend() && ret; ++it)
 		ret = (*it)->CleanUp();
 
-	return ret;
+	for (std::list<Module *>::reverse_iterator it = modules.rbegin(); it != modules.rend() && ret; ++it)
+		delete (*it);
 
+	modules.clear();
+
+	return ret;
 }

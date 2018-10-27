@@ -7,12 +7,13 @@ namespace MyEngine {
 	class IndexBuffer
 	{
 	public:
-		IndexBuffer(std::vector<unsigned int>* indices);
+		IndexBuffer(const std::vector<unsigned int>* indices);
 		virtual ~IndexBuffer();
 
 		void Bind();
 		void UnBind();
 		void Draw();
+		void DrawLines();
 
 		unsigned int ibo = 0;
 		unsigned int elements = 0;

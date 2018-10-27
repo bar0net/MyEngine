@@ -4,7 +4,7 @@
 #include "Render_Utils.h"
 
 namespace MyEngine {
-	IndexBuffer::IndexBuffer(std::vector<unsigned int>* indices)
+	IndexBuffer::IndexBuffer(const std::vector<unsigned int>* indices)
 	{
 		GLCall(glGenBuffers(1, &ibo));
 		GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
@@ -31,5 +31,11 @@ namespace MyEngine {
 	void IndexBuffer::Draw()
 	{
 		GLCall( glDrawElements(GL_TRIANGLES, elements, GL_UNSIGNED_INT, NULL) );
+	}
+
+
+	void IndexBuffer::DrawLines()
+	{
+		GLCall(glDrawElements(GL_LINES, elements, GL_UNSIGNED_INT, NULL));
 	}
 }

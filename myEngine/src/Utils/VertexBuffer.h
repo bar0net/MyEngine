@@ -8,7 +8,7 @@ namespace MyEngine
 	class VertexBuffer
 	{
 	public:
-		VertexBuffer(std::vector<float>* vertex_buffer_data);
+		VertexBuffer(const std::vector<float>* vertex_buffer_data);
 		virtual ~VertexBuffer();
 
 		void Bind() const;
