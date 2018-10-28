@@ -17,6 +17,7 @@ class ModuleEditor : public Module
 {
 public:
 	bool Init();
+	bool Start();
 	UpdateState PreUpdate();
 	UpdateState Update();
 	bool CleanUp();

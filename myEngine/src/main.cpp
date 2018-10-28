@@ -3,7 +3,13 @@
 #include "LogSystem.h"
 #include "Application.h"
 
-#define _DEV_MODE_ 1
+#define _DEV_MODE_ 0
+
+#if (_DEV_MODE_==1)
+	#define _CRTDBG_MAP_ALLOC  
+	#include <stdlib.h>  
+	#include <crtdbg.h> 
+#endif
 
 enum class AppStatus 
 { 
@@ -17,7 +23,7 @@ enum class AppStatus
 MyEngine::LogSystem* logger = nullptr;
 Application* App = nullptr;
 
-int main() 
+int main(int argc, const char* argv[])
 {
 	logger = new MyEngine::LogSystem(MyEngine::LogLevel::Debug);
 
@@ -52,13 +58,13 @@ int main()
 	}
 
 	LOGINFO("Application Clear.");
+	delete(logger);
+	delete(App);
 
 	#if (_DEV_MODE_==1)
 		LOGINFO("Press Enter to close.");
 		std::cin.get();
+		_CrtDumpMemoryLeaks();
 	#endif
-
-	delete(logger);
-	delete(App);
 	return 0;
 }

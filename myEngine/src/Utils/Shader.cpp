@@ -5,6 +5,8 @@
 #include "GL/glew.h"
 #include "Render_Utils.h"
 
+#include "../_Vendor/MathGeoLib/Math/float4x4.h"
+
 namespace MyEngine 
 {
 	Shader::Shader(const char* vertex_file, const char* fragment_file)
@@ -34,6 +36,10 @@ namespace MyEngine
 
 		if (vShader != 0) GLCall(glDeleteShader(vShader));
 		if (fShader != 0) GLCall(glDeleteShader(fShader));
+
+		// Set Unifrom Block Index to binding point 0
+		unsigned int index = glGetUniformBlockIndex(program, "GlobalMatrices");
+		GLCall(glUniformBlockBinding(program, index, 0));
 	}
 
 
@@ -83,7 +89,11 @@ namespace MyEngine
 		int success = 0;
 
 		char* shaderData = ReadFile(filename);
-		if (shaderData == nullptr) return 0;
+		if (shaderData == nullptr) 
+		{
+			LOGERROR("Could not load %s", filename);
+			return 0;
+		}
 
 		unsigned shader = glCreateShader( (GLenum)type );
 		GLCall(glShaderSource(shader, 1, &shaderData, NULL));
@@ -91,11 +101,26 @@ namespace MyEngine
 		GLCall(glGetShaderiv(shader, GL_COMPILE_STATUS, &success));
 		if (success == GL_FALSE)
 		{
-			LOGERROR("Could not compile shader: %s", filename);
+			GLint maxLength = 0;
+			glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
+
+			std::vector<GLchar> infoLog(maxLength);
+			glGetShaderInfoLog(shader, maxLength, &maxLength, &infoLog[0]);
+
+			const char* msg = infoLog.data();
+			LOGERROR("Could not compile shader: %s. << %s >>", filename, msg);
 			valid = false;
 		}
 		else LOGINFO("Shader compiled: %s", filename);
+		
+		delete shaderData;
 
 		return shader;
+	}
+
+	void Shader::SetUniform4x4(const char* name, math::float4x4* entry)
+	{
+		this->Bind();
+		GLCall(glUniformMatrix4fv(glGetUniformLocation(program, name), 1, GL_TRUE, &(*entry)[0][0]));
 	}
 }

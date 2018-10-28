@@ -3,12 +3,20 @@
 #include "../../Utils/Shader.h"
 #include "../../Utils/VertexBuffer.h"
 #include "../../Utils/IndexBuffer.h"
+#include "../GameObject.h"
+
+float r;
 
 MeshRenderer::MeshRenderer(const std::vector<float>* vertices, const std::vector<unsigned int>* indices, MyEngine::Shader* shader)
 {
 	this->vbo = new MyEngine::VertexBuffer(vertices);
 	this->ibo = new MyEngine::IndexBuffer(indices);
 	this->shader = shader;
+	math::float4x4 I = math::float4x4::identity;
+	this->shader->SetUniform4x4("model", &I);
+	//this->shader->SetUniform4x4("view", &I);
+	//this->shader->SetUniform4x4("proj", &I);
+
 	LOGINFO("Creating Mesh Renderer.");
 }
 
@@ -21,8 +29,19 @@ MeshRenderer::~MeshRenderer()
 
 void MeshRenderer::Update()
 {
+	r = r + 0.01f;
+	if (r > 6.283f) r -= 6.283f;
+	gameObject->SetRotation(0,r,0);
+
 	this->shader->Bind();
 	this->vbo->Bind();
 	this->ibo->Bind();
+	//if (this->gameObject->transformChanged) 
+		this->shader->SetUniform4x4("model", this->gameObject->ModelMatrix());
 	this->ibo->Draw();
+}
+
+void MeshRenderer::CleanUp()
+{
+
 }

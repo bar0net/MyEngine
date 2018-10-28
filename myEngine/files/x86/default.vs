@@ -1,9 +1,17 @@
-#version 330
+#version 330 core
 
 layout(location = 0) in vec3 vertex_position;
 
-
-void main()
+layout(std140) uniform GlobalMatrices
 {
-	gl_Position = vec4(vertex_position.x, vertex_position.y, vertex_position.z, 1.0);
+    mat4 proj;
+    mat4 view;
+};
+
+uniform mat4 model;
+
+
+void main() 
+{    
+	gl_Position = proj * view * model * vec4(vertex_position, 1.0); 
 }

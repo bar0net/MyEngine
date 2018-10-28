@@ -10,6 +10,7 @@
 #include "../Utils/VertexBuffer.h"
 #include "../Utils/Shader.h"
 #include "../Utils/IndexBuffer.h"
+#include "../_Vendor/MathGeoLib/Math/float4x4.h"
 
 #include "ModuleRenderer.h"
 #include "ModuleTime.h"
@@ -36,20 +37,30 @@ bool ModuleEditor::Init()
 	std::vector<float> grid;
 	std::vector<unsigned int> grid_index;
 	unsigned int id = 0;
-	for (float i = -1.0f; i <= 1.0f; i += 0.1)
+
+	for (float i = -10.0f; i <= 10.0f; i += 1)
 	{
-		grid.push_back(-1.0f); grid.push_back(i); grid.push_back(0);
-		grid.push_back(1.0f); grid.push_back(i); grid.push_back(0);
+		grid.push_back(-100.0f); grid.push_back(0); grid.push_back(abs(i)*i);
+		grid.push_back(100.0f); grid.push_back(0); grid.push_back(abs(i)*i);
 		grid_index.push_back(id++); grid_index.push_back(id++);
 
-		grid.push_back(i); grid.push_back(-1.0f); grid.push_back(0);
-		grid.push_back(i); grid.push_back(1.0f); grid.push_back(0);
+		grid.push_back(abs(i)*i); grid.push_back(0);  grid.push_back(-100.0f);
+		grid.push_back(abs(i)*i); grid.push_back(0);  grid.push_back(100.0f);
 		grid_index.push_back(id++); grid_index.push_back(id++);
 	}
+
 	vbo_grid = new MyEngine::VertexBuffer(&grid);
 	ibo_grid = new MyEngine::IndexBuffer(&grid_index);
-	App->renderer->CreateShader("grid", "default.vs", "default.fs");
-	shader_grid = App->renderer->GetShader("grid");
+	App->renderer->CreateShader("default", "default.vs", "default.fs");
+	shader_grid = App->renderer->GetShader("default");
+
+	return true;
+}
+
+bool ModuleEditor::Start()
+{
+	math::float4x4 I = math::float4x4::identity;
+	shader_grid->SetUniform4x4("model", &I);
 
 	return true;
 }
@@ -62,6 +73,9 @@ bool ModuleEditor::CleanUp()
 	ImGui::DestroyContext();
 
 	delete(fps);
+	delete(vbo_grid);
+	delete(ibo_grid);
+	delete(shader_grid);
 
 	return true;
 }
@@ -73,6 +87,8 @@ UpdateState ModuleEditor::PreUpdate()
 		shader_grid->Bind();
 		vbo_grid->Bind();
 		ibo_grid->Bind();
+		math::float4x4 I = math::float4x4::identity;
+		shader_grid->SetUniform4x4("model", &I);
 		ibo_grid->DrawLines();
 	}
 

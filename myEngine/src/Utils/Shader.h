@@ -3,6 +3,14 @@
 
 #include "LogSystem.h"
 
+#define SHADER_VIEW_OFFSET sizeof(float4x4)
+#define SHADER_PROJ_OFFSET 0
+
+namespace math
+{
+	class float4x4;
+}
+
 namespace MyEngine
 {
 	class Shader 
@@ -13,6 +21,8 @@ namespace MyEngine
 
 		void Bind() const;
 		void UnBind() const;
+
+		void SetUniform4x4(const char* name, math::float4x4* entry);
 
 		unsigned int program = 0;
 

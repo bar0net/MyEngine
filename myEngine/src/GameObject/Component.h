@@ -9,11 +9,13 @@ public:
 	Component() {};
 	virtual ~Component() {};
 
+	virtual void Init() {};
 	virtual void Start() {};
 	virtual void Update() {};
 	virtual void End() {};
+	virtual void CleanUp() {};
 
-	void SetGameObject(GameObject* gameObject);
+	virtual void SetGameObject(GameObject* gameObject);
 
 protected:
 	GameObject* gameObject;

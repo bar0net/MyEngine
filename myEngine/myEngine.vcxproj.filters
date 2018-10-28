@@ -81,6 +81,108 @@
     <ClCompile Include="src\Module\ModuleScene.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Algorithm\Random\LCG.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Geometry\AABB.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Geometry\Capsule.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Geometry\Circle.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Geometry\Cone.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Geometry\Cylinder.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Geometry\Frustum.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Geometry\Line.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Geometry\LineSegment.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Geometry\OBB.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Geometry\Plane.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Geometry\Polygon.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Geometry\Polyhedron.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Geometry\Ray.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Geometry\Sphere.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Geometry\Triangle.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Geometry\TriangleMesh.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Math\BitOps.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Math\float2.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Math\float3.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Math\float3x3.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Math\float3x4.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Math\float4.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Math\float4x4.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Math\MathFunc.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Math\MathLog.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Math\MathOps.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Math\Polynomial.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Math\Quat.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Math\SSEMath.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Math\TransformOps.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\_Vendor\MathGeoLib\Time\Clock.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObject\Components\Camera.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\UniformBuffer.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Module\Module.h">
@@ -155,9 +257,213 @@
     <ClInclude Include="src\Module\ModuleScene.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Algorithm\Random\LCG.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Geometry\AABB.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Geometry\AABB2D.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Geometry\Capsule.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Geometry\Circle.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Geometry\Cone.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Geometry\Cylinder.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Geometry\Frustum.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Geometry\GeometryAll.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Geometry\GeomType.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Geometry\HitInfo.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Geometry\KDTree.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Geometry\Line.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Geometry\LineSegment.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Geometry\OBB.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Geometry\PBVolume.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Geometry\Plane.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Geometry\Polygon.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Geometry\Polyhedron.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Geometry\QuadTree.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Geometry\Ray.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Geometry\Sphere.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Geometry\Triangle.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Geometry\TriangleMesh.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\assume.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\BitOps.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\Complex.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\CoordinateAxisConvention.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\FixedPoint.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\float2.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\float3.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\float3x3.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\float3x4.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\float4.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\float4_neon.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\float4_sse.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\float4x4.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\float4x4_neon.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\float4x4_sse.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\FloatCmp.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\MathAll.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\MathConstants.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\MathFunc.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\MathLog.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\MathNamespace.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\MathTypes.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\MatrixProxy.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\myassert.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\Polynomial.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\Quat.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\quat_simd.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\Rect.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\Reinterpret.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\sse_mathfun.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\SSEMath.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Math\TransformOps.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\Time\Clock.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\MathBuildConfig.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\MathGeoLib.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\_Vendor\MathGeoLib\MathGeoLibFwd.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameObject\Components\Camera.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\UniformBuffer.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="files\default.fs" />
     <None Include="files\default.vs" />
+    <None Include="src\_Vendor\MathGeoLib\Geometry\KDTree.inl">
+      <Filter>Archivos de encabezado</Filter>
+    </None>
+    <None Include="src\_Vendor\MathGeoLib\Geometry\QuadTree.inl">
+      <Filter>Archivos de encabezado</Filter>
+    </None>
+    <None Include="src\_Vendor\MathGeoLib\Geometry\TriangleMesh_IntersectRay_AVX.inl">
+      <Filter>Archivos de encabezado</Filter>
+    </None>
+    <None Include="src\_Vendor\MathGeoLib\Geometry\TriangleMesh_IntersectRay_CPP.inl">
+      <Filter>Archivos de encabezado</Filter>
+    </None>
+    <None Include="src\_Vendor\MathGeoLib\Geometry\TriangleMesh_IntersectRay_SSE.inl">
+      <Filter>Archivos de encabezado</Filter>
+    </None>
+    <None Include="src\_Vendor\MathGeoLib\Math\Matrix.inl">
+      <Filter>Archivos de encabezado</Filter>
+    </None>
   </ItemGroup>
 </Project>

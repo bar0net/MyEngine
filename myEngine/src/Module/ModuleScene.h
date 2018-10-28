@@ -17,11 +17,12 @@ public:
 	virtual ~ModuleScene() {};
 
 	bool Init();
+	bool Start();
 	UpdateState Update();
 	bool CleanUp();
 	
 	GameObject* object;
-	//GameObject* camera;
+	GameObject* camera;
 	MyEngine::Shader* shader;
 };
 

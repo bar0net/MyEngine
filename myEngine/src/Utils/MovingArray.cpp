@@ -1,5 +1,6 @@
 #include "MovingArray.h"
 #include <cstring>
+#include "LogSystem.h"
 
 MovingArray::MovingArray(unsigned int size, unsigned int default_value) : size(size)
 {

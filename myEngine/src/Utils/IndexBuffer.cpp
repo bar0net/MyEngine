@@ -30,6 +30,7 @@ namespace MyEngine {
 
 	void IndexBuffer::Draw()
 	{
+		//GLCall(glDrawElements(GL_LINES, elements, GL_UNSIGNED_INT, NULL));
 		GLCall( glDrawElements(GL_TRIANGLES, elements, GL_UNSIGNED_INT, NULL) );
 	}
 
