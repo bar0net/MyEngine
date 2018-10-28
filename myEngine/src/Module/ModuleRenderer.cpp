@@ -7,6 +7,11 @@
 #include "../Utils/VertexBuffer.h"
 #include "../Utils/IndexBuffer.h"
 #include "../Utils/Shader.h"
+#include "../Application.h"
+
+#include "ModuleScene.h"
+#include "../GameObject/GameObject.h"
+#include "../GameObject/Components/Camera.h"
 
 ModuleRenderer::ModuleRenderer()
 {
@@ -75,7 +80,7 @@ void ModuleRenderer::CreateShader(const char* name, const char* vShader_file, co
 	if (materials.find(name) == materials.end())
 		materials[name] = new MyEngine::Shader(vShader_file, fShader_file);
 	else
-		LOGWARNING("Trying to add a new shader %s but it already exists.", name);
+		LOGWARNING("Cannot create new shader %s because it already exists.", name);
 }
 
 MyEngine::Shader* ModuleRenderer::GetShader(const char* name)
@@ -105,4 +110,12 @@ void ModuleRenderer::EmptyShaders()
 		//delete (it->second);
 
 	materials.empty();
+}
+
+void ModuleRenderer::ResizedWindow()
+{
+	MyEngine::WindowUtils::WindowSize(data, &width, &height);
+	MyEngine::RenderUtils::ModifyViewportSize(width, height);
+	Camera* c = (Camera*)App->scene->gameObjects["Camera"]->components["Camera"];
+	c->UpdateFrustum();
 }

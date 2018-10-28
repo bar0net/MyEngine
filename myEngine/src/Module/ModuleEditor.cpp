@@ -14,6 +14,10 @@
 
 #include "ModuleRenderer.h"
 #include "ModuleTime.h"
+#include "ModuleScene.h"
+#include "../GameObject/GameObject.h"
+#include "../GameObject/Components/Camera.h"
+#include "../_Vendor/MathGeoLib/Math/float3.h"
 
 #define GLSL_VERSION "#version 130"
 
@@ -51,8 +55,9 @@ bool ModuleEditor::Init()
 
 	vbo_grid = new MyEngine::VertexBuffer(&grid);
 	ibo_grid = new MyEngine::IndexBuffer(&grid_index);
-	App->renderer->CreateShader("default", "default.vs", "default.fs");
-	shader_grid = App->renderer->GetShader("default");
+	App->renderer->CreateShader("grid", "default.vs", "default.fs");
+	shader_grid = App->renderer->GetShader("grid");
+	shader_grid->SetUniform4("albedo", 1.0f, 1.0f, 1.0f, 0.8f);
 
 	return true;
 }
@@ -87,8 +92,6 @@ UpdateState ModuleEditor::PreUpdate()
 		shader_grid->Bind();
 		vbo_grid->Bind();
 		ibo_grid->Bind();
-		math::float4x4 I = math::float4x4::identity;
-		shader_grid->SetUniform4x4("model", &I);
 		ibo_grid->DrawLines();
 	}
 
@@ -107,7 +110,38 @@ UpdateState ModuleEditor::Update()
 		ImGui::PlotHistogram("", MovingArray::Get, fps, fps->size, 0, "", 0, 120, ImVec2(0, 50));
 		ImGui::Text("Curent FPS: %i", (*fps)[1]);
 		ImGui::Separator();
+		
 		ImGui::Checkbox("Show Grid", &show_grid);
+		ImGui::Separator();
+
+
+		ImGui::Text("Camera");
+		GameObject* go = App->scene->gameObjects["Camera"];
+		if (go != nullptr)
+		{
+			Camera* c = (Camera*)go->components["Camera"];
+			if (c != nullptr)
+			{
+				float pos[3] = { go->position.x, go->position.y, go->position.z };
+				ImGui::InputFloat3("Position",pos , 2);
+				if (pos[0] != go->position.x || pos[1] != go->position.y || pos[2] != go->position.z)
+					go->SetPosition(pos[0], pos[1], pos[2]);
+
+				float rot[3] = { go->rotation.x, go->rotation.y, go->rotation.z };
+				ImGui::InputFloat3("Rotation", rot, 2);
+				if (pos[0] != go->rotation.x || pos[1] != go->rotation.y || pos[2] != go->rotation.z)
+					go->SetRotation(rot[0], rot[1], rot[2]);
+
+				float fov = c->fov;
+				ImGui::SliderFloat("FOV", &fov, 60, 120);
+				if (fov != c->fov)
+				{
+					c->fov = fov;
+					c->UpdateFrustum();
+				}
+			}
+		}
+		ImGui::Text("Width: %ipx - Height: %ipx", App->renderer->width, App->renderer->height);
 		ImGui::End();
 	}
 

@@ -87,4 +87,9 @@ namespace MyEngine {
 		LOG(s);
 		return false;
 	}
+
+	void RenderUtils::ModifyViewportSize(unsigned int width, unsigned int height)
+	{
+		glViewport(0, 0, width, height);
+	}
 }

@@ -7,14 +7,14 @@
 #include "../../Utils/UniformBuffer.h"
 #include "../GameObject.h"
 
-Camera::Camera()
+Camera::Camera() : Component("Camera")
 {
 	ubo = new UniformBuffer;
 	UpdateFrustum();
 }
 
 Camera::Camera(ProjectionType type, float nearPlane, float farPlane, float fov) :
-	type(type), nearPlane(nearPlane), farPlane(farPlane), fov(fov)
+	type(type), nearPlane(nearPlane), farPlane(farPlane), fov(fov), Component("Camera")
 {
 	UpdateFrustum();
 }
@@ -22,6 +22,16 @@ Camera::Camera(ProjectionType type, float nearPlane, float farPlane, float fov) 
 void Camera::Start()
 {
 
+}
+
+void Camera::Update() 
+{
+	if (gameObject->transformChanged) 
+	{
+		math::float4x4 VM = gameObject->ModelMatrix()->Inverted();
+		ubo->SetUniform4x4(SHADER_VIEW_OFFSET, &VM);
+		gameObject->transformChanged = false;
+	}
 }
 
 void Camera::UpdateFrustum()
@@ -38,9 +48,6 @@ void Camera::UpdateFrustum()
 
 	frustum.horizontalFov = (3.14159258 * fov / 360);
 	frustum.verticalFov = 2.0f * atan(tan( frustum.horizontalFov / 2.0f) * ((float)App->renderer->height / (float)App->renderer->width));
-
-	//frustum.verticalFov = 3.14169258f / 4.0f;
-	//frustum.horizontalFov = 2.0f * atanf(tanf(frustum.verticalFov * 0.5f) * 1.77777778f);
 
 	if (gameObject != nullptr)
 	{

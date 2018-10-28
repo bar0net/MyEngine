@@ -11,7 +11,7 @@
 
 bool ModuleScene::Init() 
 {
-	object = new GameObject();
+	gameObjects["Pyramid"] = new GameObject("Triangle");
 
 	std::vector<float> triangle = {
 		 0.0f,  1.0f,  0.0f, //0
@@ -25,50 +25,54 @@ bool ModuleScene::Init()
 		0, 1, 2,
 		0, 3, 1,
 		0, 4, 3,
-		0, 2, 4
+		0, 2, 4,
+		3, 4, 1,
+		1, 4, 2
 	};
 
 	App->renderer->CreateShader("default", "default.vs", "default.fs");
 	
-	object->AddComponent(new MeshRenderer(&triangle, &indices, App->renderer->GetShader("default")));
-	object->SetPosition(0.0f, 0.0f, -10.0f);
-	object->SetRotation(0.0f, 0.0f, 0.0f);
+	gameObjects["Pyramid"]->AddComponent(new MeshRenderer(&triangle, &indices, App->renderer->GetShader("default")));
+	gameObjects["Pyramid"]->SetPosition(0.0f, 4.0f, -10.0f);
+	gameObjects["Pyramid"]->SetRotation(0.0f, 0.0f, 0.0f);
 	
-	camera = new GameObject();
-	camera->SetPosition(0.0f, 1.0f, 0.0f);
+	gameObjects["Camera"] = new GameObject("Camera");
+	gameObjects["Camera"]->SetPosition(0.0f, 1.0f, 10.0f);
 	//camera->SetRotation(-.4f, 0.0f, .1f);
-	camera->AddComponent(new Camera());
-	camera->Init();
+	gameObjects["Camera"]->AddComponent(new Camera());
+	gameObjects["Camera"]->Init();
 	
 	return true;
 }
 
 bool ModuleScene::Start()
 {
-	//object->Start();
-	camera->Start();
+	for (std::unordered_map<const char*, GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it)
+		it->second->Start();
 
 	return true;
 }
 
 UpdateState ModuleScene::Update()
 {
-	object->Update();
-	camera->Update();
+	for (std::unordered_map<const char*, GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it)
+		it->second->Update();
 
 	return UpdateState::Update_Continue;
 }
 
 bool ModuleScene::CleanUp()
 {
-	object->End();
-	camera->End();
+	for (std::unordered_map<const char*, GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it)
+		it->second->End();
 
-	object->CleanUp();
-	camera->CleanUp();
+	for (std::unordered_map<const char*, GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it)
+		it->second->CleanUp();
 
-	delete object;
-	delete camera;
+
+	for (std::unordered_map<const char*, GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it)
+		delete(it->second);
+	gameObjects.clear();
 
 	return true;
 }

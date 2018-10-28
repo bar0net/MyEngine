@@ -9,6 +9,7 @@
 namespace math
 {
 	class float4x4;
+	class float4;
 }
 
 namespace MyEngine
@@ -23,6 +24,8 @@ namespace MyEngine
 		void UnBind() const;
 
 		void SetUniform4x4(const char* name, math::float4x4* entry);
+		void SetUniform4(const char* name, math::float4* entry);
+		void SetUniform4(const char* name, float x, float y, float z, float w);
 
 		unsigned int program = 0;
 

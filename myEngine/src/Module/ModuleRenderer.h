@@ -28,12 +28,13 @@ public:
 	void CreateShader(const char* name, const char* vShader_file, const char* fShader_file);
 	MyEngine::Shader* GetShader(const char* name);
 	void EmptyShaders();
+	void ResizedWindow();
 
 	MyEngine::WindowData* data = nullptr;
 	std::unordered_map<const char*, MyEngine::Shader*> materials;
 
-	unsigned int width = 1280;
-	unsigned int height = 720;
+	int width = 1280;
+	int height = 720;
 };
 
 

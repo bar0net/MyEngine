@@ -6,7 +6,7 @@ class GameObject;
 class Component
 {
 public:
-	Component() {};
+	Component(const char* name) : name(name) {};
 	virtual ~Component() {};
 
 	virtual void Init() {};
@@ -17,8 +17,11 @@ public:
 
 	virtual void SetGameObject(GameObject* gameObject);
 
+	const char* GetName() { return name; }
+
 protected:
 	GameObject* gameObject;
+	const char* name;
 };
 
 #endif //!_GAMEOBJECT_COMPONENT_H

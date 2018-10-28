@@ -2,7 +2,9 @@
 
 out vec4 color;
 
+uniform vec4 albedo;
+
 void main()
 {
-	color = vec4(0.3f, 0.8f, 0.3f, 1.0f);
+	color = vec4(albedo.x, albedo.y, albedo.z, albedo.w);
 }

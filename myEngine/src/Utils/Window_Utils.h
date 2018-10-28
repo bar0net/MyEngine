@@ -21,6 +21,7 @@ namespace MyEngine {
 		static WindowData* CreateWindow(const char* title, unsigned int width, unsigned int height);
 		static void DestroyWindow(WindowData* data);
 		static void SwapWindow(const WindowData* data);
+		static void WindowSize(const WindowData* data, int* width, int* height);
 	};
 }
 

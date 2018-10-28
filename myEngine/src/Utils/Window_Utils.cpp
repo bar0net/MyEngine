@@ -10,7 +10,12 @@ namespace MyEngine {
 
 		if (SDL_Init(SDL_INIT_VIDEO) != 0) return data;
 
-		SDL_WindowFlags flags = SDL_WINDOW_OPENGL;
+		//Uint32 flags = SDL_WINDOW_OPENGL;
+		//flags |= SDL_WINDOW_RESIZABLE;
+
+		Uint32 flags = SDL_WINDOW_RESIZABLE;
+		flags |= SDL_WINDOW_OPENGL;
+
 		data->window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
 		data->surface = SDL_GetWindowSurface(data->window);
 
@@ -38,6 +43,13 @@ namespace MyEngine {
 	void WindowUtils::SwapWindow(const WindowData* data)
 	{
 		SDL_GL_SwapWindow(data->window);
+	}
+
+	void WindowUtils::WindowSize(const WindowData* data, int* width, int* height)
+	{
+		*(data->surface) = *SDL_GetWindowSurface(data->window); 
+
+		SDL_GetWindowSize(data->window, width, height);
 	}
 
 }

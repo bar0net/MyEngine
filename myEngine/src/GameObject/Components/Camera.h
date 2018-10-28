@@ -21,6 +21,7 @@ public:
 	Camera(ProjectionType type, float nearPlane, float farPlane, float fov);
 	void Init() {}
 	void Start();
+	void Update();
 
 	void SetGameObject(GameObject* gameObject);
 

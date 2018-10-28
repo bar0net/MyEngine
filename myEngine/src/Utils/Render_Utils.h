@@ -24,6 +24,7 @@ namespace MyEngine {
 		static void ClearViewport();
 		static void GLClearErrors();
 		static bool GLLogCall(const char* function, const char* file, int line);
+		static void ModifyViewportSize(unsigned int width, unsigned int height);
 	};
 }
 

@@ -6,6 +6,7 @@
 #include "Render_Utils.h"
 
 #include "../_Vendor/MathGeoLib/Math/float4x4.h"
+#include "../_Vendor/MathGeoLib/Math/float4.h"
 
 namespace MyEngine 
 {
@@ -122,5 +123,17 @@ namespace MyEngine
 	{
 		this->Bind();
 		GLCall(glUniformMatrix4fv(glGetUniformLocation(program, name), 1, GL_TRUE, &(*entry)[0][0]));
+	}
+
+	void Shader::SetUniform4(const char* name, math::float4* entry)
+	{
+		this->Bind();
+		GLCall(glUniform4f(glGetUniformLocation(program, name), entry->x, entry->y, entry->z, entry->w));
+	}
+
+	void Shader::SetUniform4(const char* name, float x, float y, float z, float w)
+	{
+		this->Bind();
+		GLCall(glUniform4f(glGetUniformLocation(program, name), x, y, z, w));
 	}
 }

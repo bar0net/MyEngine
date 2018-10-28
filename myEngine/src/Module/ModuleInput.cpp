@@ -3,6 +3,7 @@
 #include "SDL.h"
 #include "../Application.h"
 #include "ModuleEditor.h"
+#include "ModuleRenderer.h"
 
 #define MAX_KEYS 300
 
@@ -56,6 +57,9 @@ UpdateState ModuleInput::PreUpdate()
 		App->editor->ProcessEvent(&event);
 		if (event.type == SDL_QUIT)
 			return UpdateState::Update_End;
+		
+		if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+				App->renderer->ResizedWindow();		
 	}
 
 	return UpdateState::Update_Continue;

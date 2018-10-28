@@ -7,15 +7,15 @@
 
 float r;
 
-MeshRenderer::MeshRenderer(const std::vector<float>* vertices, const std::vector<unsigned int>* indices, MyEngine::Shader* shader)
+MeshRenderer::MeshRenderer(const std::vector<float>* vertices, const std::vector<unsigned int>* indices, MyEngine::Shader* shader) : Component("MeshRenderer")
 {
 	this->vbo = new MyEngine::VertexBuffer(vertices);
 	this->ibo = new MyEngine::IndexBuffer(indices);
 	this->shader = shader;
 	math::float4x4 I = math::float4x4::identity;
-	this->shader->SetUniform4x4("model", &I);
-	//this->shader->SetUniform4x4("view", &I);
-	//this->shader->SetUniform4x4("proj", &I);
+	this->shader->SetUniform4x4("model", &I); 
+	
+	this->shader->SetUniform4("albedo", 0.2f, 0.8f, 0.2f, 1.0f);
 
 	LOGINFO("Creating Mesh Renderer.");
 }

@@ -2,6 +2,7 @@
 #define _MYENGINE_MODULE_SCENE_H
 
 #include "Module.h"
+#include <unordered_map>
 
 class GameObject;
 
@@ -21,9 +22,9 @@ public:
 	UpdateState Update();
 	bool CleanUp();
 	
-	GameObject* object;
-	GameObject* camera;
 	MyEngine::Shader* shader;
+
+	std::unordered_map<const char*, GameObject*> gameObjects;
 };
 
 
