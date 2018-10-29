@@ -7,6 +7,8 @@
 #include "../GameObject/GameObject.h"
 #include "../GameObject/Components/MeshRenderer.h"
 #include "../GameObject/Components/Camera.h"
+#include "../GameObject/Components/CameraControl.h"
+
 //#include "../Utils/Shader.h"
 
 bool ModuleScene::Init() 
@@ -40,6 +42,7 @@ bool ModuleScene::Init()
 	gameObjects["Camera"]->SetPosition(0.0f, 1.0f, 10.0f);
 	//camera->SetRotation(-.4f, 0.0f, .1f);
 	gameObjects["Camera"]->AddComponent(new Camera());
+	gameObjects["Camera"]->AddComponent(new CameraControl());
 	gameObjects["Camera"]->Init();
 	
 	return true;

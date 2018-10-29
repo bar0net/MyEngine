@@ -63,21 +63,22 @@ void GameObject::AddComponent(Component* component)
 void GameObject::SetPosition(float x, float y, float z)
 {
 	position = { x, y, z };
-	transform = math::float4x4::FromTRS(position, Quat::FromEulerXYZ(DEG2RAD * rotation.x, DEG2RAD * rotation.y, DEG2RAD * rotation.z), scale);
+	transform = math::float4x4::FromTRS(position, Quat::FromEulerZYX(DEG2RAD * rotation.z, DEG2RAD * rotation.y, DEG2RAD * rotation.x), scale);
 	transformChanged = true;
 }
 
+// It's important to use FromEulerZYX so we can easyly implement rotations.
 void GameObject::SetRotation(float x, float y, float z)
 {
 	rotation = { x, y, z };
-	transform = math::float4x4::FromTRS(position, Quat::FromEulerXYZ(DEG2RAD * rotation.x, DEG2RAD * rotation.y, DEG2RAD * rotation.z), scale);
+	transform = math::float4x4::FromTRS(position, Quat::FromEulerZYX(DEG2RAD * rotation.z, DEG2RAD * rotation.y, DEG2RAD * rotation.x), scale);
 	transformChanged = true;
 }
 
 void GameObject::SetScale(float x, float y, float z)
 {
 	scale = { x, y, z };
-	transform = math::float4x4::FromTRS(position, Quat::FromEulerXYZ(DEG2RAD * rotation.x, DEG2RAD * rotation.y, DEG2RAD * rotation.z), scale);
+	transform = math::float4x4::FromTRS(position, Quat::FromEulerZYX(DEG2RAD * rotation.z, DEG2RAD * rotation.y, DEG2RAD * rotation.x), scale);
 	transformChanged = true;
 }
 
@@ -88,5 +89,20 @@ void GameObject::Translate(float x, float y, float z)
 
 void GameObject::Rotate(float x, float y, float z)
 {
-	SetRotation(rotation.x + x, rotation.y + y, rotation.z + z);
+	SetRotation(fmod(rotation.x + x, 360.f), fmod(rotation.y + y, 360.f), fmod(rotation.z + z, 360.f));
+}
+
+math::float3 GameObject::Up()
+{
+	return (transform * math::float4::unitY).Float3Part();
+}
+
+math::float3 GameObject::Right()
+{
+	return (transform * math::float4::unitX).Float3Part();
+}
+
+math::float3 GameObject::Front()
+{
+	return (transform * math::float4::unitZ).Float3Part();
 }

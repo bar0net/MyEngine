@@ -12,6 +12,22 @@ enum class KeyState
 	KEY_REPEAT,
 	KEY_UP
 };
+#include <SDL.h>
+enum class KeyCode
+{
+	A = 4,
+	D = 7,
+	E = 8,
+	I = 12,
+	J = 13,
+	K = 14,
+	L = 15,
+	O = 18,
+	Q = 20,
+	S = 22,
+	U = 24,
+	W = 26
+};
 
 class ModuleInput : public Module
 {
@@ -23,8 +39,11 @@ public:
 	UpdateState PreUpdate();
 	bool CleanUp();
 
+	bool GetKeyDown(KeyCode k)	{ return keyboard[(int)k] == KeyState::KEY_DOWN; }
+	bool GetKey(KeyCode k)		{ return keyboard[(int)k] == KeyState::KEY_REPEAT; }
+	bool GetKeyUP(KeyCode k)	{ return keyboard[(int)k] == KeyState::KEY_UP; }
+
 	KeyState* keyboard;
-	std::unordered_map<const char*, unsigned int> keyCode;
 };
 
 #endif // !_MODEL_INPUT_H

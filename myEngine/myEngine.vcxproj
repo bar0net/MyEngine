@@ -148,6 +148,7 @@
   <ItemGroup>
     <ClCompile Include="src\GameObject\Component.cpp" />
     <ClCompile Include="src\GameObject\Components\Camera.cpp" />
+    <ClCompile Include="src\GameObject\Components\CameraControl.cpp" />
     <ClCompile Include="src\GameObject\Components\MeshRenderer.cpp" />
     <ClCompile Include="src\GameObject\GameObject.cpp" />
     <ClCompile Include="src\Module\ModuleScene.cpp" />
@@ -211,6 +212,7 @@
   <ItemGroup>
     <ClInclude Include="src\GameObject\Component.h" />
     <ClInclude Include="src\GameObject\Components\Camera.h" />
+    <ClInclude Include="src\GameObject\Components\CameraControl.h" />
     <ClInclude Include="src\GameObject\Components\MeshRenderer.h" />
     <ClInclude Include="src\GameObject\GameObject.h" />
     <ClInclude Include="src\Module\ModuleScene.h" />

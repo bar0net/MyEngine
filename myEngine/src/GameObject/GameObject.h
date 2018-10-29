@@ -23,13 +23,17 @@ public:
 	virtual void CleanUp();
 	virtual void End();
 
+	virtual math::float3 Up();
+	virtual math::float3 Right();
+	virtual math::float3 Front();
+
 	virtual void SetPosition(float x, float y, float z);
 	virtual void SetRotation(float x, float y, float z);
 	virtual void SetScale(float x, float y, float z);
 
 	virtual void Translate(float x, float y, float z);
 	virtual void Rotate(float x, float y, float z);
-
+	
 	virtual math::float4x4* ModelMatrix() { return &transform; }
 
 	void AddComponent(Component* component);
