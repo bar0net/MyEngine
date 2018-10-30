@@ -25,6 +25,7 @@ namespace MyEngine {
 		static void GLClearErrors();
 		static bool GLLogCall(const char* function, const char* file, int line);
 		static void ModifyViewportSize(unsigned int width, unsigned int height);
+		static void ChangeClearColor(float r, float g, float b, float a);
 	};
 }
 

@@ -138,3 +138,14 @@ void ModuleRenderer::ResizedWindow()
 	Camera* c = (Camera*)App->scene->gameObjects["Camera"]->components["Camera"];
 	c->UpdateFrustum();
 }
+
+void ModuleRenderer::UpdateClearColor()
+{
+	MyEngine::RenderUtils::ChangeClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
+}
+
+void ModuleRenderer::UpdateClearColor(float r, float g, float b, float a)
+{
+	MyEngine::RenderUtils::ChangeClearColor(r, g, b, a);
+	clearColor[0] = r; clearColor[1] = g; clearColor[2] = b; clearColor[3] = a;
+}

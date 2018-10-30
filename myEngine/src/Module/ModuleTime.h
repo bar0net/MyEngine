@@ -10,6 +10,7 @@ public:
 	UpdateState Update();
 
 	float DeltaTime() { return (float)deltaTime/1000.f; }
+	unsigned int DeltaTimeMS() { return deltaTime; }
 	float FPS() { return 1000.0f / (float)deltaTime; }
 
 private:

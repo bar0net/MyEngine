@@ -32,6 +32,9 @@ public:
 	void EmptyShaders();
 	void ResizedWindow();
 
+	void UpdateClearColor();
+	void UpdateClearColor(float r, float g, float b, float a);
+
 	MyEngine::WindowData* data = nullptr;
 	std::unordered_map<const char*, MyEngine::Shader*> materials;
 
@@ -41,6 +44,7 @@ public:
 	int active_vao = -1;
 	int active_ibo = -1;
 	int active_shader = -1;
+	float clearColor[4] = { 0.3f, 0.3f, 0.3f, 1.0f };
 };
 
 

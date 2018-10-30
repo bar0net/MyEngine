@@ -35,15 +35,18 @@ MeshRenderer::~MeshRenderer()
 
 void MeshRenderer::Update()
 {
-	r = r + 0.01f;
-	if (r > 6.283f) r -= 6.283f;
+	r = r + 1.f;
+	if (r > 360) r -= 360;
 	gameObject->SetRotation(0,r,0);
 
 	this->shader->Bind();
 	this->vao->Bind();
 	this->ibo->Bind();
-	//if (this->gameObject->transformChanged) 
-	this->shader->SetUniform4x4("model", this->gameObject->ModelMatrix());
+	if (this->gameObject->transformChanged)
+	{
+		this->shader->SetUniform4x4("model", this->gameObject->ModelMatrix());
+		this->gameObject->transformChanged = false;
+	}
 	this->ibo->Draw();
 }
 

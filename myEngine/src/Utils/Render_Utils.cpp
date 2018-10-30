@@ -18,7 +18,8 @@ namespace MyEngine {
 		glEnable(GL_TEXTURE_2D);
 
 		glClearDepth(1.0f);
-		glClearColor(0.3f, 0.3f, 0.3f, 1.f);
+		//glClearColor(0.3f, 0.3f, 0.3f, 1.f);
+		ChangeClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 
 		glViewport(0, 0, width, height);
 	}
@@ -91,5 +92,10 @@ namespace MyEngine {
 	void RenderUtils::ModifyViewportSize(unsigned int width, unsigned int height)
 	{
 		glViewport(0, 0, width, height);
+	}
+
+	void RenderUtils::ChangeClearColor(float r, float g, float b, float a)
+	{
+		glClearColor(r, g, b, a);
 	}
 }

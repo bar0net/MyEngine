@@ -31,12 +31,15 @@ private:
 
 	ImGuiIO* io;
 	MovingArray* fps;
+	MovingArray* avg_ms_array;
+	unsigned int avg_ms = 0;
 
 	MyEngine::VertexArray* vao_grid = nullptr;
 	MyEngine::IndexBuffer* ibo_grid = nullptr;
 	MyEngine::VertexBuffer* vbo_grid = nullptr;
 	MyEngine::Shader* shader_grid = nullptr;
 	bool show_grid = true;
+	float grid_color[4] = { 1.0f,1.0f,1.0f,1.0f };
 };
 
 

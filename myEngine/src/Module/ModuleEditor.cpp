@@ -27,6 +27,7 @@ bool ModuleEditor::Init()
 {
 	LOGINFO("Initializing Editor.");
 	fps = new MovingArray(300, 0);
+	avg_ms_array = new MovingArray(30, 0);
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -64,7 +65,7 @@ bool ModuleEditor::Init()
 	vao_grid->AddBuffer(*vbo_grid, vbl);
 	App->renderer->CreateShader("grid", "default.vs", "default.fs");
 	shader_grid = App->renderer->GetShader("grid");
-	shader_grid->SetUniform4("albedo", 1.0f, 1.0f, 1.0f, 0.8f);
+	shader_grid->SetUniform4("albedo", grid_color[0], grid_color[1], grid_color[2], grid_color[3]);
 
 	return true;
 }
@@ -85,6 +86,7 @@ bool ModuleEditor::CleanUp()
 	ImGui::DestroyContext();
 
 	delete(fps);
+	delete(avg_ms_array);
 	delete(vbo_grid);
 	delete(ibo_grid);
 	delete(shader_grid);
@@ -113,44 +115,75 @@ UpdateState ModuleEditor::Update()
 
 	{
 		fps->push((unsigned int)App->time->FPS());
+		avg_ms -= (*avg_ms_array)[0];
+		avg_ms_array->push(App->time->DeltaTimeMS());
+		avg_ms += App->time->DeltaTimeMS();
 
-		ImGui::Begin("Performance",NULL);
-		ImGui::Text("Frames per second");
-		ImGui::PlotHistogram("", MovingArray::Get, fps, fps->size, 0, "", 0, 120, ImVec2(0, 50));
-		ImGui::Text("Curent FPS: %i", (*fps)[1]);
-		ImGui::Separator();
-		
-		ImGui::Checkbox("Show Grid", &show_grid);
-		ImGui::Separator();
-
-
-		ImGui::Text("Camera");
-		GameObject* go = App->scene->gameObjects["Camera"];
-		if (go != nullptr)
+		ImGui::Begin("Menu",NULL);
+		if (ImGui::CollapsingHeader("Performance"))
 		{
-			Camera* c = (Camera*)go->components["Camera"];
-			if (c != nullptr)
+			ImGui::Text("Frames per second");
+			ImGui::PlotHistogram("", MovingArray::Get, fps, fps->size, 0, "", 0, 120, ImVec2(0, 50));
+			ImGui::Text("Average ms/frame: %ims - FPS: %i", avg_ms / (avg_ms_array->size), (int)(1000.0f * avg_ms_array->size / avg_ms));
+		}
+
+		if (ImGui::CollapsingHeader("Editor"))
+		{
+			// Background Color
+			ImVec4 bgcolor( App->renderer->clearColor[0], App->renderer->clearColor[1], App->renderer->clearColor[2], App->renderer->clearColor[3] );
+			bool open_bgcolor = ImGui::ColorButton("BGButton", bgcolor);
+			ImGui::SameLine(); ImGui::Text("Background Color");
+			if (open_bgcolor) ImGui::OpenPopup("BackgroundPicker");
+			if (ImGui::BeginPopup("BackgroundPicker"))
 			{
-				float pos[3] = { go->position.x, go->position.y, go->position.z };
-				ImGui::InputFloat3("Position",pos , 2);
-				if (pos[0] != go->position.x || pos[1] != go->position.y || pos[2] != go->position.z)
-					go->SetPosition(pos[0], pos[1], pos[2]);
+				if (ImGui::ColorPicker4("Background Color", App->renderer->clearColor)) App->renderer->UpdateClearColor();
+				ImGui::EndPopup();
+			}
 
-				float rot[3] = { go->rotation.x, go->rotation.y, go->rotation.z };
-				ImGui::InputFloat3("Rotation", rot, 2);
-				if (pos[0] != go->rotation.x || pos[1] != go->rotation.y || pos[2] != go->rotation.z)
-					go->SetRotation(rot[0], rot[1], rot[2]);
+			// Grid Color
+			bool open_gridcolor = ImGui::ColorButton("GridColorButton", *(ImVec4*)&grid_color);
+			ImGui::SameLine(); ImGui::Text("Grid Color");
+			if (open_gridcolor) ImGui::OpenPopup("GridColorPicker");
+			if (ImGui::BeginPopup("GridColorPicker"))
+			{
+				if (ImGui::ColorPicker4("Grid Color", grid_color)) 
+					shader_grid->SetUniform4("albedo", grid_color[0], grid_color[1], grid_color[2], grid_color[3]);
+				ImGui::EndPopup();
+			}
 
-				float fov = c->fov;
-				ImGui::SliderFloat("FOV", &fov, 60, 120);
-				if (fov != c->fov)
+			ImGui::Checkbox("Show Grid", &show_grid);
+			ImGui::Separator();
+		}
+
+		if (ImGui::CollapsingHeader("Camera"))
+		{
+			GameObject* go = App->scene->gameObjects["Camera"];
+			if (go != nullptr)
+			{
+				Camera* c = (Camera*)go->components["Camera"];
+				if (c != nullptr)
 				{
-					c->fov = fov;
-					c->UpdateFrustum();
+					float pos[3] = { go->position.x, go->position.y, go->position.z };
+					ImGui::InputFloat3("Position", pos, 2);
+					if (pos[0] != go->position.x || pos[1] != go->position.y || pos[2] != go->position.z)
+						go->SetPosition(pos[0], pos[1], pos[2]);
+
+					float rot[3] = { go->rotation.x, go->rotation.y, go->rotation.z };
+					ImGui::InputFloat3("Rotation", rot, 2);
+					if (pos[0] != go->rotation.x || pos[1] != go->rotation.y || pos[2] != go->rotation.z)
+						go->SetRotation(rot[0], rot[1], rot[2]);
+
+					float fov = c->fov;
+					ImGui::SliderFloat("FOV", &fov, 60, 120);
+					if (fov != c->fov)
+					{
+						c->fov = fov;
+						c->UpdateFrustum();
+					}
 				}
 			}
+			ImGui::Text("Width: %ipx - Height: %ipx", App->renderer->width, App->renderer->height);
 		}
-		ImGui::Text("Width: %ipx - Height: %ipx", App->renderer->width, App->renderer->height);
 		ImGui::End();
 	}
 
