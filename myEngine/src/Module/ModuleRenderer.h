@@ -9,6 +9,7 @@ namespace MyEngine
 	struct WindowData;
 	class IndexBuffer;
 	class VertexBuffer;
+	class VertexArray;
 	class Shader;
 }
 
@@ -24,6 +25,7 @@ public:
 	UpdateState Update();
 	UpdateState PostUpdate();
 	bool CleanUp();
+	void Draw(MyEngine::VertexArray* vao, MyEngine::IndexBuffer* ibo, MyEngine::Shader* shader);
 
 	void CreateShader(const char* name, const char* vShader_file, const char* fShader_file);
 	MyEngine::Shader* GetShader(const char* name);
@@ -35,6 +37,10 @@ public:
 
 	int width = 1280;
 	int height = 720;
+
+	int active_vao = -1;
+	int active_ibo = -1;
+	int active_shader = -1;
 };
 
 

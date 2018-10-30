@@ -8,9 +8,11 @@
 #include "../Utils/Window_Utils.h"
 #include "../Utils/MovingArray.h"
 #include "../Utils/VertexBuffer.h"
+#include "../Utils/VertexArray.h"
 #include "../Utils/Shader.h"
 #include "../Utils/IndexBuffer.h"
 #include "../_Vendor/MathGeoLib/Math/float4x4.h"
+#include "../Utils/VertexBufferLayout.h"
 
 #include "ModuleRenderer.h"
 #include "ModuleTime.h"
@@ -52,9 +54,14 @@ bool ModuleEditor::Init()
 		grid.push_back(abs(i)*i); grid.push_back(0);  grid.push_back(100.0f);
 		grid_index.push_back(id++); grid_index.push_back(id++);
 	}
+	MyEngine::VertexBufferLayout vbl;
+	vbl.Push<float>(3);
 
 	vbo_grid = new MyEngine::VertexBuffer(&grid);
 	ibo_grid = new MyEngine::IndexBuffer(&grid_index);
+	
+	vao_grid = new MyEngine::VertexArray();
+	vao_grid->AddBuffer(*vbo_grid, vbl);
 	App->renderer->CreateShader("grid", "default.vs", "default.fs");
 	shader_grid = App->renderer->GetShader("grid");
 	shader_grid->SetUniform4("albedo", 1.0f, 1.0f, 1.0f, 0.8f);
@@ -81,6 +88,7 @@ bool ModuleEditor::CleanUp()
 	delete(vbo_grid);
 	delete(ibo_grid);
 	delete(shader_grid);
+	delete(vao_grid);
 
 	return true;
 }
@@ -90,7 +98,8 @@ UpdateState ModuleEditor::PreUpdate()
 	if (show_grid)
 	{
 		shader_grid->Bind();
-		vbo_grid->Bind();
+		//vbo_grid->Bind();
+		vao_grid->Bind();
 		ibo_grid->Bind();
 		ibo_grid->DrawLines();
 	}

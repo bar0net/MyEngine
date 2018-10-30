@@ -75,6 +75,25 @@ bool ModuleRenderer::CleanUp()
 	return true;
 }
 
+void ModuleRenderer::Draw(MyEngine::VertexArray * vao, MyEngine::IndexBuffer * ibo, MyEngine::Shader * shader)
+{
+	// TODO: VAO
+
+	if ((int)ibo->ibo != active_ibo)
+	{
+		active_ibo = ibo->ibo;
+		ibo->Bind();
+	}
+
+	if ((int)shader->program != active_shader)
+	{
+		active_shader = shader->program;
+		shader->Bind();
+	}
+
+	ibo->Draw();
+}
+
 void ModuleRenderer::CreateShader(const char* name, const char* vShader_file, const char* fShader_file)
 {
 	if (materials.find(name) == materials.end())

@@ -63,7 +63,8 @@ void GameObject::AddComponent(Component* component)
 void GameObject::SetPosition(float x, float y, float z)
 {
 	position = { x, y, z };
-	transform = math::float4x4::FromTRS(position, Quat::FromEulerZYX(DEG2RAD * rotation.z, DEG2RAD * rotation.y, DEG2RAD * rotation.x), scale);
+	transform.SetTranslatePart({ x,y,z });
+	//transform = math::float4x4::FromTRS(position, Quat::FromEulerZYX(DEG2RAD * rotation.z, DEG2RAD * rotation.y, DEG2RAD * rotation.x), scale);
 	transformChanged = true;
 }
 
@@ -80,6 +81,11 @@ void GameObject::SetScale(float x, float y, float z)
 	scale = { x, y, z };
 	transform = math::float4x4::FromTRS(position, Quat::FromEulerZYX(DEG2RAD * rotation.z, DEG2RAD * rotation.y, DEG2RAD * rotation.x), scale);
 	transformChanged = true;
+}
+
+void GameObject::Translate(math::float3 direction)
+{
+	SetPosition(position.x + direction.x, position.y + direction.y, position.z + direction.z);
 }
 
 void GameObject::Translate(float x, float y, float z)
@@ -104,5 +110,5 @@ math::float3 GameObject::Right()
 
 math::float3 GameObject::Front()
 {
-	return (transform * math::float4::unitZ).Float3Part();
+	return -(transform * math::float4::unitZ).Float3Part();
 }

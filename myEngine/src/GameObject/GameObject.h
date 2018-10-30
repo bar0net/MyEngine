@@ -31,6 +31,7 @@ public:
 	virtual void SetRotation(float x, float y, float z);
 	virtual void SetScale(float x, float y, float z);
 
+	virtual void Translate(math::float3 direction);
 	virtual void Translate(float x, float y, float z);
 	virtual void Rotate(float x, float y, float z);
 	

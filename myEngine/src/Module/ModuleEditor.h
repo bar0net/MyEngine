@@ -10,6 +10,7 @@ namespace MyEngine
 {
 	class IndexBuffer;
 	class VertexBuffer;
+	class VertexArray;
 	class Shader;
 }
 
@@ -31,6 +32,7 @@ private:
 	ImGuiIO* io;
 	MovingArray* fps;
 
+	MyEngine::VertexArray* vao_grid = nullptr;
 	MyEngine::IndexBuffer* ibo_grid = nullptr;
 	MyEngine::VertexBuffer* vbo_grid = nullptr;
 	MyEngine::Shader* shader_grid = nullptr;

@@ -62,9 +62,9 @@ int main(int argc, const char* argv[])
 	delete(App);
 
 	#if (_DEV_MODE_==1)
+		_CrtDumpMemoryLeaks();
 		LOGINFO("Press Enter to close.");
 		std::cin.get();
-		_CrtDumpMemoryLeaks();
 	#endif
 	return 0;
 }

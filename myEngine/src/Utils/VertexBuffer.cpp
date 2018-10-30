@@ -21,13 +21,13 @@ namespace MyEngine
 	void VertexBuffer::Bind() const
 	{
 		GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));
-		GLCall(glEnableVertexAttribArray(0));
-		GLCall(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0));
+		//GLCall(glEnableVertexAttribArray(0));
+		//GLCall(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0));
 	}
 
 	void VertexBuffer::UnBind() const
 	{
-		GLCall(glDisableVertexAttribArray(0));
+		//GLCall(glDisableVertexAttribArray(0));
 		GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
 	}
 

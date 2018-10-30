@@ -162,6 +162,7 @@
     <ClCompile Include="src\Utils\IndexBuffer.cpp" />
     <ClCompile Include="src\Utils\Render_Utils.cpp" />
     <ClCompile Include="src\Utils\UniformBuffer.cpp" />
+    <ClCompile Include="src\Utils\VertexArray.cpp" />
     <ClCompile Include="src\Utils\Window_Utils.cpp" />
     <ClCompile Include="src\Utils\Shader.cpp" />
     <ClCompile Include="src\Utils\VertexBuffer.cpp" />
@@ -226,6 +227,8 @@
     <ClInclude Include="src\Utils\IndexBuffer.h" />
     <ClInclude Include="src\Utils\Render_Utils.h" />
     <ClInclude Include="src\Utils\UniformBuffer.h" />
+    <ClInclude Include="src\Utils\VertexArray.h" />
+    <ClInclude Include="src\Utils\VertexBufferLayout.h" />
     <ClInclude Include="src\Utils\Window_Utils.h" />
     <ClInclude Include="src\Utils\Shader.h" />
     <ClInclude Include="src\Utils\VertexBuffer.h" />
