@@ -3,6 +3,8 @@
 
 #include "LogSystem.h"
 
+#include <vector>
+
 #define SHADER_VIEW_OFFSET sizeof(float4x4)
 #define SHADER_PROJ_OFFSET 0
 
@@ -27,6 +29,8 @@ namespace MyEngine
 		void SetUniform4(const char* name, math::float4* entry);
 		void SetUniform4(const char* name, float x, float y, float z, float w);
 
+		void AddTexture2D(unsigned int textureID);
+
 		unsigned int program = 0;
 
 	private:
@@ -34,6 +38,7 @@ namespace MyEngine
 		unsigned int CompileShader(const char* filename, int type);
 
 		bool valid = true;
+		std::vector<unsigned int> textures;
 	};
 
 }

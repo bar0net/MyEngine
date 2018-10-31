@@ -27,7 +27,6 @@ bool ModuleTexture::CleanUp()
 {
 	LOGINFO("Deleting all remaining loaded textures (%i textures)", textures.size());
 
-
 	unsigned int i = 1;
 
 	for (std::unordered_set<unsigned int>::iterator it = textures.begin(); it != textures.end(); ++it)

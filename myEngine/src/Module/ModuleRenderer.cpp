@@ -78,6 +78,12 @@ bool ModuleRenderer::CleanUp()
 
 void ModuleRenderer::Draw(MyEngine::VertexArray * vao, MyEngine::IndexBuffer * ibo, MyEngine::Shader * shader)
 {
+	if ((int)shader->program != active_shader)
+	{
+		active_shader = shader->program;
+		shader->Bind();
+	}
+
 	if ((int)vao->vao != active_vao)
 	{
 		active_vao = vao->vao;
@@ -90,17 +96,19 @@ void ModuleRenderer::Draw(MyEngine::VertexArray * vao, MyEngine::IndexBuffer * i
 		ibo->Bind();
 	}
 
-	if ((int)shader->program != active_shader)
-	{
-		active_shader = shader->program;
-		shader->Bind();
-	}
 
 	ibo->Draw();
 }
 
 void ModuleRenderer::DrawLines(MyEngine::VertexArray * vao, MyEngine::IndexBuffer * ibo, MyEngine::Shader * shader)
 {
+
+	if ((int)shader->program != active_shader)
+	{
+		active_shader = shader->program;
+		shader->Bind();
+	}
+
 	if ((int)vao->vao != active_vao)
 	{
 		active_vao = vao->vao;
@@ -111,12 +119,6 @@ void ModuleRenderer::DrawLines(MyEngine::VertexArray * vao, MyEngine::IndexBuffe
 	{
 		active_ibo = ibo->ibo;
 		ibo->Bind();
-	}
-
-	if ((int)shader->program != active_shader)
-	{
-		active_shader = shader->program;
-		shader->Bind();
 	}
 
 	ibo->DrawLines();

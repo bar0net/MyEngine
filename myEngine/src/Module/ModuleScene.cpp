@@ -9,6 +9,8 @@
 #include "../GameObject/Components/Camera.h"
 #include "../GameObject/Components/CameraControl.h"
 #include "../Utils/VertexBufferLayout.h"
+#include "../Module/ModuleTexture.h"
+#include "../Utils/Shader.h"
 
 //#include "../Utils/Shader.h"
 
@@ -17,14 +19,15 @@ bool ModuleScene::Init()
 	gameObjects["Pyramid"] = new GameObject("Triangle");
 
 	std::vector<float> triangle = {
-		 0.0f,  1.0f,  0.0f, //0
-		-0.5f, -0.5f,  0.5f, //1
-		 0.5f, -0.5f,  0.5f,  //2
-		-0.5f, -0.5f,  -0.5f, //3
-		 0.5f, -0.5f,  -0.5f //4
+		 0.0f,  1.0f,  0.0f, 0.5f, 1.0f,	//0
+		-0.5f, -0.5f,  0.5f, 0.0f, 0.0f,	//1
+		 0.5f, -0.5f,  0.5f, 0.33f, 0.0f,	//2
+		-0.5f, -0.5f,  -0.5f, 0.66f, 0.0f,	//3
+		 0.5f, -0.5f,  -0.5f, 1.0f, 0.0f	//4
 	};
 	MyEngine::VertexBufferLayout layout;
 	layout.Push<float>(3);
+	layout.Push<float>(2);
 
 	std::vector<unsigned int> indices = {
 		0, 1, 2,
@@ -35,9 +38,11 @@ bool ModuleScene::Init()
 		1, 4, 2
 	};
 
-	App->renderer->CreateShader("default", "default.vs", "default.fs");
-	
-	gameObjects["Pyramid"]->AddComponent(new MeshRenderer(&triangle, &layout, &indices, App->renderer->GetShader("default")));
+	App->renderer->CreateShader("texture", "texture.vs", "texture.fs");
+	unsigned int textureID = App->texture->LoadTexture("Lenna.png");
+	App->renderer->GetShader("texture")->AddTexture2D(textureID);
+
+	gameObjects["Pyramid"]->AddComponent(new MeshRenderer(&triangle, &layout, &indices, App->renderer->GetShader("texture")));
 	gameObjects["Pyramid"]->SetPosition(0.0f, 4.0f, -10.0f);
 	gameObjects["Pyramid"]->SetRotation(0.0f, 0.0f, 0.0f);
 	

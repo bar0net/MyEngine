@@ -53,6 +53,18 @@ namespace MyEngine
 	void Shader::Bind() const
 	{
 		GLCall(glUseProgram(program));
+		for (unsigned int i = 0; i < textures.size(); i++)
+		{
+			//glActiveTexture(GL_TEXTURE0 + i);
+			//glBindTexture(GL_TEXTURE_2D, textures[i]);
+			//std::string location = std::string("texture") + std::to_string(i);
+			//glUniform1i(glGetUniformLocation(program, location.c_str()), i);
+
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, textures[i]);
+			glUniform1i(glGetUniformLocation(program, "texture0"), 0);
+
+		}
 	}
 
 
@@ -135,5 +147,15 @@ namespace MyEngine
 	{
 		this->Bind();
 		GLCall(glUniform4f(glGetUniformLocation(program, name), x, y, z, w));
+	}
+
+	void Shader::AddTexture2D(unsigned int textureID)
+	{
+		glActiveTexture(GL_TEXTURE0 + textures.size());
+		glBindTexture(GL_TEXTURE_2D, textureID);
+		std::string location = std::string("texture") + std::to_string(textures.size());
+		glUniform1i(glGetUniformLocation(program, location.c_str()), textures.size());
+		textures.push_back(textureID);
+
 	}
 }
