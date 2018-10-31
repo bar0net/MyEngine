@@ -3,7 +3,7 @@
 
 #include "LogSystem.h"
 
-class SDL_Window;
+struct SDL_Window;
 class SDL_Surface;
 
 namespace MyEngine {

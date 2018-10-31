@@ -3,9 +3,9 @@
 
 #include "Module.h"
 
-#include <unordered_set>;
+#include <unordered_set>
 
-class ModuleTexture
+class ModuleTexture : public Module
 {
 public:
 	ModuleTexture();

@@ -10,6 +10,7 @@ class ModuleInput;
 class ModuleEditor;
 class ModuleTime;
 class ModuleScene;
+class ModuleTexture;
 
 class Application
 {
@@ -26,6 +27,7 @@ public:
 	ModuleEditor* editor;
 	ModuleTime* time;
 	ModuleScene* scene;
+	ModuleTexture* texture;
 
 
 private:

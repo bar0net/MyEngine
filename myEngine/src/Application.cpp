@@ -5,10 +5,12 @@
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleTexture.h"
 
 Application::Application()
 {
 	modules.push_back(renderer = new ModuleRenderer());
+	modules.push_back(texture = new ModuleTexture());
 	modules.push_back(input = new ModuleInput());
 	modules.push_back(time = new ModuleTime());
 	modules.push_back(scene = new ModuleScene());
