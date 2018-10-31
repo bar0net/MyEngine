@@ -6,6 +6,8 @@
 #include "../../Utils/VertexArray.h"
 #include "../../Utils/VertexBufferLayout.h"
 #include "../GameObject.h"
+#include "../../Application.h"
+#include "../../Module/ModuleRenderer.h"
 
 float r;
 
@@ -39,15 +41,21 @@ void MeshRenderer::Update()
 	if (r > 360) r -= 360;
 	gameObject->SetRotation(0,r,0);
 
-	this->shader->Bind();
-	this->vao->Bind();
-	this->ibo->Bind();
+	//this->vao->Bind();
+	//this->ibo->Bind();
 	if (this->gameObject->transformChanged)
 	{
+		if (App->renderer->active_shader != shader->program) 
+		{
+			this->shader->Bind();
+			App->renderer->active_shader = shader->program;
+		}
 		this->shader->SetUniform4x4("model", this->gameObject->ModelMatrix());
 		this->gameObject->transformChanged = false;
 	}
-	this->ibo->Draw();
+	App->renderer->Draw(vao, ibo, shader);
+
+	//this->ibo->Draw();
 }
 
 void MeshRenderer::CleanUp()

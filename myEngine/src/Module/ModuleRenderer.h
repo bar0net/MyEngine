@@ -26,6 +26,7 @@ public:
 	UpdateState PostUpdate();
 	bool CleanUp();
 	void Draw(MyEngine::VertexArray* vao, MyEngine::IndexBuffer* ibo, MyEngine::Shader* shader);
+	void DrawLines(MyEngine::VertexArray* vao, MyEngine::IndexBuffer* ibo, MyEngine::Shader* shader);
 
 	void CreateShader(const char* name, const char* vShader_file, const char* fShader_file);
 	MyEngine::Shader* GetShader(const char* name);

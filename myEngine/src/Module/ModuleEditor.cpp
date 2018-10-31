@@ -99,11 +99,11 @@ UpdateState ModuleEditor::PreUpdate()
 {
 	if (show_grid)
 	{
-		shader_grid->Bind();
-		//vbo_grid->Bind();
-		vao_grid->Bind();
-		ibo_grid->Bind();
-		ibo_grid->DrawLines();
+		App->renderer->DrawLines(vao_grid, ibo_grid, shader_grid);
+		//shader_grid->Bind();
+		//vao_grid->Bind();
+		//ibo_grid->Bind();
+		//ibo_grid->DrawLines();
 	}
 
 	return UpdateState::Update_Continue;
