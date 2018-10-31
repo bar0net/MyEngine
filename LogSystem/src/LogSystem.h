@@ -9,6 +9,7 @@
 #define LOGWARNING(x, ...)	logger->Log(MyEngine::LogLevel::Warning, __FILE__, __LINE__, x, __VA_ARGS__)
 #define LOGERROR(x, ...)	logger->Log(MyEngine::LogLevel::Error, __FILE__, __LINE__, x, __VA_ARGS__)
 
+
 namespace MyEngine 
 {
 	enum class LogLevel 

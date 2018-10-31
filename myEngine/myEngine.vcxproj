@@ -91,11 +91,11 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)LogSystem\src;$(SolutionDir)Dependencies\SDL2-2.0.8\include;$(SolutionDir)Dependencies\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)LogSystem\src;$(SolutionDir)Dependencies\SDL2-2.0.8\include;$(SolutionDir)Dependencies\DevIL\include;$(SolutionDir)Dependencies\Assimp\include;$(SolutionDir)Dependencies\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\glew-2.1.0\lib\Release\Win32\;$(SolutionDir)Dependencies\SDL2-2.0.8\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib; opengl32.lib; sdl2.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$SolutionDir)\Dependencies\DevIL\lib\x86\Release;$(SolutionDir)\Dependencies\Assimp\lib\x86;$(SolutionDir)Dependencies\glew-2.1.0\lib\Release\Win32\;$(SolutionDir)Dependencies\SDL2-2.0.8\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp.lib;assimp-vc140-mt.lib;DevIL.lib;ILU.lib;ILUT.lib;glew32.lib;opengl32.lib;sdl2.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -107,8 +107,8 @@
       <AdditionalIncludeDirectories>$(SolutionDir)LogSystem\src;$(SolutionDir)Dependencies\SDL2-2.0.8\include;$(SolutionDir)Dependencies\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\glew-2.1.0\lib\Release\x64\;$(SolutionDir)Dependencies\SDL2-2.0.8\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib; opengl32.lib; sdl2.lib;sdl2.dll;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\DevIL\lib\x64\Release;$(SolutionDir)Dependencies\Assimp\lib\x64;$(SolutionDir)Dependencies\glew-2.1.0\lib\Release\x64\;$(SolutionDir)Dependencies\SDL2-2.0.8\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp.lib;assimp-vc140-mt.lib;DevIL.lib;ILU.lib;ILUT.lib;glew32.lib;opengl32.lib;sdl2.lib;sdl2.dll;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -152,6 +152,7 @@
     <ClCompile Include="src\GameObject\Components\MeshRenderer.cpp" />
     <ClCompile Include="src\GameObject\GameObject.cpp" />
     <ClCompile Include="src\Module\ModuleScene.cpp" />
+    <ClCompile Include="src\Module\ModuleTexture.cpp" />
     <ClCompile Include="src\Utils\MovingArray.cpp" />
     <ClCompile Include="src\Module\ModuleEditor.cpp" />
     <ClCompile Include="src\Module\ModuleInput.cpp" />
@@ -217,6 +218,7 @@
     <ClInclude Include="src\GameObject\Components\MeshRenderer.h" />
     <ClInclude Include="src\GameObject\GameObject.h" />
     <ClInclude Include="src\Module\ModuleScene.h" />
+    <ClInclude Include="src\Module\ModuleTexture.h" />
     <ClInclude Include="src\Utils\MovingArray.h" />
     <ClInclude Include="src\Module\ModuleEditor.h" />
     <ClInclude Include="src\Module\ModuleInput.h" />

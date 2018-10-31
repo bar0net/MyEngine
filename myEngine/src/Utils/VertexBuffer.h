@@ -14,8 +14,6 @@ namespace MyEngine
 		void Bind() const;
 		void UnBind() const;
 
-		//void Draw() const;
-
 		unsigned int vbo = 0;
 	};
 }
