@@ -2,6 +2,7 @@
 
 #include "GL/glew.h"
 #include "Render_Utils.h"
+#include "../Globals.h"
 
 namespace MyEngine {
 	IndexBuffer::IndexBuffer(const std::vector<unsigned int>* indices)
@@ -20,17 +21,22 @@ namespace MyEngine {
 
 	void IndexBuffer::Bind()
 	{
+		if (Globals::active_ibo == ibo) return;
+
 		GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
+		Globals::active_ibo = ibo;
 	}
 
 	void IndexBuffer::UnBind()
 	{
+		if (Globals::active_ibo == 0) return;
+
 		GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+		Globals::active_ibo = 0;
 	}
 
 	void IndexBuffer::Draw()
 	{
-		//GLCall(glDrawElements(GL_LINES, elements, GL_UNSIGNED_INT, NULL));
 		GLCall( glDrawElements(GL_TRIANGLES, elements, GL_UNSIGNED_INT, NULL) );
 	}
 

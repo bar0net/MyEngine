@@ -29,6 +29,11 @@ private:
 	void FrameStart();
 	void FrameEnd();
 
+	void PanelPerformance();
+	void PanelEditor();
+	void PanelCamera();
+	void PanelObjects();
+
 	ImGuiIO* io;
 	MovingArray* fps;
 	MovingArray* avg_ms_array;
@@ -41,6 +46,8 @@ private:
 	bool show_grid = true;
 	float grid_color[4] = { 1.0f,1.0f,1.0f,1.0f };
 };
+
+
 
 
 #endif // !_MODULE_EDITOR_H

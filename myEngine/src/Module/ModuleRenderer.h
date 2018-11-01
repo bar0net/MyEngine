@@ -42,9 +42,6 @@ public:
 	int width = 1280;
 	int height = 720;
 
-	int active_vao = -1;
-	int active_ibo = -1;
-	int active_shader = -1;
 	float clearColor[4] = { 0.3f, 0.3f, 0.3f, 1.0f };
 };
 

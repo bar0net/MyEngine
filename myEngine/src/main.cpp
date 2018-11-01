@@ -25,7 +25,7 @@ Application* App = nullptr;
 
 int main(int argc, const char* argv[])
 {
-	logger = new MyEngine::LogSystem(MyEngine::LogLevel::Debug);
+	logger = new MyEngine::LogSystem(MyEngine::LogLevel::None);
 
 	LOGINFO("Begin Application");
 	App = new Application();

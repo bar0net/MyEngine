@@ -18,6 +18,7 @@ bool ModuleScene::Init()
 {
 	gameObjects["Pyramid"] = new GameObject("Triangle");
 
+	/* ==== PYRAMID ==== */
 	std::vector<float> triangle = {
 		 0.0f,  1.0f,  0.0f, 0.5f, 1.0f,	//0
 		-0.5f, -0.5f,  0.5f, 0.0f, 0.0f,	//1
@@ -25,9 +26,6 @@ bool ModuleScene::Init()
 		-0.5f, -0.5f,  -0.5f, 0.66f, 0.0f,	//3
 		 0.5f, -0.5f,  -0.5f, 1.0f, 0.0f	//4
 	};
-	MyEngine::VertexBufferLayout layout;
-	layout.Push<float>(3);
-	layout.Push<float>(2);
 
 	std::vector<unsigned int> indices = {
 		0, 1, 2,
@@ -38,11 +36,31 @@ bool ModuleScene::Init()
 		1, 4, 2
 	};
 
-	App->renderer->CreateShader("texture", "texture.vs", "texture.fs");
-	unsigned int textureID = App->texture->LoadTexture("Lenna.png");
-	App->renderer->GetShader("texture")->AddTexture2D(textureID);
 
-	gameObjects["Pyramid"]->AddComponent(new MeshRenderer(&triangle, &layout, &indices, App->renderer->GetShader("texture")));
+	/* ==== QUAD ====
+	std::vector<float> triangle = {
+		-0.5f,   0.5f,  0.0f, 0.0f, 1.0f,	//0
+		 0.5f,   0.5f,  0.0f, 1.0f, 1.0f,	//1
+		-0.5f,  -0.5f,  0.0f, 0.0f, 0.0f,	//2
+		 0.5f,  -0.5f,  0.0f, 1.0f, 0.0f,	//3
+	};
+
+	std::vector<unsigned int> indices = {
+		1, 0, 2,
+		1, 2, 3
+	};*/
+
+	MyEngine::VertexBufferLayout layout;
+	layout.Push<float>(3);
+	layout.Push<float>(2);
+
+	App->renderer->CreateShader("texture", "texture.vs", "texture.fs");
+	MyEngine::Shader* shader = App->renderer->GetShader("texture");
+	unsigned int textureID = App->texture->LoadTexture("Lenna.png");
+	shader->Bind();
+	shader->AddTexture2D(textureID);
+
+	gameObjects["Pyramid"]->AddComponent(new MeshRenderer(&triangle, &layout, &indices, shader));
 	gameObjects["Pyramid"]->SetPosition(0.0f, 4.0f, -10.0f);
 	gameObjects["Pyramid"]->SetRotation(0.0f, 0.0f, 0.0f);
 	

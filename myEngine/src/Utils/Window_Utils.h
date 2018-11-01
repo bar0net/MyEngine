@@ -22,6 +22,7 @@ namespace MyEngine {
 		static void DestroyWindow(WindowData* data);
 		static void SwapWindow(const WindowData* data);
 		static void WindowSize(const WindowData* data, int* width, int* height);
+		static int WindowID(const WindowData* data);
 	};
 }
 

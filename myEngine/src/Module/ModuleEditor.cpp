@@ -17,6 +17,7 @@
 #include "ModuleRenderer.h"
 #include "ModuleTime.h"
 #include "ModuleScene.h"
+#include "ModuleTexture.h"
 #include "../GameObject/GameObject.h"
 #include "../GameObject/Components/Camera.h"
 #include "../_Vendor/MathGeoLib/Math/float3.h"
@@ -34,7 +35,6 @@ bool ModuleEditor::Init()
 	io = &ImGui::GetIO(); (void)io;
 	io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
 	io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-	io->ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
 	
 	ImGui_ImplSDL2_InitForOpenGL(App->renderer->data->window, App->renderer->data->context);
 	ImGui_ImplOpenGL3_Init(GLSL_VERSION);
@@ -58,14 +58,21 @@ bool ModuleEditor::Init()
 	MyEngine::VertexBufferLayout vbl;
 	vbl.Push<float>(3);
 
-	vbo_grid = new MyEngine::VertexBuffer(&grid);
-	ibo_grid = new MyEngine::IndexBuffer(&grid_index);
-	
-	vao_grid = new MyEngine::VertexArray();
-	vao_grid->AddBuffer(*vbo_grid, vbl);
 	App->renderer->CreateShader("grid", "default.vs", "default.fs");
 	shader_grid = App->renderer->GetShader("grid");
+	shader_grid->Bind();
 	shader_grid->SetUniform4("albedo", grid_color[0], grid_color[1], grid_color[2], grid_color[3]);
+
+	vbo_grid = new MyEngine::VertexBuffer(&grid);
+	vbo_grid->Bind();
+
+	vao_grid = new MyEngine::VertexArray();
+	vao_grid->Bind();
+	vao_grid->AddBuffer(*vbo_grid, vbl);
+
+	ibo_grid = new MyEngine::IndexBuffer(&grid_index);
+	ibo_grid->Bind();
+	
 
 	return true;
 }
@@ -100,10 +107,6 @@ UpdateState ModuleEditor::PreUpdate()
 	if (show_grid)
 	{
 		App->renderer->DrawLines(vao_grid, ibo_grid, shader_grid);
-		//shader_grid->Bind();
-		//vao_grid->Bind();
-		//ibo_grid->Bind();
-		//ibo_grid->DrawLines();
 	}
 
 	return UpdateState::Update_Continue;
@@ -111,79 +114,16 @@ UpdateState ModuleEditor::PreUpdate()
 
 UpdateState ModuleEditor::Update()
 {
+	ImGui::SetNextWindowPosCenter(ImGuiCond(1));
 	FrameStart();
-
 	{
-		fps->push((unsigned int)App->time->FPS());
-		avg_ms -= (*avg_ms_array)[0];
-		avg_ms_array->push(App->time->DeltaTimeMS());
-		avg_ms += App->time->DeltaTimeMS();
-
 		ImGui::Begin("Menu",NULL);
-		if (ImGui::CollapsingHeader("Performance"))
-		{
-			ImGui::Text("Frames per second");
-			ImGui::PlotHistogram("", MovingArray::Get, fps, fps->size, 0, "", 0, 120, ImVec2(0, 50));
-			ImGui::Text("Average ms/frame: %ims - FPS: %i", avg_ms / (avg_ms_array->size), (int)(1000.0f * avg_ms_array->size / avg_ms));
-		}
+		PanelPerformance();
+		PanelEditor();
+		PanelCamera();		
+		PanelObjects();
 
-		if (ImGui::CollapsingHeader("Editor"))
-		{
-			// Background Color
-			ImVec4 bgcolor( App->renderer->clearColor[0], App->renderer->clearColor[1], App->renderer->clearColor[2], App->renderer->clearColor[3] );
-			bool open_bgcolor = ImGui::ColorButton("BGButton", bgcolor);
-			ImGui::SameLine(); ImGui::Text("Background Color");
-			if (open_bgcolor) ImGui::OpenPopup("BackgroundPicker");
-			if (ImGui::BeginPopup("BackgroundPicker"))
-			{
-				if (ImGui::ColorPicker4("Background Color", App->renderer->clearColor)) App->renderer->UpdateClearColor();
-				ImGui::EndPopup();
-			}
 
-			// Grid Color
-			bool open_gridcolor = ImGui::ColorButton("GridColorButton", *(ImVec4*)&grid_color);
-			ImGui::SameLine(); ImGui::Text("Grid Color");
-			if (open_gridcolor) ImGui::OpenPopup("GridColorPicker");
-			if (ImGui::BeginPopup("GridColorPicker"))
-			{
-				if (ImGui::ColorPicker4("Grid Color", grid_color)) 
-					shader_grid->SetUniform4("albedo", grid_color[0], grid_color[1], grid_color[2], grid_color[3]);
-				ImGui::EndPopup();
-			}
-
-			ImGui::Checkbox("Show Grid", &show_grid);
-			ImGui::Separator();
-		}
-
-		if (ImGui::CollapsingHeader("Camera"))
-		{
-			GameObject* go = App->scene->gameObjects["Camera"];
-			if (go != nullptr)
-			{
-				Camera* c = (Camera*)go->components["Camera"];
-				if (c != nullptr)
-				{
-					float pos[3] = { go->position.x, go->position.y, go->position.z };
-					ImGui::InputFloat3("Position", pos, 2);
-					if (pos[0] != go->position.x || pos[1] != go->position.y || pos[2] != go->position.z)
-						go->SetPosition(pos[0], pos[1], pos[2]);
-
-					float rot[3] = { go->rotation.x, go->rotation.y, go->rotation.z };
-					ImGui::InputFloat3("Rotation", rot, 2);
-					if (pos[0] != go->rotation.x || pos[1] != go->rotation.y || pos[2] != go->rotation.z)
-						go->SetRotation(rot[0], rot[1], rot[2]);
-
-					float fov = c->fov;
-					ImGui::SliderFloat("FOV", &fov, 60, 120);
-					if (fov != c->fov)
-					{
-						c->fov = fov;
-						c->UpdateFrustum();
-					}
-				}
-			}
-			ImGui::Text("Width: %ipx - Height: %ipx", App->renderer->width, App->renderer->height);
-		}
 		ImGui::End();
 	}
 
@@ -213,4 +153,103 @@ void ModuleEditor::FrameEnd()
 void ModuleEditor::ProcessEvent(void* event)
 {
 	ImGui_ImplSDL2_ProcessEvent((SDL_Event*)event);
+}
+
+void ModuleEditor::PanelPerformance()
+{
+	fps->push((unsigned int)App->time->FPS());
+	avg_ms -= (*avg_ms_array)[0];
+	avg_ms_array->push(App->time->DeltaTimeMS());
+	avg_ms += App->time->DeltaTimeMS();
+
+	if (ImGui::CollapsingHeader("Performance"))
+	{
+		ImGui::Text("Frames per second");
+		ImGui::PlotHistogram("", MovingArray::Get, fps, fps->size, 0, "", 0, 120, ImVec2(0, 50));
+		ImGui::Text("Average ms/frame: %ims - FPS: %i", avg_ms / (avg_ms_array->size), (int)(1000.0f * avg_ms_array->size / avg_ms));
+	}
+}
+
+void ModuleEditor::PanelEditor()
+{
+	if (ImGui::CollapsingHeader("Editor"))
+	{
+		// Background Color
+		ImVec4 bgcolor(App->renderer->clearColor[0], App->renderer->clearColor[1], App->renderer->clearColor[2], App->renderer->clearColor[3]);
+		bool open_bgcolor = ImGui::ColorButton("BGButton", bgcolor);
+		ImGui::SameLine(); ImGui::Text("Background Color");
+		if (open_bgcolor) ImGui::OpenPopup("BackgroundPicker");
+		if (ImGui::BeginPopup("BackgroundPicker"))
+		{
+			if (ImGui::ColorPicker4("Background Color", App->renderer->clearColor)) App->renderer->UpdateClearColor();
+			ImGui::EndPopup();
+		}
+
+		// Grid Color
+		bool open_gridcolor = ImGui::ColorButton("GridColorButton", *(ImVec4*)&grid_color);
+		ImGui::SameLine(); ImGui::Text("Grid Color");
+		if (open_gridcolor) ImGui::OpenPopup("GridColorPicker");
+		if (ImGui::BeginPopup("GridColorPicker"))
+		{
+			if (ImGui::ColorPicker4("Grid Color", grid_color))
+				shader_grid->SetUniform4("albedo", grid_color[0], grid_color[1], grid_color[2], grid_color[3]);
+			ImGui::EndPopup();
+		}
+
+		ImGui::Checkbox("Show Grid", &show_grid);
+		ImGui::Separator();
+	}
+}
+
+void ModuleEditor::PanelCamera()
+{
+	if (ImGui::CollapsingHeader("Camera"))
+	{
+		GameObject* go = App->scene->gameObjects["Camera"];
+		if (go != nullptr)
+		{
+			Camera* c = (Camera*)go->components["Camera"];
+			if (c != nullptr)
+			{
+				float pos[3] = { go->position.x, go->position.y, go->position.z };
+				ImGui::InputFloat3("Position", pos, 2);
+				if (pos[0] != go->position.x || pos[1] != go->position.y || pos[2] != go->position.z)
+					go->SetPosition(pos[0], pos[1], pos[2]);
+
+				float rot[3] = { go->rotation.x, go->rotation.y, go->rotation.z };
+				ImGui::InputFloat3("Rotation", rot, 2);
+				if (pos[0] != go->rotation.x || pos[1] != go->rotation.y || pos[2] != go->rotation.z)
+					go->SetRotation(rot[0], rot[1], rot[2]);
+
+				float fov = c->fov;
+				ImGui::SliderFloat("FOV", &fov, 60, 120);
+				if (fov != c->fov)
+				{
+					c->fov = fov;
+					c->UpdateFrustum();
+				}
+			}
+		}
+		ImGui::Text("Width: %ipx - Height: %ipx", App->renderer->width, App->renderer->height);
+	}
+}
+
+void ModuleEditor::PanelObjects()
+{
+	if (App->scene->gameObjects.size() == 0) return;
+
+	if (ImGui::CollapsingHeader("Objects"))
+	{
+		for (std::unordered_map<const char*, GameObject*>::iterator it = App->scene->gameObjects.begin(); it != App->scene->gameObjects.end(); ++it)
+		{
+			if (ImGui::CollapsingHeader(it->first));
+		}
+	}
+
+
+	if (ImGui::CollapsingHeader("Textures"))
+	{
+		for (unsigned int i : App->texture->textures)
+			ImGui::Image((ImTextureID)i, ImVec2(200, 200));
+	}
 }

@@ -1,9 +1,10 @@
 #include "ModuleTexture.h"
 
 #include "GL/glew.h"
-
 #include "IL/il.h"
 #include "IL/ilut.h"
+
+#include "../Utils/Render_Utils.h"
 
 ModuleTexture::ModuleTexture()
 {
@@ -42,76 +43,50 @@ bool ModuleTexture::CleanUp()
 unsigned int ModuleTexture::LoadTexture(const char* filename)
 {
 	ILuint imageID;
-	GLuint textureID;
-	ILboolean success;
-	ILenum error;
 	ilGenImages(1, &imageID);
 	ilBindImage(imageID);
-	success = ilLoadImage(filename);
 
-	if (success)
+	ILboolean success;
+	ILenum error;
+
+	if (ilLoadImage(filename))
 	{
+		GLuint textureID;
+		GLCall(glGenTextures(1, &textureID));
+		GLCall(glBindTexture(GL_TEXTURE_2D, textureID));
+
 		ILinfo ImageInfo;
 		iluGetImageInfo(&ImageInfo);
-		if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
-		{
-			iluFlipImage();
-		}
+		if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT) iluFlipImage();
 
 		int channels = ilGetInteger(IL_IMAGE_CHANNELS);
-		if (channels == 3)
-		{
-			success = ilConvertImage(IL_RGB, IL_UNSIGNED_BYTE);
-		}
-		else if (channels == 4)
-		{
-			success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
-		}
+		if (channels == 3) success = ilConvertImage(IL_RGB, IL_UNSIGNED_BYTE);
+		else if (channels == 4)	success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
 
-		if (!success)
-		{
-			error = ilGetError();
-			LOGERROR("Image conversion failed - IL reports error: %s - %s", error, iluErrorString(error));
-			exit(-1);
-		}
+		ILubyte* data = ilGetData();
+		int width = ilGetInteger(IL_IMAGE_WIDTH);
+		int height = ilGetInteger(IL_IMAGE_HEIGHT);
 
-		// Generate a new texture
-		glGenTextures(1, &textureID);
-		if (textures.find(textureID) != textures.end()) 
-		{
-			LOGERROR("Trying to create texture %i but it is already registered.", textureID);
-			__debugbreak();
-		}
-
-		// Bind the texture to a name
-		glBindTexture(GL_TEXTURE_2D, textureID);
+		GLCall(glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_FORMAT), width, height, 0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, data));
 
 		// Set texture clamping method
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+		//GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
+		//GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
 
 		// Texture Interpolation
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
 
-		glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_FORMAT),
-			ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT), 0,
-			ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, ilGetData());
-	}
-	else
-	{
-		error = ilGetError();
-		LOGERROR("Image load failed - IL reports error: %s - %s", error, iluErrorString(error));
-		exit(-1);
+		ilDeleteImages(1, &imageID);
+		textures.insert(textureID);
+		GLCall(glBindTexture(GL_TEXTURE_2D, 0));
+		LOGINFO("Texture loading successful.");
+		return textureID;
 	}
 
-	ilDeleteImages(1, &imageID);
-
-	LOGINFO("Texture creation successful.");
-
-	textures.insert(textureID);
-
-	return textureID;
+	error = ilGetError();
+	LOGERROR("Image load failed - IL reports error: %s - %s", error, iluErrorString(error));
+	return 0;
 }
 
 void ModuleTexture::UnLoadTexture(const unsigned int id)

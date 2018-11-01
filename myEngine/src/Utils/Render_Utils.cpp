@@ -31,7 +31,54 @@ namespace MyEngine {
 
 	void RenderUtils::GLClearErrors()
 	{
-		while (glGetError() != GL_NO_ERROR);
+		GLenum error = glGetError();
+		while (error != GL_NO_ERROR)
+		{
+			std::string s = "";
+			switch (glGetError())
+			{
+			case GL_INVALID_ENUM:
+				s.append("Invalid Enum.");
+				break;
+
+			case GL_INVALID_VALUE:
+				s.append("Invalid Value.");
+				break;
+
+			case GL_INVALID_OPERATION:
+				s.append("Invalid Operation.");
+				break;
+
+			case GL_STACK_OVERFLOW:
+				s.append("Stack Overflow.");
+				break;
+
+			case GL_STACK_UNDERFLOW:
+				s.append("Stack Underflow.");
+				break;
+
+			case GL_OUT_OF_MEMORY:
+				s.append("Out of memory.");
+				break;
+
+			case GL_INVALID_FRAMEBUFFER_OPERATION:
+				s.append("Invalid frame buffer operation.");
+				break;
+
+			case GL_CONTEXT_LOST:
+				s.append("Context lost.");
+				break;
+
+			case GL_TABLE_TOO_LARGE:
+				s.append("Table too large.");
+				break;
+
+			default:
+				s += std::to_string((int)error);
+				break;
+			}
+			LOGERROR("%s",s);
+		}
 	}
 
 	bool RenderUtils::GLLogCall(const char * function, const char * file, int line)

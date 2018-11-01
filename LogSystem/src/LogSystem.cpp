@@ -21,7 +21,7 @@ void  MyEngine::LogSystem::Print()
 void MyEngine::LogSystem::Log(LogLevel level, const char* file, int line, const char* message...)
 {
 	if (level < this->level) return;
-	std::string s;
+	std::string s = "";
 
 	switch (level)
 	{

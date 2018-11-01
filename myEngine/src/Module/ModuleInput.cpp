@@ -4,6 +4,7 @@
 #include "../Application.h"
 #include "ModuleEditor.h"
 #include "ModuleRenderer.h"
+#include "../Utils/Window_Utils.h"
 
 #define MAX_KEYS 300
 
@@ -58,7 +59,7 @@ UpdateState ModuleInput::PreUpdate()
 		if (event.type == SDL_QUIT)
 			return UpdateState::Update_End;
 		
-		if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+		if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED && (int)event.window.windowID == MyEngine::WindowUtils::WindowID(App->renderer->data))
 				App->renderer->ResizedWindow();		
 	}
 

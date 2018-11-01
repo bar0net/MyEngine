@@ -9,6 +9,8 @@
 #include "../../Application.h"
 #include "../../Module/ModuleRenderer.h"
 
+#include "GL/glew.h"
+
 float r;
 
 MeshRenderer::MeshRenderer(const std::vector<float>* vertices, const MyEngine::VertexBufferLayout* layout, const std::vector<unsigned int>* indices, MyEngine::Shader* shader) : Component("MeshRenderer")
@@ -37,25 +39,19 @@ MeshRenderer::~MeshRenderer()
 
 void MeshRenderer::Update()
 {
+
 	r = r + 1.f;
 	if (r > 360) r -= 360;
 	gameObject->SetRotation(0,r,0);
 
-	//this->vao->Bind();
-	//this->ibo->Bind();
+
 	if (this->gameObject->transformChanged)
 	{
-		if (App->renderer->active_shader != shader->program) 
-		{
-			this->shader->Bind();
-			App->renderer->active_shader = shader->program;
-		}
+		this->shader->Bind();
 		this->shader->SetUniform4x4("model", this->gameObject->ModelMatrix());
 		this->gameObject->transformChanged = false;
 	}
 	App->renderer->Draw(vao, ibo, shader);
-
-	//this->ibo->Draw();
 }
 
 void MeshRenderer::CleanUp()

@@ -212,6 +212,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Globals.h" />
     <ClInclude Include="src\GameObject\Component.h" />
     <ClInclude Include="src\GameObject\Components\Camera.h" />
     <ClInclude Include="src\GameObject\Components\CameraControl.h" />

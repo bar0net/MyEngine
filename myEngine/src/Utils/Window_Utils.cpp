@@ -52,4 +52,9 @@ namespace MyEngine {
 		SDL_GetWindowSize(data->window, width, height);
 	}
 
+	int WindowUtils::WindowID(const WindowData * data)
+	{
+		return SDL_GetWindowID(data->window);
+	}
+
 }

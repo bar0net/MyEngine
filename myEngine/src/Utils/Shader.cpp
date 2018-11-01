@@ -4,6 +4,7 @@
 
 #include "GL/glew.h"
 #include "Render_Utils.h"
+#include "../Globals.h"
 
 #include "../_Vendor/MathGeoLib/Math/float4x4.h"
 #include "../_Vendor/MathGeoLib/Math/float4.h"
@@ -52,25 +53,30 @@ namespace MyEngine
 
 	void Shader::Bind() const
 	{
+		if (Globals::active_shader == program) return;
+
 		GLCall(glUseProgram(program));
 		for (unsigned int i = 0; i < textures.size(); i++)
 		{
-			//glActiveTexture(GL_TEXTURE0 + i);
-			//glBindTexture(GL_TEXTURE_2D, textures[i]);
-			//std::string location = std::string("texture") + std::to_string(i);
-			//glUniform1i(glGetUniformLocation(program, location.c_str()), i);
+			GLCall(glActiveTexture(GL_TEXTURE0 + i));
 
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, textures[i]);
-			glUniform1i(glGetUniformLocation(program, "texture0"), 0);
+			GLCall(glBindTexture(GL_TEXTURE_2D, textures[i]));
 
+			std::string location = std::string("texture") + std::to_string(i);
+
+			GLCall(glUniform1i(glGetUniformLocation(program, location.c_str()), i));
 		}
+
+		Globals::active_shader = program;
 	}
 
 
 	void Shader::UnBind() const
 	{
+		if (Globals::active_shader == 0) return;
+
 		GLCall(glUseProgram(0));
+		Globals::active_shader = 0;
 	}
 
 
@@ -151,11 +157,18 @@ namespace MyEngine
 
 	void Shader::AddTexture2D(unsigned int textureID)
 	{
-		glActiveTexture(GL_TEXTURE0 + textures.size());
-		glBindTexture(GL_TEXTURE_2D, textureID);
-		std::string location = std::string("texture") + std::to_string(textures.size());
-		glUniform1i(glGetUniformLocation(program, location.c_str()), textures.size());
-		textures.push_back(textureID);
+		this->Bind();
 
+		GLCall(glActiveTexture(GL_TEXTURE0 + textures.size()));
+		GLCall(glBindTexture(GL_TEXTURE_2D, textureID));
+		
+		std::string uniformName = std::string("texture") + std::to_string(textures.size());
+		GLCall(int location = glGetUniformLocation(program, uniformName.c_str()));
+
+		if (location == -1)
+			LOGWARNING("Cannot find Uniform %s in this shader.", uniformName);
+
+		GLCall(glUniform1i(location, textures.size()));
+		textures.push_back(textureID);
 	}
 }
