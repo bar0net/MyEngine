@@ -31,6 +31,13 @@
 #define GRID_LENGTH 100
 #define GIZMO_LENGTH 0.5F
 
+#define DISABLED_COLOR ImVec4(0.6F, 0.6F, 0.6F, 1.0F)
+#define NONE_COLOR ImVec4(0.0F, 1.0F, 0.0F, 1.0F)
+#define DEBUG_COLOR ImVec4(0.0F, 1.0F, 1.0F, 1.0F)
+#define INFO_COLOR ImVec4(1.0F, 1.0F, 1.0F, 1.0F)
+#define WARNING_COLOR ImVec4(1.0F, 1.0F, 0.0F, 1.0F)
+#define ERROR_COLOR ImVec4(1.0F, 0.0F, 0.0F, 1.0F)
+
 bool ModuleEditor::Init()
 {
 	LOGINFO("Initializing Editor.");
@@ -124,6 +131,12 @@ bool ModuleEditor::Start()
 	math::float4x4 I = math::float4x4::identity;
 	shader_grid->SetUniform4x4("model", I);
 
+	LOG("___ EDITOR: TESTING NONE LOG LEVELS ____");
+	LOGINFO("___ EDITOR: TESTING INFO LOG LEVELS ____");
+	LOGDEBUG("___ EDITOR: TESTING DEBUG LOG LEVEL ____");
+	LOGWARNING("___ EDITOR: TESTING WARNING LOG LEVEL ____");
+	LOGERROR("___ EDITOR: TESTING ERROR LOG LEVEL ____");
+
 	return true;
 }
 
@@ -171,6 +184,7 @@ UpdateState ModuleEditor::Update()
 		if (ImGui::BeginMenu("Windows"))
 		{
 			ImGui::MenuItem("Configuration", NULL, &config_window);
+			ImGui::MenuItem("Console", NULL, &console_window);
 			ImGui::MenuItem("Debug Tools", NULL, &debug_window);
 			ImGui::MenuItem("Inspector", NULL, &inspect_window);
 			ImGui::EndMenu();
@@ -187,7 +201,7 @@ UpdateState ModuleEditor::Update()
 
 	if(config_window) 
 	{
-		ImGui::Begin("Configuration");
+		ImGui::Begin("Configuration", &config_window);
 		if (ImGui::CollapsingHeader("Editor")) PanelEditor();
 		ImGui::End();
 	}
@@ -203,6 +217,13 @@ UpdateState ModuleEditor::Update()
 	{
 		ImGui::Begin("Inspector", &inspect_window);
 		PanelObjects();
+		ImGui::End();
+	}
+
+	if (console_window)
+	{
+		ImGui::Begin("Console", &console_window);
+		PanelConsole();
 		ImGui::End();
 	}
 
@@ -338,6 +359,56 @@ void ModuleEditor::PanelObjects()
 		}
 	}
 
+}
+
+void ModuleEditor::PanelConsole()
+{
+	if (show_info) ImGui::PushStyleColor(ImGuiCol_Text, INFO_COLOR);
+	else ImGui::PushStyleColor(ImGuiCol_Text, DISABLED_COLOR);
+	if (ImGui::Button("Info")) show_info = !show_info; 
+	ImGui::PopStyleColor();
+	ImGui::SameLine();
+
+	if (show_debug) ImGui::PushStyleColor(ImGuiCol_Text, DEBUG_COLOR);
+	else ImGui::PushStyleColor(ImGuiCol_Text, DISABLED_COLOR);
+	if (ImGui::Button("Debug")) show_debug = !show_debug;
+	ImGui::PopStyleColor();
+	ImGui::SameLine();
+
+	if (show_warning) ImGui::PushStyleColor(ImGuiCol_Text, WARNING_COLOR);
+	else ImGui::PushStyleColor(ImGuiCol_Text, DISABLED_COLOR);
+	if (ImGui::Button("Warning")) show_warning = !show_warning;
+	ImGui::PopStyleColor();
+	ImGui::SameLine();
+
+	if (show_error) ImGui::PushStyleColor(ImGuiCol_Text, ERROR_COLOR);
+	else ImGui::PushStyleColor(ImGuiCol_Text, DISABLED_COLOR);
+	if (ImGui::Button("Error")) show_error = !show_error;
+	ImGui::PopStyleColor();
+
+	ImGui::BeginChild("Scrolling");
+	for (std::list<MyEngine::LogData>::iterator it = logger->history.begin(); it != logger->history.end(); ++it)
+	{
+		switch(it->type)
+		{
+		case MyEngine::LogLevel::Info:
+			if(show_info) ImGui::TextColored(INFO_COLOR, it->message.c_str());
+			break;
+		case MyEngine::LogLevel::Debug:
+			if(show_debug) ImGui::TextColored(DEBUG_COLOR, it->message.c_str());
+			break;
+		case MyEngine::LogLevel::Warning:
+			if(show_warning) ImGui::TextColored(WARNING_COLOR, it->message.c_str());
+			break;
+		case MyEngine::LogLevel::Error:
+			if (show_error) ImGui::TextColored(ERROR_COLOR, it->message.c_str());
+			break;
+		default:
+			if (show_info) ImGui::TextColored(NONE_COLOR, it->message.c_str());
+			break;
+		}
+	}
+	ImGui::EndChild();
 }
 
 void ModuleEditor::PanelCamera(Camera* component) const

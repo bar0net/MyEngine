@@ -1,7 +1,7 @@
 #ifndef _MYENGINE_LOGSYSTEM_
 #define _MYENGINE_LOGSYSTEM_
 
-#include <queue>
+#include <list>
 
 #define LOG(x)				logger->Log(x)
 #define LOGINFO(x, ...)		logger->Log(MyEngine::LogLevel::Info, __FILE__, __LINE__, x, __VA_ARGS__)
@@ -37,11 +37,12 @@ namespace MyEngine
 		void Log(LogLevel level, const char* file, int line, const char* message...);
 		void Log(const char* message);
 		void Log(std::string message);
-		void Print();
 
 	private:
 		LogLevel level = LogLevel::Debug;
-		std::queue<LogData> history;
+
+	public:
+		std::list<LogData> history;
 
 	};
 

@@ -1,21 +1,21 @@
 #include "LogSystem.h"
 
 #include <string>
-#include <iostream>
 #include <stdarg.h>
+
+#define _USE_CONSOLE_ 0
+
+#if (_USE_CONSOLE_ == 1)
+	#include <iostream>
+	#define PRINT(x) std::cout << x << std::endl;
+#else
+	#define PRINT(x)
+#endif
+
 
 MyEngine::LogSystem::~LogSystem()
 {
-	while (!history.empty()) history.pop();
-}
-
-void  MyEngine::LogSystem::Print()
-{
-	while (!history.empty())
-	{
-		std::cout << history.front().message << std::endl;
-		history.pop();
-	}
+	while (!history.empty()) history.pop_back();
 }
 
 void MyEngine::LogSystem::Log(LogLevel level, const char* file, int line, const char* message...)
@@ -36,6 +36,10 @@ void MyEngine::LogSystem::Log(LogLevel level, const char* file, int line, const 
 		break;
 	case LogLevel::Error:
 		s = "[Error] <";
+		break;
+
+	default:
+		s = "[None] <";
 		break;
 	}
 	s.append(file); s.append(":"); s += std::to_string(line); s.append("> ");
@@ -66,23 +70,22 @@ void MyEngine::LogSystem::Log(LogLevel level, const char* file, int line, const 
 		}
 	}
 	
-	std::cout << s << std::endl;
+	PRINT(s);
 
 	LogData data = { level, s };
-	history.push(data);
+	history.push_back(data);
 }
 
 void MyEngine::LogSystem::Log(const char * message)
 {
 	std::string s(message);
-
-	std::cout << message << std::endl;
-	history.push({ LogLevel::None, s });
+	PRINT(s);
+	history.push_back({ LogLevel::None, s });
 }
 
 
 void MyEngine::LogSystem::Log(std::string message)
 {
-	std::cout << message << std::endl;
-	history.push({ LogLevel::None, message });
+	PRINT(message);
+	history.push_back({ LogLevel::None, message });
 }

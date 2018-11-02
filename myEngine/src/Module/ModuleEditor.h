@@ -36,6 +36,7 @@ private:
 	void PanelPerformance() const;
 	void PanelEditor();
 	void PanelObjects();
+	void PanelConsole();
 
 	void PanelCamera(Camera* component) const;
 	void PanelCameraControl(CameraControl* component) const;
@@ -60,7 +61,13 @@ private:
 	bool debug_window = true;
 	bool config_window = true;
 	bool inspect_window = true;
+	bool console_window = true;
 	GameObject* inspect_object = nullptr;
+
+	bool show_info = true;
+	bool show_debug = true;
+	bool show_warning = true;
+	bool show_error = true;
 };
 
 
