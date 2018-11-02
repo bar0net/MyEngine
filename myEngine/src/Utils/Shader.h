@@ -25,8 +25,8 @@ namespace MyEngine
 		void Bind() const;
 		void UnBind() const;
 
-		void SetUniform4x4(const char* name, math::float4x4* entry) const;
-		void SetUniform4(const char* name, math::float4* entry) const;
+		void SetUniform4x4(const char* name, math::float4x4& entry) const;
+		void SetUniform4(const char* name, math::float4& entry) const;
 		void SetUniform4(const char* name, float x, float y, float z, float w) const;
 
 		void AddTexture2D(unsigned int textureID);

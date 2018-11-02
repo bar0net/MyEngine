@@ -54,8 +54,7 @@ bool ModuleScene::Init()
 	layout.Push<float>(3);
 	layout.Push<float>(2);
 
-	App->renderer->CreateShader("texture", "texture.vs", "texture.fs");
-	MyEngine::Shader* texture_shader = App->renderer->GetShader("texture");
+	MyEngine::Shader* texture_shader = App->renderer->CreateShader("texture", "texture.vs", "texture.fs");
 	unsigned int textureID = App->texture->LoadTexture("Lenna.png");
 	texture_shader->Bind();
 	texture_shader->AddTexture2D(textureID);

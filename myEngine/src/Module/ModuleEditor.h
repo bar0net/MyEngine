@@ -45,6 +45,11 @@ private:
 	MovingArray* avg_ms_array = nullptr;
 	unsigned int avg_ms = 0;
 
+	MyEngine::VertexArray* vao_gizmo = nullptr;
+	MyEngine::IndexBuffer* ibo_gizmo = nullptr;
+	MyEngine::VertexBuffer* vbo_gizmo = nullptr;
+	MyEngine::Shader* shader_gizmo = nullptr;
+
 	MyEngine::VertexArray* vao_grid = nullptr;
 	MyEngine::IndexBuffer* ibo_grid = nullptr;
 	MyEngine::VertexBuffer* vbo_grid = nullptr;

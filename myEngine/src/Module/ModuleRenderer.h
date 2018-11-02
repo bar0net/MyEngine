@@ -28,7 +28,7 @@ public:
 	void Draw(const MyEngine::VertexArray* vao, const MyEngine::IndexBuffer* ibo, const MyEngine::Shader* shader) const;
 	void DrawLines(const MyEngine::VertexArray* vao, const MyEngine::IndexBuffer* ibo, const MyEngine::Shader* shader, float line_width = 1.0f) const;
 
-	void CreateShader(const char* name, const char* vShader_file, const char* fShader_file);
+	MyEngine::Shader* CreateShader(const char* name, const char* vShader_file, const char* fShader_file);
 	MyEngine::Shader* GetShader(const char* name);
 	void EmptyShaders();
 	void ResizedWindow();

@@ -23,7 +23,7 @@ MeshRenderer::MeshRenderer(const std::vector<float>* vertices, const MyEngine::V
 
 	this->ibo = new MyEngine::IndexBuffer(indices);
 	math::float4x4 I = math::float4x4::identity;
-	this->shader->SetUniform4x4("model", &I); 
+	this->shader->SetUniform4x4("model", I); 
 	
 	this->shader->SetUniform4("albedo", 0.2F, 0.8F, 0.2F, 1.0F);
 
@@ -49,7 +49,7 @@ void MeshRenderer::Update()
 	if (this->gameObject->transformChanged)
 	{
 		this->shader->Bind();
-		this->shader->SetUniform4x4("model", this->gameObject->ModelMatrix());
+		this->shader->SetUniform4x4("model", *gameObject->ModelMatrix());
 		this->gameObject->transformChanged = false;
 	}
 	App->renderer->Draw(vao, ibo, shader);

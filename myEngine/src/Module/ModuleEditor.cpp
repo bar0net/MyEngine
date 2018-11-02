@@ -29,6 +29,7 @@
 
 #define GLSL_VERSION "#version 130"
 #define GRID_LENGTH 100
+#define GIZMO_LENGTH 0.5F
 
 bool ModuleEditor::Init()
 {
@@ -45,7 +46,8 @@ bool ModuleEditor::Init()
 	ImGui_ImplSDL2_InitForOpenGL(App->renderer->data->window, App->renderer->data->context);
 	ImGui_ImplOpenGL3_Init(GLSL_VERSION);
 	ImGui::StyleColorsDark();
-	
+
+	math::float4x4 identity = math::float4x4::identity;
 	// Create Grid
 	std::vector<float> grid;
 	std::vector<unsigned int> grid_index;
@@ -53,32 +55,66 @@ bool ModuleEditor::Init()
 
 	for (int i = -GRID_LENGTH; i <= GRID_LENGTH; ++i)
 	{
-		grid.push_back((float)-GRID_LENGTH); grid.push_back(0); grid.push_back((float)i);
-		grid.push_back((float)GRID_LENGTH); grid.push_back(0); grid.push_back((float)i);
-		grid_index.push_back(id++); grid_index.push_back(id++);
+		if (i == 0) 
+		{
+			grid.push_back((float)-GRID_LENGTH); grid.push_back(0); grid.push_back((float)i);
+			grid.push_back(0); grid.push_back(0); grid.push_back((float)i);
+			grid_index.push_back(id++); grid_index.push_back(id++);
 
-		grid.push_back((float)i); grid.push_back(0);  grid.push_back(-(float)GRID_LENGTH);
-		grid.push_back((float)i); grid.push_back(0);  grid.push_back((float)GRID_LENGTH);
-		grid_index.push_back(id++); grid_index.push_back(id++);
+			grid.push_back((float)i); grid.push_back(0);  grid.push_back(-(float)GRID_LENGTH);
+			grid.push_back((float)i); grid.push_back(0);  grid.push_back(0);
+			grid_index.push_back(id++); grid_index.push_back(id++);
+
+			grid.push_back(GIZMO_LENGTH); grid.push_back(0); grid.push_back((float)i);
+			grid.push_back((float)GRID_LENGTH); grid.push_back(0); grid.push_back((float)i);
+			grid_index.push_back(id++); grid_index.push_back(id++);
+
+			grid.push_back((float)i); grid.push_back(0);  grid.push_back(GIZMO_LENGTH);
+			grid.push_back((float)i); grid.push_back(0);  grid.push_back((float)GRID_LENGTH);
+			grid_index.push_back(id++); grid_index.push_back(id++);
+
+		}
+		else
+		{
+			grid.push_back((float)-GRID_LENGTH); grid.push_back(0); grid.push_back((float)i);
+			grid.push_back((float)GRID_LENGTH); grid.push_back(0); grid.push_back((float)i);
+			grid_index.push_back(id++); grid_index.push_back(id++);
+
+			grid.push_back((float)i); grid.push_back(0);  grid.push_back(-(float)GRID_LENGTH);
+			grid.push_back((float)i); grid.push_back(0);  grid.push_back((float)GRID_LENGTH);
+			grid_index.push_back(id++); grid_index.push_back(id++);
+		}
 	}
-	MyEngine::VertexBufferLayout vbl;
-	vbl.Push<float>(3);
+	MyEngine::VertexBufferLayout grid_layout;
+	grid_layout.Push<float>(3);
 
-	App->renderer->CreateShader("grid", "default.vs", "default.fs");
-	shader_grid = App->renderer->GetShader("grid");
-	shader_grid->Bind();
+	shader_grid = App->renderer->CreateShader("grid", "default.vs", "default.fs");
 	shader_grid->SetUniform4("albedo", grid_color[0], grid_color[1], grid_color[2], grid_color[3]);
-
+	shader_grid->SetUniform4x4("model", identity);
 	vbo_grid = new MyEngine::VertexBuffer(&grid);
-	vbo_grid->Bind();
-
 	vao_grid = new MyEngine::VertexArray();
-	vao_grid->Bind();
-	vao_grid->AddBuffer(*vbo_grid, vbl);
-
+	vao_grid->AddBuffer(*vbo_grid, grid_layout);
 	ibo_grid = new MyEngine::IndexBuffer(&grid_index);
-	ibo_grid->Bind();
 	
+	std::vector<float> gizmo =
+	{
+		0.0F,	0.0F,		0.0F,	0.0F, 0.0F, 0.0F,
+		GIZMO_LENGTH, 0.0F, 0.0F,	1.0F, 0.0F, 0.0F,
+		0.0F, GIZMO_LENGTH, 0.0F,	0.0F, 1.0F, 0.0F,
+		0.0F, 0.0F, GIZMO_LENGTH,	0.0F, 0.0F, 1.0F
+	};
+
+	std::vector<unsigned int> gizmo_index = { 0, 1, 0, 2, 0, 3 };
+	MyEngine::VertexBufferLayout gizmo_layout;
+	gizmo_layout.Push<float>(3);
+	gizmo_layout.Push<float>(3);
+
+	shader_gizmo = App->renderer->CreateShader("gizmo", "gizmo.vs", "gizmo.fs");
+	shader_gizmo->SetUniform4x4("model", identity);
+	vbo_gizmo = new MyEngine::VertexBuffer(&gizmo);
+	vao_gizmo = new MyEngine::VertexArray();
+	vao_gizmo->AddBuffer(*vbo_gizmo, gizmo_layout);
+	ibo_gizmo = new MyEngine::IndexBuffer(&gizmo_index);
 
 	return true;
 }
@@ -86,7 +122,7 @@ bool ModuleEditor::Init()
 bool ModuleEditor::Start()
 {
 	math::float4x4 I = math::float4x4::identity;
-	shader_grid->SetUniform4x4("model", &I);
+	shader_grid->SetUniform4x4("model", I);
 
 	return true;
 }
@@ -100,10 +136,11 @@ bool ModuleEditor::CleanUp()
 
 	delete(fps);
 	delete(avg_ms_array);
-	delete(vbo_grid);
-	delete(ibo_grid);
-	delete(shader_grid);
-	delete(vao_grid);
+
+	delete(vbo_grid);	delete(vbo_gizmo);
+	delete(ibo_grid);	delete(ibo_gizmo);
+	delete(shader_grid);delete(shader_gizmo);
+	delete(vao_grid);	delete(vao_gizmo);
 
 	return true;
 }
@@ -112,6 +149,7 @@ UpdateState ModuleEditor::PreUpdate()
 {
 	if (show_grid)
 	{
+		App->renderer->DrawLines(vao_gizmo, ibo_gizmo, shader_gizmo, 2.5F);
 		App->renderer->DrawLines(vao_grid, ibo_grid, shader_grid);
 	}
 

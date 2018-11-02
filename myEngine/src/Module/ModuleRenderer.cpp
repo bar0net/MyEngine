@@ -97,7 +97,7 @@ void ModuleRenderer::DrawLines(const MyEngine::VertexArray * vao, const MyEngine
 	ibo->DrawLines(line_width);
 }
 
-void ModuleRenderer::CreateShader(const char* name, const char* vShader_file, const char* fShader_file)
+MyEngine::Shader* ModuleRenderer::CreateShader(const char* name, const char* vShader_file, const char* fShader_file)
 {
 	assert(name && vShader_file && fShader_file);
 
@@ -105,6 +105,8 @@ void ModuleRenderer::CreateShader(const char* name, const char* vShader_file, co
 		shaders[name] = new MyEngine::Shader(vShader_file, fShader_file);
 	else
 		LOGWARNING("Cannot create new shader %s because it already exists.", name);
+	
+	return shaders[name];
 }
 
 MyEngine::Shader* ModuleRenderer::GetShader(const char* name)

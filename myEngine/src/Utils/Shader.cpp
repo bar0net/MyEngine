@@ -141,18 +141,18 @@ namespace MyEngine
 		return shader;
 	}
 
-	void Shader::SetUniform4x4(const char* name, math::float4x4* entry) const
+	void Shader::SetUniform4x4(const char* name, math::float4x4& entry) const
+	{
+		assert(name);
+		this->Bind(); 
+		GLCall(glUniformMatrix4fv(glGetUniformLocation(program, name), 1, GL_TRUE, &(entry)[0][0]));
+	}
+
+	void Shader::SetUniform4(const char* name, math::float4& entry) const
 	{
 		assert(name);
 		this->Bind();
-		GLCall(glUniformMatrix4fv(glGetUniformLocation(program, name), 1, GL_TRUE, &(*entry)[0][0]));
-	}
-
-	void Shader::SetUniform4(const char* name, math::float4* entry) const
-	{
-		assert(name && entry);
-		this->Bind();
-		GLCall(glUniform4f(glGetUniformLocation(program, name), entry->x, entry->y, entry->z, entry->w));
+		GLCall(glUniform4f(glGetUniformLocation(program, name), entry.x, entry.y, entry.z, entry.w));
 	}
 
 	void Shader::SetUniform4(const char* name, float x, float y, float z, float w) const
