@@ -27,22 +27,22 @@ public:
 	UpdateState Update();
 	bool CleanUp();
 	
-	void ProcessEvent(void* event);
+	void ProcessEvent(void* event) const;
 
 private:
 	void FrameStart();
-	void FrameEnd();
+	void FrameEnd() const;
 
-	void PanelPerformance();
+	void PanelPerformance() const;
 	void PanelEditor();
 	void PanelObjects();
 
-	void PanelCamera(Camera* component);
-	void PanelCameraControl(CameraControl* component);
+	void PanelCamera(Camera* component) const;
+	void PanelCameraControl(CameraControl* component) const;
 
-	ImGuiIO* io;
-	MovingArray* fps;
-	MovingArray* avg_ms_array;
+	ImGuiIO* io = nullptr;
+	MovingArray* fps = nullptr;
+	MovingArray* avg_ms_array = nullptr;
 	unsigned int avg_ms = 0;
 
 	MyEngine::VertexArray* vao_grid = nullptr;

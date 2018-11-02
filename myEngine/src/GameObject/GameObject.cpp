@@ -7,7 +7,11 @@
 
 GameObject::~GameObject()
 {
-
+	for (std::unordered_map<const char*, Component*>::iterator it = components.begin(); it != components.end(); ++it)
+	{
+		delete (it->second);
+	}
+	components.clear();
 }
 
 void GameObject::Init()
@@ -45,7 +49,7 @@ void GameObject::CleanUp()
 	components.clear();
 }
 
-void GameObject::AddComponent(Component* component)
+void GameObject::AddComponent(Component* const component)
 {
 	if (components.find(component->GetName()) == components.end())
 	{
@@ -64,7 +68,6 @@ void GameObject::SetPosition(float x, float y, float z)
 {
 	position = { x, y, z };
 	transform.SetTranslatePart({ x,y,z });
-	//transform = math::float4x4::FromTRS(position, Quat::FromEulerZYX(DEG2RAD * rotation.z, DEG2RAD * rotation.y, DEG2RAD * rotation.x), scale);
 	transformChanged = true;
 }
 
@@ -95,7 +98,7 @@ void GameObject::Translate(float x, float y, float z)
 
 void GameObject::Rotate(float x, float y, float z)
 {
-	SetRotation(fmod(rotation.x + x, 360.f), fmod(rotation.y + y, 360.f), fmod(rotation.z + z, 360.f));
+	SetRotation(fmod(rotation.x + x, 360.F), fmod(rotation.y + y, 360.F), fmod(rotation.z + z, 360.F));
 }
 
 math::float3 GameObject::Up()

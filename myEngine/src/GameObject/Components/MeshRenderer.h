@@ -21,7 +21,6 @@ public:
 	virtual ~MeshRenderer();
 
 	void Update();
-	void CleanUp();
 
 	MyEngine::Shader *shader;
 	MyEngine::VertexBuffer *vbo;

@@ -26,6 +26,7 @@
 #include "../GameObject/Components/CameraControl.h"
 
 #define GLSL_VERSION "#version 130"
+#define GRID_LENGTH 100
 
 bool ModuleEditor::Init()
 {
@@ -43,19 +44,19 @@ bool ModuleEditor::Init()
 	ImGui_ImplOpenGL3_Init(GLSL_VERSION);
 	ImGui::StyleColorsDark();
 	
-	// GRID
+	// Create Grid
 	std::vector<float> grid;
 	std::vector<unsigned int> grid_index;
 	unsigned int id = 0;
 
-	for (float i = -100.0f; i <= 100.0f; i += 1)
+	for (int i = -GRID_LENGTH; i <= GRID_LENGTH; ++i)
 	{
-		grid.push_back(-100.0f); grid.push_back(0); grid.push_back(i);
-		grid.push_back(100.0f); grid.push_back(0); grid.push_back(i);
+		grid.push_back((float)-GRID_LENGTH); grid.push_back(0); grid.push_back((float)i);
+		grid.push_back((float)GRID_LENGTH); grid.push_back(0); grid.push_back((float)i);
 		grid_index.push_back(id++); grid_index.push_back(id++);
 
-		grid.push_back(i); grid.push_back(0);  grid.push_back(-100.0f);
-		grid.push_back(i); grid.push_back(0);  grid.push_back(100.0f);
+		grid.push_back((float)i); grid.push_back(0);  grid.push_back(-(float)GRID_LENGTH);
+		grid.push_back((float)i); grid.push_back(0);  grid.push_back((float)GRID_LENGTH);
 		grid_index.push_back(id++); grid_index.push_back(id++);
 	}
 	MyEngine::VertexBufferLayout vbl;
@@ -129,16 +130,16 @@ UpdateState ModuleEditor::Update()
 
 		if (ImGui::BeginMenu("Windows"))
 		{
-			if (ImGui::MenuItem("Configuration", NULL, &config_window)) {}
-			if (ImGui::MenuItem("Debug Tools", NULL, &debug_window)) {}
-			if (ImGui::MenuItem("Inspector", NULL, &inspect_window)) {}
+			ImGui::MenuItem("Configuration", NULL, &config_window);
+			ImGui::MenuItem("Debug Tools", NULL, &debug_window);
+			ImGui::MenuItem("Inspector", NULL, &inspect_window);
 			ImGui::EndMenu();
 		}
 
 		if (ImGui::BeginMenu("Help"))
 		{
-			if (ImGui::MenuItem("Github")) {}
-			if (ImGui::MenuItem("About")) {}
+			ImGui::MenuItem("Github");
+			ImGui::MenuItem("About");
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
@@ -181,7 +182,7 @@ void ModuleEditor::FrameStart()
 	avg_ms += App->time->DeltaTimeMS();
 }
 
-void ModuleEditor::FrameEnd()
+void ModuleEditor::FrameEnd() const
 {
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -193,17 +194,17 @@ void ModuleEditor::FrameEnd()
 	}
 }
 
-void ModuleEditor::ProcessEvent(void* event)
+void ModuleEditor::ProcessEvent(void* event) const
 {
 	ImGui_ImplSDL2_ProcessEvent((SDL_Event*)event);
 }
 
-void ModuleEditor::PanelPerformance()
+void ModuleEditor::PanelPerformance() const
 {
 	ImGui::Text("Frames per second");
 	ImGui::PushItemWidth(ImGui::GetWindowWidth() - 25);
 	ImGui::PlotHistogram("", MovingArray::Get, fps, fps->size, 1, "", 0, 120, ImVec2(0, 50));
-	ImGui::Text("Average ms/frame: %ims - FPS: %i", avg_ms / (avg_ms_array->size), (int)(1000.0f * avg_ms_array->size / avg_ms));
+	ImGui::Text("Average ms/frame: %ims - FPS: %i", avg_ms / (avg_ms_array->size), (int)(1000.0F * avg_ms_array->size / avg_ms));
 	ImGui::Text("Width: %ipx - Height: %ipx", App->renderer->width, App->renderer->height);
 
 	bool vsyncEnabled = App->renderer->vsyncEnabled;
@@ -211,7 +212,9 @@ void ModuleEditor::PanelPerformance()
 	if (vsyncEnabled != App->renderer->vsyncEnabled) App->renderer->EnableVSync(vsyncEnabled);
 
 	ImGui::Separator();
-	int major, minor, patch;
+	int major = 0; 
+	int minor = 0; 
+	int patch = 0;
 	MyEngine::WindowUtils::Version(major, minor, patch);
 
 	ImGui::Text("GPU");
@@ -254,7 +257,7 @@ void ModuleEditor::PanelEditor()
 		
 }
 
-void ModuleEditor::PanelObjects()
+void ModuleEditor::PanelObjects() 
 {
 	if (App->scene->gameObjects.size() == 0) return;
 
@@ -273,7 +276,7 @@ void ModuleEditor::PanelObjects()
 	ImGui::Spacing();
 	if (this->inspect_object != nullptr)
 	{
-		ImGui::TextColored(ImVec4(0.3f, 0.5f, 0.8f, 1.0f), inspect_object->GetName());
+		ImGui::TextColored(ImVec4(0.3F, 0.5F, 0.8F, 1.0F), inspect_object->GetName());
 		float pos[3] = { this->inspect_object->position.x, this->inspect_object->position.y, this->inspect_object->position.z };
 		if (ImGui::InputFloat3("Position", pos, 2)) this->inspect_object->SetPosition(pos[0], pos[1], pos[2]);			
 
@@ -296,7 +299,7 @@ void ModuleEditor::PanelObjects()
 
 }
 
-void ModuleEditor::PanelCamera(Camera* component)
+void ModuleEditor::PanelCamera(Camera* component) const
 {
 	if (ImGui::CollapsingHeader("Camera Properties"))
 	{
@@ -306,7 +309,7 @@ void ModuleEditor::PanelCamera(Camera* component)
 	}
 }
 
-void ModuleEditor::PanelCameraControl(CameraControl* component)
+void ModuleEditor::PanelCameraControl(CameraControl* component) const
 {
 	if (ImGui::CollapsingHeader("Camera Control"))
 	{

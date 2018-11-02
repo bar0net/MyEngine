@@ -9,10 +9,10 @@ public:
 	UniformBuffer();
 	virtual ~UniformBuffer();
 
-	void Bind();
-	void UnBind();
+	void Bind() const;
+	void UnBind() const;
 
-	void SetUniform4x4(unsigned int offset, math::float4x4* data);
+	void SetUniform4x4(unsigned int offset, math::float4x4* data) const;
 
 	unsigned int ubo = 0;
 };

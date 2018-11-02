@@ -19,8 +19,9 @@ class Camera : public Component
 public:
 	Camera();
 	Camera(ProjectionType type, float nearPlane, float farPlane, float fov);
+	virtual ~Camera();
+
 	void Init() {}
-	void Start();
 	void Update();
 
 	void SetGameObject(GameObject* gameObject);
@@ -37,7 +38,7 @@ public:
 
 private:
 	math::Frustum frustum;
-	UniformBuffer* ubo;
+	UniformBuffer* ubo = nullptr;
 };
 
 #endif // !_MYENGINE_COMPONENT_CAMERA_H

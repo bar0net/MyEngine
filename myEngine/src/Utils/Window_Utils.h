@@ -5,7 +5,7 @@
 #include <string>
 
 struct SDL_Window;
-class SDL_Surface;
+struct SDL_Surface;
 
 namespace MyEngine {
 	struct WindowData 

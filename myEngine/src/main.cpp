@@ -53,7 +53,10 @@ int main(int argc, const char* argv[])
 			App->End();
 			status = AppStatus::Exit;
 			break;
-				
+		
+		default:
+			status = AppStatus::Exit;
+			break;
 		}
 	}
 

@@ -20,11 +20,11 @@ bool ModuleScene::Init()
 
 	/* ==== PYRAMID ==== */
 	std::vector<float> triangle = {
-		 0.0f,  1.0f,  0.0f, 0.50f, 1.0f,	//0
-		-0.5f, -0.5f,  0.5f, 0.00f, 0.0f,	//1
-		 0.5f, -0.5f,  0.5f, 1.00f, 0.0f,	//2
-		-0.5f, -0.5f, -0.5f, 0.33f, 0.0f,	//3
-		 0.5f, -0.5f, -0.5f, 0.66f, 0.0f	//4
+		 0.0F,  1.0F,  0.0F, 0.50F, 1.0F,	//0
+		-0.5F, -0.5F,  0.5F, 0.00F, 0.0F,	//1
+		 0.5F, -0.5F,  0.5F, 1.00F, 0.0F,	//2
+		-0.5F, -0.5F, -0.5F, 0.33F, 0.0F,	//3
+		 0.5F, -0.5F, -0.5F, 0.66F, 0.0F	//4
 	};
 
 	std::vector<unsigned int> indices = {
@@ -39,10 +39,10 @@ bool ModuleScene::Init()
 
 	/* ==== QUAD ====
 	std::vector<float> triangle = {
-		-0.5f,   0.5f,  0.0f, 0.0f, 1.0f,	//0
-		 0.5f,   0.5f,  0.0f, 1.0f, 1.0f,	//1
-		-0.5f,  -0.5f,  0.0f, 0.0f, 0.0f,	//2
-		 0.5f,  -0.5f,  0.0f, 1.0f, 0.0f,	//3
+		-0.5f,   0.5f,  0.0f, 0.0f, 1.0f,	
+		 0.5f,   0.5f,  0.0f, 1.0f, 1.0f,	
+		-0.5f,  -0.5f,  0.0f, 0.0f, 0.0f,	
+		 0.5f,  -0.5f,  0.0f, 1.0f, 0.0f,	
 	};
 
 	std::vector<unsigned int> indices = {
@@ -55,17 +55,17 @@ bool ModuleScene::Init()
 	layout.Push<float>(2);
 
 	App->renderer->CreateShader("texture", "texture.vs", "texture.fs");
-	MyEngine::Shader* shader = App->renderer->GetShader("texture");
+	MyEngine::Shader* texture_shader = App->renderer->GetShader("texture");
 	unsigned int textureID = App->texture->LoadTexture("Lenna.png");
-	shader->Bind();
-	shader->AddTexture2D(textureID);
+	texture_shader->Bind();
+	texture_shader->AddTexture2D(textureID);
 
-	gameObjects["Pyramid"]->AddComponent(new MeshRenderer(&triangle, &layout, &indices, shader));
-	gameObjects["Pyramid"]->SetPosition(0.0f, 4.0f, -10.0f);
-	gameObjects["Pyramid"]->SetRotation(0.0f, 0.0f, 0.0f);
+	gameObjects["Pyramid"]->AddComponent(new MeshRenderer(&triangle, &layout, &indices, texture_shader));
+	gameObjects["Pyramid"]->SetPosition(0.0F, 4.0F, -10.0F);
+	gameObjects["Pyramid"]->SetRotation(0.0F, 0.0F, 0.0F);
 	
 	gameObjects["Camera"] = new GameObject("Camera");
-	gameObjects["Camera"]->SetPosition(0.0f, 1.0f, 10.0f);
+	gameObjects["Camera"]->SetPosition(0.0F, 1.0F, 10.0F);
 	gameObjects["Camera"]->AddComponent(new Camera());
 	gameObjects["Camera"]->AddComponent(new CameraControl());
 	gameObjects["Camera"]->Init();
@@ -97,7 +97,7 @@ bool ModuleScene::CleanUp()
 	for (std::unordered_map<const char*, GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it)
 		it->second->CleanUp();
 
-
+	// Delete all gameobjects
 	for (std::unordered_map<const char*, GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it)
 		delete(it->second);
 	gameObjects.clear();

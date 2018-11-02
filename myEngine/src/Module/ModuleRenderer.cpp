@@ -38,7 +38,7 @@ bool ModuleRenderer::Init()
 	}
 	LOGINFO("Window successfully created.");
 
-	MyEngine::RenderUtils::CreateViewport(width, height, { 0.3f, 0.3f, 0.3f, 1.0f }, 1.0);
+	MyEngine::RenderUtils::CreateViewport(width, height, { 0.3F, 0.3F, 0.3F, 1.0F }, 1.0F);
 
 	return true;
 }
@@ -77,7 +77,7 @@ bool ModuleRenderer::CleanUp()
 	return true;
 }
 
-void ModuleRenderer::Draw(MyEngine::VertexArray * vao, MyEngine::IndexBuffer * ibo, MyEngine::Shader * shader)
+void ModuleRenderer::Draw(const MyEngine::VertexArray* vao, const MyEngine::IndexBuffer * ibo, const MyEngine::Shader * shader) const
 {
 	shader->Bind();
 	vao->Bind();
@@ -85,7 +85,7 @@ void ModuleRenderer::Draw(MyEngine::VertexArray * vao, MyEngine::IndexBuffer * i
 	ibo->Draw();
 }
 
-void ModuleRenderer::DrawLines(MyEngine::VertexArray * vao, MyEngine::IndexBuffer * ibo, MyEngine::Shader * shader, float line_width)
+void ModuleRenderer::DrawLines(const MyEngine::VertexArray * vao, const MyEngine::IndexBuffer * ibo, const MyEngine::Shader * shader, float line_width) const
 {
 	shader->Bind();
 	vao->Bind();
@@ -95,22 +95,22 @@ void ModuleRenderer::DrawLines(MyEngine::VertexArray * vao, MyEngine::IndexBuffe
 
 void ModuleRenderer::CreateShader(const char* name, const char* vShader_file, const char* fShader_file)
 {
-	if (materials.find(name) == materials.end())
-		materials[name] = new MyEngine::Shader(vShader_file, fShader_file);
+	if (shaders.find(name) == shaders.end())
+		shaders[name] = new MyEngine::Shader(vShader_file, fShader_file);
 	else
 		LOGWARNING("Cannot create new shader %s because it already exists.", name);
 }
 
 MyEngine::Shader* ModuleRenderer::GetShader(const char* name)
 {
-	if (materials.find(name) != materials.end())
-		return materials[name];
+	if (shaders.find(name) != shaders.end())
+		return shaders[name];
 	else
 	{
-		if (materials.size() > 0)
+		if (shaders.size() > 0)
 		{
-			LOGERROR("Trying to access shader %s but it doesn't exist. Using %s shader instead.", name, materials.begin()->first);
-			return materials.begin()->second;
+			LOGERROR("Trying to access shader %s but it doesn't exist. Using %s shader instead.", name, shaders.begin()->first);
+			return shaders.begin()->second;
 		}
 		else 
 		{
@@ -124,10 +124,7 @@ MyEngine::Shader* ModuleRenderer::GetShader(const char* name)
 void ModuleRenderer::EmptyShaders()
 {
 	LOGINFO("Emptying the shaders collection");
-	//for (std::unordered_map<const char*, MyEngine::Shader*>::iterator it = materials.begin(); it != materials.end(); ++it)
-		//delete (it->second);
-
-	materials.empty();
+	shaders.empty();
 }
 
 void ModuleRenderer::ResizedWindow()
@@ -144,7 +141,7 @@ void ModuleRenderer::EnableVSync(bool enabled)
 	vsyncEnabled = enabled;
 }
 
-void ModuleRenderer::UpdateClearColor()
+void ModuleRenderer::UpdateClearColor() const
 {
 	MyEngine::RenderUtils::ChangeClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
 }

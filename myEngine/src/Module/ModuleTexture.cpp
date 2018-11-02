@@ -28,7 +28,6 @@ bool ModuleTexture::CleanUp()
 {
 	LOGINFO("Deleting all remaining loaded textures (%i textures)", textures.size());
 
-	unsigned int i = 1;
 
 	for (std::unordered_set<unsigned int>::iterator it = textures.begin(); it != textures.end(); ++it)
 	{
@@ -46,7 +45,7 @@ unsigned int ModuleTexture::LoadTexture(const char* filename)
 	ilGenImages(1, &imageID);
 	ilBindImage(imageID);
 
-	ILboolean success;
+	ILboolean success = IL_TRUE;
 	ILenum error;
 
 	if (ilLoadImage(filename))
@@ -62,6 +61,8 @@ unsigned int ModuleTexture::LoadTexture(const char* filename)
 		int channels = ilGetInteger(IL_IMAGE_CHANNELS);
 		if (channels == 3) success = ilConvertImage(IL_RGB, IL_UNSIGNED_BYTE);
 		else if (channels == 4)	success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+
+		if (!success) LOGERROR("Image conversion on Texture Load.");
 
 		ILubyte* data = ilGetData();
 		int width = ilGetInteger(IL_IMAGE_WIDTH);

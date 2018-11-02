@@ -6,7 +6,7 @@ namespace MyEngine {
 
 	WindowData* WindowUtils::CreateWindow(const char* title, unsigned int width, unsigned int height)
 	{
-		WindowData* data = new WindowData;
+		WindowData* data = new WindowData; // data deleted on ModuleRenderer cleanup
 
 		if (SDL_Init(SDL_INIT_VIDEO) != 0) return data;
 

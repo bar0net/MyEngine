@@ -22,7 +22,7 @@ public:
 	UpdateState Update();
 	bool CleanUp();
 	
-	MyEngine::Shader* shader;
+	MyEngine::Shader* shader = nullptr;
 
 	std::unordered_map<const char*, GameObject*> gameObjects;
 };

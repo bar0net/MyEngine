@@ -25,19 +25,18 @@ namespace MyEngine
 		void Bind() const;
 		void UnBind() const;
 
-		void SetUniform4x4(const char* name, math::float4x4* entry);
-		void SetUniform4(const char* name, math::float4* entry);
-		void SetUniform4(const char* name, float x, float y, float z, float w);
+		void SetUniform4x4(const char* name, math::float4x4* entry) const;
+		void SetUniform4(const char* name, math::float4* entry) const;
+		void SetUniform4(const char* name, float x, float y, float z, float w) const;
 
 		void AddTexture2D(unsigned int textureID);
 
 		unsigned int program = 0;
 
 	private:
-		char* ReadFile(const char* filename);
-		unsigned int CompileShader(const char* filename, int type);
+		const char* ReadFile(const char* filename) const;
+		unsigned int CompileShader(const char* filename, int type) const;
 
-		bool valid = true;
 		std::vector<unsigned int> textures;
 	};
 

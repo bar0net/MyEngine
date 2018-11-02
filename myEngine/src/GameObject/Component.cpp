@@ -3,7 +3,7 @@
 #include "GameObject.h"
 
 
-void Component::SetGameObject(GameObject* gameObject)
+void Component::SetGameObject(GameObject* const gameObject)
 {
 	this->gameObject = gameObject;
 }

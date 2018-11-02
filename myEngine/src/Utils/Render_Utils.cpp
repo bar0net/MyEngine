@@ -19,9 +19,8 @@ namespace MyEngine {
 		glFrontFace(GL_CCW);
 		glEnable(GL_TEXTURE_2D);
 
-		glClearDepth(1.0f);
-		ChangeClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-		//wglSwapIntervalEXT(0);
+		glClearDepth(1.0F);
+		ChangeClearColor(0.3F, 0.3F, 0.3F, 1.0F);
 
 		glViewport(0, 0, width, height);
 	}
@@ -103,9 +102,6 @@ namespace MyEngine {
 
 	void RenderUtils::EnableVSync(bool enabled)
 	{
-		//if (enabled) wglSwapIntervalEXT(1);
-		//else wglSwapIntervalEXT(0);
-
 		PFNWGLGETEXTENSIONSSTRINGEXTPROC _wglGetExtensionsStringEXT = NULL;
 		_wglGetExtensionsStringEXT = (PFNWGLGETEXTENSIONSSTRINGEXTPROC)wglGetProcAddress("wglGetExtensionsStringEXT");
 
@@ -120,14 +116,17 @@ namespace MyEngine {
 		if(enabled) wglSwapIntervalEXT(1);
 		else wglSwapIntervalEXT(0);
 	}
+
 	const char * RenderUtils::Version()
 	{
 		return (const char*)glewGetString(GLEW_VERSION);
 	}
+
 	const char * RenderUtils::Vendor()
 	{
 		return (const char*)glGetString(GL_VENDOR);
 	}
+
 	const char * RenderUtils::Renderer()
 	{
 		return (const char*)glGetString(GL_RENDERER);

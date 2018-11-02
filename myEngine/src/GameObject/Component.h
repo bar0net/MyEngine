@@ -15,9 +15,9 @@ public:
 	virtual void End() {};
 	virtual void CleanUp() {};
 
-	virtual void SetGameObject(GameObject* gameObject);
+	virtual void SetGameObject(GameObject* const gameObject);
 
-	const char* GetName() { return name; }
+	const char* const GetName() const { return name; }
 
 protected:
 	GameObject* gameObject;

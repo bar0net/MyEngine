@@ -29,5 +29,5 @@ void MovingArray::push(unsigned int x)
 
 float MovingArray::Get(void* data, int x)
 {
-	return (*(MovingArray*)data)[x];
+	return (float)(*(MovingArray*)data)[x];
 }

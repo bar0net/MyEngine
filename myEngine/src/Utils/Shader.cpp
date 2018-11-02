@@ -16,7 +16,7 @@ namespace MyEngine
 		unsigned int vShader = CompileShader(vertex_file, (int)GL_VERTEX_SHADER);
 		unsigned int fShader = CompileShader(fragment_file, (int)GL_FRAGMENT_SHADER);
 
-		if (valid) 
+		if (vShader != 0 && fShader != 0) 
 		{
 			program = glCreateProgram();
 			GLCall(glAttachShader(program, vShader));
@@ -80,7 +80,7 @@ namespace MyEngine
 	}
 
 
-	char* Shader::ReadFile(const char* filename)
+	const char* Shader::ReadFile(const char* filename) const
 	{
 		char* data = nullptr;
 		FILE* file = nullptr;
@@ -103,11 +103,11 @@ namespace MyEngine
 		return data;
 	}
 
-	unsigned int Shader::CompileShader(const char* filename, int type)
+	unsigned int Shader::CompileShader(const char* filename, int type) const
 	{
 		int success = 0;
 
-		char* shaderData = ReadFile(filename);
+		const char* shaderData = ReadFile(filename);
 		if (shaderData == nullptr) 
 		{
 			LOGERROR("Could not load %s", filename);
@@ -128,7 +128,7 @@ namespace MyEngine
 
 			const char* msg = infoLog.data();
 			LOGERROR("Could not compile shader: %s. << %s >>", filename, msg);
-			valid = false;
+			return 0;
 		}
 		else LOGINFO("Shader compiled: %s", filename);
 		
@@ -137,19 +137,19 @@ namespace MyEngine
 		return shader;
 	}
 
-	void Shader::SetUniform4x4(const char* name, math::float4x4* entry)
+	void Shader::SetUniform4x4(const char* name, math::float4x4* entry) const
 	{
 		this->Bind();
 		GLCall(glUniformMatrix4fv(glGetUniformLocation(program, name), 1, GL_TRUE, &(*entry)[0][0]));
 	}
 
-	void Shader::SetUniform4(const char* name, math::float4* entry)
+	void Shader::SetUniform4(const char* name, math::float4* entry) const
 	{
 		this->Bind();
 		GLCall(glUniform4f(glGetUniformLocation(program, name), entry->x, entry->y, entry->z, entry->w));
 	}
 
-	void Shader::SetUniform4(const char* name, float x, float y, float z, float w)
+	void Shader::SetUniform4(const char* name, float x, float y, float z, float w) const
 	{
 		this->Bind();
 		GLCall(glUniform4f(glGetUniformLocation(program, name), x, y, z, w));

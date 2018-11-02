@@ -19,7 +19,7 @@ namespace MyEngine {
 		if (ibo != 0) glDeleteBuffers(1, &ibo);
 	}
 
-	void IndexBuffer::Bind()
+	void IndexBuffer::Bind() const
 	{
 		if (Globals::active_ibo == ibo) return;
 
@@ -27,7 +27,7 @@ namespace MyEngine {
 		Globals::active_ibo = ibo;
 	}
 
-	void IndexBuffer::UnBind()
+	void IndexBuffer::UnBind() const
 	{
 		if (Globals::active_ibo == 0) return;
 
@@ -35,13 +35,13 @@ namespace MyEngine {
 		Globals::active_ibo = 0;
 	}
 
-	void IndexBuffer::Draw()
+	void IndexBuffer::Draw() const
 	{
 		GLCall( glDrawElements(GL_TRIANGLES, elements, GL_UNSIGNED_INT, NULL) );
 	}
 
 
-	void IndexBuffer::DrawLines(float line_width)
+	void IndexBuffer::DrawLines(float line_width) const
 	{
 		GLCall(glLineWidth(line_width));
 		GLCall(glDrawElements(GL_LINES, elements, GL_UNSIGNED_INT, NULL));

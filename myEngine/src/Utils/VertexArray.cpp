@@ -23,9 +23,6 @@ void MyEngine::VertexArray::Bind() const
 {
 	if (Globals::active_vao == vao) return;
 
-	//GLCall(glEnableVertexAttribArray(0));
-	//GLCall(glEnableVertexAttribArray(1));
-
 	GLCall(glBindVertexArray(vao));
 	Globals::active_vao = vao;
 }

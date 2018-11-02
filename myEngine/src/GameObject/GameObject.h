@@ -7,8 +7,8 @@
 #include "../_Vendor/MathGeoLib/Math/float4x4.h"
 #include "../_Vendor/MathGeoLib/Math/float3.h"
 
-#define DEG2RAD 0.0174532925
-#define RAD2DEG 57.2957795
+#define DEG2RAD 0.0174532925F
+#define RAD2DEG 57.2957795F
 
 class GameObject
 {

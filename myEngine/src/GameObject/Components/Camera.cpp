@@ -19,9 +19,9 @@ Camera::Camera(ProjectionType type, float nearPlane, float farPlane, float fov) 
 	UpdateFrustum();
 }
 
-void Camera::Start()
+Camera::~Camera()
 {
-
+	delete ubo;
 }
 
 void Camera::Update() 
@@ -46,8 +46,8 @@ void Camera::UpdateFrustum()
 	frustum.nearPlaneDistance = nearPlane;
 	frustum.farPlaneDistance = farPlane;
 
-	frustum.horizontalFov = (3.14159258f * fov / 180.0f);
-	frustum.verticalFov = 2.0f * atan(tan( frustum.horizontalFov / 2.0f) * ((float)App->renderer->height / (float)App->renderer->width));
+	frustum.horizontalFov = (3.14159258F * fov / 180.0F);
+	frustum.verticalFov = 2.0F * atan(tan( frustum.horizontalFov / 2.0F) * ((float)App->renderer->height / (float)App->renderer->width));
 
 	if (gameObject != nullptr)
 	{
