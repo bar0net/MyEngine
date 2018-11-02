@@ -29,6 +29,7 @@ ModuleRenderer::~ModuleRenderer()
 bool ModuleRenderer::Init()
 {
 	data = MyEngine::WindowUtils::CreateWindow("Test Window", width, height);
+	MyEngine::RenderUtils::EnableVSync(vsyncEnabled);
 
 	if (!data->valid)
 	{
@@ -84,12 +85,12 @@ void ModuleRenderer::Draw(MyEngine::VertexArray * vao, MyEngine::IndexBuffer * i
 	ibo->Draw();
 }
 
-void ModuleRenderer::DrawLines(MyEngine::VertexArray * vao, MyEngine::IndexBuffer * ibo, MyEngine::Shader * shader)
+void ModuleRenderer::DrawLines(MyEngine::VertexArray * vao, MyEngine::IndexBuffer * ibo, MyEngine::Shader * shader, float line_width)
 {
 	shader->Bind();
 	vao->Bind();
 	ibo->Bind();
-	ibo->DrawLines();
+	ibo->DrawLines(line_width);
 }
 
 void ModuleRenderer::CreateShader(const char* name, const char* vShader_file, const char* fShader_file)
@@ -135,6 +136,12 @@ void ModuleRenderer::ResizedWindow()
 	MyEngine::RenderUtils::ModifyViewportSize(width, height);
 	Camera* c = (Camera*)App->scene->gameObjects["Camera"]->components["Camera"];
 	c->UpdateFrustum();
+}
+
+void ModuleRenderer::EnableVSync(bool enabled)
+{
+	MyEngine::RenderUtils::EnableVSync(enabled);
+	vsyncEnabled = enabled;
 }
 
 void ModuleRenderer::UpdateClearColor()

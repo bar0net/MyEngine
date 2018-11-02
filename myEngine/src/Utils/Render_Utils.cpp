@@ -3,12 +3,14 @@
 #include <string>
 
 #include "GL/glew.h"
+#include "GL/wglew.h"
 #include "LogSystem.h"
 
 namespace MyEngine {
 	void RenderUtils::CreateViewport(unsigned int width, unsigned int height, Color clear_color, float depth)
 	{
 		glewInit();
+		wglewInit();
 
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -18,8 +20,8 @@ namespace MyEngine {
 		glEnable(GL_TEXTURE_2D);
 
 		glClearDepth(1.0f);
-		//glClearColor(0.3f, 0.3f, 0.3f, 1.f);
 		ChangeClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+		//wglSwapIntervalEXT(0);
 
 		glViewport(0, 0, width, height);
 	}
@@ -31,54 +33,7 @@ namespace MyEngine {
 
 	void RenderUtils::GLClearErrors()
 	{
-		GLenum error = glGetError();
-		while (error != GL_NO_ERROR)
-		{
-			std::string s = "";
-			switch (glGetError())
-			{
-			case GL_INVALID_ENUM:
-				s.append("Invalid Enum.");
-				break;
-
-			case GL_INVALID_VALUE:
-				s.append("Invalid Value.");
-				break;
-
-			case GL_INVALID_OPERATION:
-				s.append("Invalid Operation.");
-				break;
-
-			case GL_STACK_OVERFLOW:
-				s.append("Stack Overflow.");
-				break;
-
-			case GL_STACK_UNDERFLOW:
-				s.append("Stack Underflow.");
-				break;
-
-			case GL_OUT_OF_MEMORY:
-				s.append("Out of memory.");
-				break;
-
-			case GL_INVALID_FRAMEBUFFER_OPERATION:
-				s.append("Invalid frame buffer operation.");
-				break;
-
-			case GL_CONTEXT_LOST:
-				s.append("Context lost.");
-				break;
-
-			case GL_TABLE_TOO_LARGE:
-				s.append("Table too large.");
-				break;
-
-			default:
-				s += std::to_string((int)error);
-				break;
-			}
-			LOGERROR("%s",s);
-		}
+		while (glGetError() != GL_NO_ERROR);
 	}
 
 	bool RenderUtils::GLLogCall(const char * function, const char * file, int line)
@@ -144,5 +99,37 @@ namespace MyEngine {
 	void RenderUtils::ChangeClearColor(float r, float g, float b, float a)
 	{
 		glClearColor(r, g, b, a);
+	}
+
+	void RenderUtils::EnableVSync(bool enabled)
+	{
+		//if (enabled) wglSwapIntervalEXT(1);
+		//else wglSwapIntervalEXT(0);
+
+		PFNWGLGETEXTENSIONSSTRINGEXTPROC _wglGetExtensionsStringEXT = NULL;
+		_wglGetExtensionsStringEXT = (PFNWGLGETEXTENSIONSSTRINGEXTPROC)wglGetProcAddress("wglGetExtensionsStringEXT");
+
+		if (strstr(_wglGetExtensionsStringEXT(), "WGL_EXT_swap_control") == NULL) return;
+
+		PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = NULL;
+		PFNWGLGETSWAPINTERVALEXTPROC wglGetSwapIntervalEXT = NULL;
+
+		wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)wglGetProcAddress("wglSwapIntervalEXT");
+		wglGetSwapIntervalEXT = (PFNWGLGETSWAPINTERVALEXTPROC)wglGetProcAddress("wglGetSwapIntervalEXT");
+
+		if(enabled) wglSwapIntervalEXT(1);
+		else wglSwapIntervalEXT(0);
+	}
+	const char * RenderUtils::Version()
+	{
+		return (const char*)glewGetString(GLEW_VERSION);
+	}
+	const char * RenderUtils::Vendor()
+	{
+		return (const char*)glGetString(GL_VENDOR);
+	}
+	const char * RenderUtils::Renderer()
+	{
+		return (const char*)glGetString(GL_RENDERER);
 	}
 }

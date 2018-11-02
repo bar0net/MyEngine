@@ -26,6 +26,11 @@ namespace MyEngine {
 		static bool GLLogCall(const char* function, const char* file, int line);
 		static void ModifyViewportSize(unsigned int width, unsigned int height);
 		static void ChangeClearColor(float r, float g, float b, float a);
+		static void EnableVSync(bool enabled);
+		static const char* Version();
+		static const char* Vendor();
+		static const char* Renderer();
+
 	};
 }
 

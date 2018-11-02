@@ -13,7 +13,7 @@ namespace MyEngine {
 		void Bind();
 		void UnBind();
 		void Draw();
-		void DrawLines();
+		void DrawLines(float line_width);
 
 		unsigned int ibo = 0;
 		unsigned int elements = 0;

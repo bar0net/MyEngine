@@ -14,6 +14,10 @@ namespace MyEngine
 	class Shader;
 }
 
+class GameObject;
+class Camera;
+class CameraControl;
+
 class ModuleEditor : public Module
 {
 public:
@@ -31,8 +35,10 @@ private:
 
 	void PanelPerformance();
 	void PanelEditor();
-	void PanelCamera();
 	void PanelObjects();
+
+	void PanelCamera(Camera* component);
+	void PanelCameraControl(CameraControl* component);
 
 	ImGuiIO* io;
 	MovingArray* fps;
@@ -45,6 +51,11 @@ private:
 	MyEngine::Shader* shader_grid = nullptr;
 	bool show_grid = true;
 	float grid_color[4] = { 1.0f,1.0f,1.0f,1.0f };
+
+	bool debug_window = true;
+	bool config_window = true;
+	bool inspect_window = true;
+	GameObject* inspect_object = nullptr;
 };
 
 

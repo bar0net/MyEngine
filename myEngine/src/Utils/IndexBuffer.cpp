@@ -41,8 +41,9 @@ namespace MyEngine {
 	}
 
 
-	void IndexBuffer::DrawLines()
+	void IndexBuffer::DrawLines(float line_width)
 	{
+		GLCall(glLineWidth(line_width));
 		GLCall(glDrawElements(GL_LINES, elements, GL_UNSIGNED_INT, NULL));
 	}
 

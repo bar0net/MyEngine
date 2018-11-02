@@ -10,9 +10,6 @@ namespace MyEngine {
 
 		if (SDL_Init(SDL_INIT_VIDEO) != 0) return data;
 
-		//Uint32 flags = SDL_WINDOW_OPENGL;
-		//flags |= SDL_WINDOW_RESIZABLE;
-
 		Uint32 flags = SDL_WINDOW_RESIZABLE;
 		flags |= SDL_WINDOW_OPENGL;
 
@@ -29,7 +26,7 @@ namespace MyEngine {
 
 		data->context = SDL_GL_CreateContext(data->window);
 		data->valid = data->context && data->surface && data->window;
-
+		
 		return data;
 	}
 
@@ -57,4 +54,13 @@ namespace MyEngine {
 		return SDL_GetWindowID(data->window);
 	}
 
+	void WindowUtils::Version(int & major, int & minor, int & patch)
+	{
+		SDL_version compiled;
+		SDL_VERSION(&compiled);
+
+		major = compiled.major;
+		minor = compiled.minor;
+		patch = compiled.patch;
+	}
 }

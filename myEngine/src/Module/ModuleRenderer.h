@@ -26,12 +26,13 @@ public:
 	UpdateState PostUpdate();
 	bool CleanUp();
 	void Draw(MyEngine::VertexArray* vao, MyEngine::IndexBuffer* ibo, MyEngine::Shader* shader);
-	void DrawLines(MyEngine::VertexArray* vao, MyEngine::IndexBuffer* ibo, MyEngine::Shader* shader);
+	void DrawLines(MyEngine::VertexArray* vao, MyEngine::IndexBuffer* ibo, MyEngine::Shader* shader, float line_width = 1.0f);
 
 	void CreateShader(const char* name, const char* vShader_file, const char* fShader_file);
 	MyEngine::Shader* GetShader(const char* name);
 	void EmptyShaders();
 	void ResizedWindow();
+	void EnableVSync(bool enabled);
 
 	void UpdateClearColor();
 	void UpdateClearColor(float r, float g, float b, float a);
@@ -41,6 +42,7 @@ public:
 
 	int width = 1280;
 	int height = 720;
+	bool vsyncEnabled = true;
 
 	float clearColor[4] = { 0.3f, 0.3f, 0.3f, 1.0f };
 };

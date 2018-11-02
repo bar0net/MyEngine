@@ -2,6 +2,7 @@
 #define _MYENGINE_SDL_UTILS_H
 
 #include "LogSystem.h"
+#include <string>
 
 struct SDL_Window;
 class SDL_Surface;
@@ -23,6 +24,8 @@ namespace MyEngine {
 		static void SwapWindow(const WindowData* data);
 		static void WindowSize(const WindowData* data, int* width, int* height);
 		static int WindowID(const WindowData* data);
+
+		static void Version(int& major, int& minor, int& patch);
 	};
 }
 
