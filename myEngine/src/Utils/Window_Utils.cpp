@@ -1,11 +1,14 @@
 #include "Window_Utils.h"
 
+#include <assert.h>
+
 #include "SDL.h"
 
 namespace MyEngine {
 
 	WindowData* WindowUtils::CreateWindow(const char* title, unsigned int width, unsigned int height)
 	{
+		assert(title);
 		WindowData* data = new WindowData; // data deleted on ModuleRenderer cleanup
 
 		if (SDL_Init(SDL_INIT_VIDEO) != 0) return data;
@@ -32,6 +35,7 @@ namespace MyEngine {
 
 	void WindowUtils::DestroyWindow(WindowData* data)
 	{
+		assert(data);
 		SDL_GL_DeleteContext(data->context);
 		SDL_DestroyWindow(data->window);
 		SDL_Quit();
@@ -39,11 +43,13 @@ namespace MyEngine {
 
 	void WindowUtils::SwapWindow(const WindowData* data)
 	{
+		assert(data);
 		SDL_GL_SwapWindow(data->window);
 	}
 
 	void WindowUtils::WindowSize(const WindowData* data, int* width, int* height)
 	{
+		assert(data && width && height);
 		*(data->surface) = *SDL_GetWindowSurface(data->window); 
 
 		SDL_GetWindowSize(data->window, width, height);
@@ -51,6 +57,7 @@ namespace MyEngine {
 
 	int WindowUtils::WindowID(const WindowData * data)
 	{
+		assert(data);
 		return SDL_GetWindowID(data->window);
 	}
 

@@ -1,6 +1,6 @@
 #include "MovingArray.h"
 #include <cstring>
-#include "LogSystem.h"
+#include <assert.h>
 
 MovingArray::MovingArray(unsigned int size, unsigned int default_value) : size(size)
 {
@@ -29,5 +29,6 @@ void MovingArray::push(unsigned int x)
 
 float MovingArray::Get(void* data, int x)
 {
+
 	return (float)(*(MovingArray*)data)[x];
 }

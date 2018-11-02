@@ -1,6 +1,7 @@
 #include "Render_Utils.h"
 
 #include <string>
+#include <assert.h>
 
 #include "GL/glew.h"
 #include "GL/wglew.h"
@@ -37,6 +38,7 @@ namespace MyEngine {
 
 	bool RenderUtils::GLLogCall(const char * function, const char * file, int line)
 	{
+		assert(function && file && line);
 		GLenum error = glGetError();
 		if (error == GL_NO_ERROR) return true;
 

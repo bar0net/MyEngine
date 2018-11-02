@@ -1,6 +1,7 @@
 #include "Shader.h"
 
 #include <fstream>
+#include <assert.h>
 
 #include "GL/glew.h"
 #include "Render_Utils.h"
@@ -13,6 +14,7 @@ namespace MyEngine
 {
 	Shader::Shader(const char* vertex_file, const char* fragment_file)
 	{
+		assert(vertex_file && fragment_file);
 		unsigned int vShader = CompileShader(vertex_file, (int)GL_VERTEX_SHADER);
 		unsigned int fShader = CompileShader(fragment_file, (int)GL_FRAGMENT_SHADER);
 
@@ -82,6 +84,7 @@ namespace MyEngine
 
 	const char* Shader::ReadFile(const char* filename) const
 	{
+		assert(filename);
 		char* data = nullptr;
 		FILE* file = nullptr;
 		fopen_s(&file, filename, "rb");
@@ -105,6 +108,7 @@ namespace MyEngine
 
 	unsigned int Shader::CompileShader(const char* filename, int type) const
 	{
+		assert(filename);
 		int success = 0;
 
 		const char* shaderData = ReadFile(filename);
@@ -139,12 +143,14 @@ namespace MyEngine
 
 	void Shader::SetUniform4x4(const char* name, math::float4x4* entry) const
 	{
+		assert(name);
 		this->Bind();
 		GLCall(glUniformMatrix4fv(glGetUniformLocation(program, name), 1, GL_TRUE, &(*entry)[0][0]));
 	}
 
 	void Shader::SetUniform4(const char* name, math::float4* entry) const
 	{
+		assert(name && entry);
 		this->Bind();
 		GLCall(glUniform4f(glGetUniformLocation(program, name), entry->x, entry->y, entry->z, entry->w));
 	}

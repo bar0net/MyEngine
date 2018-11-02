@@ -1,5 +1,7 @@
 #include "ModuleEditor.h"
 
+#include <assert.h>
+
 #include "../_Vendor/imgui-docking/imgui.h"
 #include "../_Vendor/imgui-docking/imgui_impl_sdl.h"
 #include "../_Vendor/imgui-docking/imgui_impl_opengl3.h"
@@ -196,6 +198,7 @@ void ModuleEditor::FrameEnd() const
 
 void ModuleEditor::ProcessEvent(void* event) const
 {
+	assert(event);
 	ImGui_ImplSDL2_ProcessEvent((SDL_Event*)event);
 }
 
@@ -301,6 +304,7 @@ void ModuleEditor::PanelObjects()
 
 void ModuleEditor::PanelCamera(Camera* component) const
 {
+	assert(component);
 	if (ImGui::CollapsingHeader("Camera Properties"))
 	{
 		if (ImGui::InputFloat("Near Plane", &component->nearPlane)) component->UpdateFrustum();
@@ -311,6 +315,7 @@ void ModuleEditor::PanelCamera(Camera* component) const
 
 void ModuleEditor::PanelCameraControl(CameraControl* component) const
 {
+	assert(component);
 	if (ImGui::CollapsingHeader("Camera Control"))
 	{
 		ImGui::InputFloat("Velocity", &component->velocity);

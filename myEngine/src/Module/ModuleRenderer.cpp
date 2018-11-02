@@ -79,6 +79,8 @@ bool ModuleRenderer::CleanUp()
 
 void ModuleRenderer::Draw(const MyEngine::VertexArray* vao, const MyEngine::IndexBuffer * ibo, const MyEngine::Shader * shader) const
 {
+	assert(vao && ibo && shader);
+
 	shader->Bind();
 	vao->Bind();
 	ibo->Bind();
@@ -87,6 +89,8 @@ void ModuleRenderer::Draw(const MyEngine::VertexArray* vao, const MyEngine::Inde
 
 void ModuleRenderer::DrawLines(const MyEngine::VertexArray * vao, const MyEngine::IndexBuffer * ibo, const MyEngine::Shader * shader, float line_width) const
 {
+	assert(vao && ibo && shader);
+
 	shader->Bind();
 	vao->Bind();
 	ibo->Bind();
@@ -95,6 +99,8 @@ void ModuleRenderer::DrawLines(const MyEngine::VertexArray * vao, const MyEngine
 
 void ModuleRenderer::CreateShader(const char* name, const char* vShader_file, const char* fShader_file)
 {
+	assert(name && vShader_file && fShader_file);
+
 	if (shaders.find(name) == shaders.end())
 		shaders[name] = new MyEngine::Shader(vShader_file, fShader_file);
 	else
@@ -103,6 +109,8 @@ void ModuleRenderer::CreateShader(const char* name, const char* vShader_file, co
 
 MyEngine::Shader* ModuleRenderer::GetShader(const char* name)
 {
+	assert(name);
+
 	if (shaders.find(name) != shaders.end())
 		return shaders[name];
 	else

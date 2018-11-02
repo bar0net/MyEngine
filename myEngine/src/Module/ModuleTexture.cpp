@@ -1,5 +1,7 @@
 #include "ModuleTexture.h"
 
+#include <assert.h>
+
 #include "GL/glew.h"
 #include "IL/il.h"
 #include "IL/ilut.h"
@@ -41,6 +43,8 @@ bool ModuleTexture::CleanUp()
 
 unsigned int ModuleTexture::LoadTexture(const char* filename)
 {
+	assert(filename);
+
 	ILuint imageID;
 	ilGenImages(1, &imageID);
 	ilBindImage(imageID);

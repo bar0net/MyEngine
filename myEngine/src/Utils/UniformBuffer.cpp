@@ -35,6 +35,7 @@ void UniformBuffer::UnBind() const
 
 void UniformBuffer::SetUniform4x4(unsigned int offset, math::float4x4* data) const
 {
+	assert(data);
 	GLCall(glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo, 0, 2 * sizeof(float4x4)));
 	GLCall(glBindBuffer(GL_UNIFORM_BUFFER, ubo));
 	GLCall(glBufferSubData(GL_UNIFORM_BUFFER, offset, sizeof(float4x4), &data->Transposed()[0][0]));
