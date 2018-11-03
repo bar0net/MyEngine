@@ -31,12 +31,53 @@
 #define GRID_LENGTH 100
 #define GIZMO_LENGTH 0.5F
 
-#define DISABLED_COLOR ImVec4(0.6F, 0.6F, 0.6F, 1.0F)
+#define DISABLEDTEXT_COLOR ImVec4(0.7F, 0.7F, 0.7F, 1.0F)
+#define DISABLED_COLOR ImVec4(0.5F, 0.5F, 0.5F, 1.0F)
+#define DISABLED_HIGHLIGHT_COLOR ImVec4(0.6F, 0.6F, 0.6F, 1.0F)
 #define NONE_COLOR ImVec4(0.0F, 1.0F, 0.0F, 1.0F)
 #define DEBUG_COLOR ImVec4(0.0F, 1.0F, 1.0F, 1.0F)
 #define INFO_COLOR ImVec4(1.0F, 1.0F, 1.0F, 1.0F)
 #define WARNING_COLOR ImVec4(1.0F, 1.0F, 0.0F, 1.0F)
 #define ERROR_COLOR ImVec4(1.0F, 0.0F, 0.0F, 1.0F)
+
+void AddConsoleButton(const char* text, bool& active, MyEngine::LogLevel type)
+{
+	unsigned int i = 0;
+	if (active)
+	{
+		switch (type)
+		{
+		case MyEngine::LogLevel::None:
+			ImGui::PushStyleColor(ImGuiCol_Text, NONE_COLOR);
+			break;
+		case MyEngine::LogLevel::Debug:
+			ImGui::PushStyleColor(ImGuiCol_Text, DEBUG_COLOR);
+			break;
+		case MyEngine::LogLevel::Info:
+			ImGui::PushStyleColor(ImGuiCol_Text, INFO_COLOR);
+			break;
+		case MyEngine::LogLevel::Warning:
+			ImGui::PushStyleColor(ImGuiCol_Text, WARNING_COLOR);
+			break;
+		case MyEngine::LogLevel::Error:
+			ImGui::PushStyleColor(ImGuiCol_Text, ERROR_COLOR);
+			break;
+		default:
+			ImGui::PushStyleColor(ImGuiCol_Text, INFO_COLOR);
+			break;
+		}
+		++i;
+	}
+	else 
+	{
+		ImGui::PushStyleColor(ImGuiCol_Text, DISABLEDTEXT_COLOR); ++i;
+		ImGui::PushStyleColor(ImGuiCol_Button, DISABLED_COLOR); ++i;
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, DISABLED_HIGHLIGHT_COLOR); ++i;
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, DISABLED_HIGHLIGHT_COLOR); ++i;
+	}
+	if (ImGui::Button(text)) active = !active;
+	while(i-- > 0) ImGui::PopStyleColor();
+}
 
 bool ModuleEditor::Init()
 {
@@ -363,29 +404,23 @@ void ModuleEditor::PanelObjects()
 
 void ModuleEditor::PanelConsole()
 {
-	if (show_info) ImGui::PushStyleColor(ImGuiCol_Text, INFO_COLOR);
-	else ImGui::PushStyleColor(ImGuiCol_Text, DISABLED_COLOR);
-	if (ImGui::Button("Info")) show_info = !show_info; 
+	// Clear Button
+	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0F, 0.55F, 0.55F, 1.0F));
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.0F, 0.6F, 0.6F, 1.0F));
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.0F, 0.62F, 0.62F, 1.0F));
+	if (ImGui::Button("Clear")) logger->history.clear();
+	ImGui::PopStyleColor(); 
+	ImGui::PopStyleColor(); 
 	ImGui::PopStyleColor();
-	ImGui::SameLine();
+	ImGui::SameLine(); ImGui::Spacing(); ImGui::SameLine();
 
-	if (show_debug) ImGui::PushStyleColor(ImGuiCol_Text, DEBUG_COLOR);
-	else ImGui::PushStyleColor(ImGuiCol_Text, DISABLED_COLOR);
-	if (ImGui::Button("Debug")) show_debug = !show_debug;
-	ImGui::PopStyleColor();
-	ImGui::SameLine();
+	// Log Level Buttons
+	AddConsoleButton("Info", show_info, MyEngine::LogLevel::Info);			ImGui::SameLine();
+	AddConsoleButton("Debug", show_debug, MyEngine::LogLevel::Debug);		ImGui::SameLine();
+	AddConsoleButton("Warning", show_warning, MyEngine::LogLevel::Warning);	ImGui::SameLine();
+	AddConsoleButton("Error", show_error, MyEngine::LogLevel::Error);		ImGui::Separator();
 
-	if (show_warning) ImGui::PushStyleColor(ImGuiCol_Text, WARNING_COLOR);
-	else ImGui::PushStyleColor(ImGuiCol_Text, DISABLED_COLOR);
-	if (ImGui::Button("Warning")) show_warning = !show_warning;
-	ImGui::PopStyleColor();
-	ImGui::SameLine();
-
-	if (show_error) ImGui::PushStyleColor(ImGuiCol_Text, ERROR_COLOR);
-	else ImGui::PushStyleColor(ImGuiCol_Text, DISABLED_COLOR);
-	if (ImGui::Button("Error")) show_error = !show_error;
-	ImGui::PopStyleColor();
-
+	// Console Text
 	ImGui::BeginChild("Scrolling");
 	for (std::list<MyEngine::LogData>::iterator it = logger->history.begin(); it != logger->history.end(); ++it)
 	{
