@@ -151,6 +151,7 @@
     <ClCompile Include="src\GameObject\Components\CameraControl.cpp" />
     <ClCompile Include="src\GameObject\Components\MeshRenderer.cpp" />
     <ClCompile Include="src\GameObject\GameObject.cpp" />
+    <ClCompile Include="src\Module\ModuleModelLoader.cpp" />
     <ClCompile Include="src\Module\ModuleScene.cpp" />
     <ClCompile Include="src\Module\ModuleTexture.cpp" />
     <ClCompile Include="src\Utils\MovingArray.cpp" />
@@ -218,6 +219,7 @@
     <ClInclude Include="src\GameObject\Components\CameraControl.h" />
     <ClInclude Include="src\GameObject\Components\MeshRenderer.h" />
     <ClInclude Include="src\GameObject\GameObject.h" />
+    <ClInclude Include="src\Module\ModuleModelLoader.h" />
     <ClInclude Include="src\Module\ModuleScene.h" />
     <ClInclude Include="src\Module\ModuleTexture.h" />
     <ClInclude Include="src\Utils\MovingArray.h" />

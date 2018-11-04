@@ -3,6 +3,8 @@
 #include <vector>
 
 #include "ModuleRenderer.h"
+#include "ModuleModelLoader.h"
+
 #include "../Application.h"
 #include "../GameObject/GameObject.h"
 #include "../GameObject/Components/MeshRenderer.h"
@@ -10,15 +12,16 @@
 #include "../GameObject/Components/CameraControl.h"
 #include "../Utils/VertexBufferLayout.h"
 #include "../Module/ModuleTexture.h"
+#include "../Module/ModuleModelLoader.h"
 #include "../Utils/Shader.h"
 
 //#include "../Utils/Shader.h"
 
 bool ModuleScene::Init() 
 {
-	gameObjects["Pyramid"] = new GameObject("Triangle");
 
-	/* ==== PYRAMID ==== */
+	/*
+	// ==== PYRAMID ====
 	std::vector<float> triangle = {
 		 0.0F,  1.0F,  0.0F, 0.50F, 1.0F,	//0
 		-0.5F, -0.5F,  0.5F, 0.00F, 0.0F,	//1
@@ -37,6 +40,7 @@ bool ModuleScene::Init()
 	};
 
 
+	*/
 	/* ==== QUAD ====
 	std::vector<float> triangle = {
 		-0.5f,   0.5f,  0.0f, 0.0f, 1.0f,	
@@ -50,19 +54,32 @@ bool ModuleScene::Init()
 		1, 2, 3
 	};*/
 
-	MyEngine::VertexBufferLayout layout;
-	layout.Push<float>(3);
-	layout.Push<float>(2);
 
+	//gameObjects["Pyramid"] = new GameObject("Pyramid");
+	//MyEngine::VertexBufferLayout layout;
+	//layout.Push<float>(3);
+	//layout.Push<float>(2);
+
+	//MyEngine::Shader* texture_shader = App->renderer->CreateShader("texture", "texture.vs", "texture.fs");
+	//unsigned int textureID = App->texture->LoadTexture("Lenna.png");
+	//texture_shader->Bind();
+	//texture_shader->AddTexture2D(textureID);
+	//gameObjects["Pyramid"]->AddComponent(new MeshRenderer(&triangle, &layout, &indices, texture_shader));
+
+
+
+	Mesh mesh = ModuleModelLoader::Load("BakerHouse.fbx");
+	gameObjects["Model"] = new GameObject("Model");
 	MyEngine::Shader* texture_shader = App->renderer->CreateShader("texture", "texture.vs", "texture.fs");
-	unsigned int textureID = App->texture->LoadTexture("Lenna.png");
-	texture_shader->Bind();
+	unsigned int textureID = App->texture->LoadTexture(mesh.texture_path.c_str());
 	texture_shader->AddTexture2D(textureID);
+	gameObjects["Model"]->AddComponent(new MeshRenderer(&mesh.vertices, &mesh.layout, &mesh.indices, texture_shader));
 
-	gameObjects["Pyramid"]->AddComponent(new MeshRenderer(&triangle, &layout, &indices, texture_shader));
-	gameObjects["Pyramid"]->SetPosition(0.0F, 4.0F, -10.0F);
-	gameObjects["Pyramid"]->SetRotation(0.0F, 0.0F, 0.0F);
+	gameObjects["Model"]->SetPosition(0.0F, 0.0F, 0.0F);
+	gameObjects["Model"]->SetRotation(0.0F, 0.0F, 0.0F);
 	
+
+
 	gameObjects["Camera"] = new GameObject("Camera");
 	gameObjects["Camera"]->SetPosition(0.0F, 1.0F, 10.0F);
 	gameObjects["Camera"]->AddComponent(new Camera());

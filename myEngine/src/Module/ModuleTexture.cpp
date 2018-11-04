@@ -44,6 +44,7 @@ bool ModuleTexture::CleanUp()
 unsigned int ModuleTexture::LoadTexture(const char* filename)
 {
 	assert(filename);
+	LOGINFO("Loading Texture %s", filename);
 
 	ILuint imageID;
 	ilGenImages(1, &imageID);
@@ -66,7 +67,7 @@ unsigned int ModuleTexture::LoadTexture(const char* filename)
 		if (channels == 3) success = ilConvertImage(IL_RGB, IL_UNSIGNED_BYTE);
 		else if (channels == 4)	success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
 
-		if (!success) LOGERROR("Image conversion on Texture Load.");
+		if (!success) LOGERROR("Image conversion on Texture Load failed.");
 
 		ILubyte* data = ilGetData();
 		int width = ilGetInteger(IL_IMAGE_WIDTH);
@@ -85,12 +86,12 @@ unsigned int ModuleTexture::LoadTexture(const char* filename)
 		ilDeleteImages(1, &imageID);
 		textures.insert(textureID);
 		GLCall(glBindTexture(GL_TEXTURE_2D, 0));
-		LOGINFO("Texture loading successful.");
+		LOGINFO("Texture %s loaded successfully.", filename);
 		return textureID;
 	}
 
 	error = ilGetError();
-	LOGERROR("Image load failed - IL reports error: %s - %s", error, iluErrorString(error));
+	LOGERROR("Image load failed - IL reports error: %i - %s", (int)error, iluErrorString(error));
 	return 0;
 }
 

@@ -11,6 +11,7 @@ class ModuleEditor;
 class ModuleTime;
 class ModuleScene;
 class ModuleTexture;
+class ModuleModelLoader;
 
 class Application
 {
@@ -28,6 +29,7 @@ public:
 	ModuleTime* time;
 	ModuleScene* scene;
 	ModuleTexture* texture;
+	ModuleModelLoader* models;
 
 
 private:

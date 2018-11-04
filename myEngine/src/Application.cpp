@@ -6,6 +6,7 @@
 #include "Module/ModuleTime.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
+#include "Module/ModuleModelLoader.h"
 
 Application::Application()
 {
@@ -15,6 +16,7 @@ Application::Application()
 	modules.push_back(time = new ModuleTime());
 	modules.push_back(scene = new ModuleScene());
 	modules.push_back(editor = new ModuleEditor());
+	modules.push_back(models = new ModuleModelLoader());
 }
 
 

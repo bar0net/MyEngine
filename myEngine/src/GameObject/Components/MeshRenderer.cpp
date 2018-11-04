@@ -12,11 +12,9 @@
 
 #include "GL/glew.h"
 
-float r;
 
 MeshRenderer::MeshRenderer(const std::vector<float>* vertices, const MyEngine::VertexBufferLayout* layout, const std::vector<unsigned int>* indices, MyEngine::Shader* shader) : Component("MeshRenderer"), shader(shader)
 {
-	// ToConsider: Instead of passing vertices and layout, pass the vao directly (?)
 	this->vbo = new MyEngine::VertexBuffer(vertices);
 	this->vao = new MyEngine::VertexArray();
 	this->vao->AddBuffer(*vbo, *layout);
@@ -40,12 +38,6 @@ MeshRenderer::~MeshRenderer()
 
 void MeshRenderer::Update()
 {
-
-	r = r + 90.0F * App->time->DeltaTime();
-	if (r > 360) r -= 360;
-	gameObject->SetRotation(0,r,0);
-
-
 	if (this->gameObject->transformChanged)
 	{
 		this->shader->Bind();

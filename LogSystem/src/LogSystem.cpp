@@ -3,7 +3,7 @@
 #include <string>
 #include <stdarg.h>
 
-#define _USE_CONSOLE_ 0
+#define _USE_CONSOLE_ 1
 
 #if (_USE_CONSOLE_ == 1)
 	#include <iostream>
