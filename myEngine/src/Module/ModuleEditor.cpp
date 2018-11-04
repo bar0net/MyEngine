@@ -26,6 +26,7 @@
 #include "../GameObject/GameObject.h"
 #include "../GameObject/Components/Camera.h"
 #include "../GameObject/Components/CameraControl.h"
+#include "../GameObject/Components/MeshRenderer.h"
 
 #define GLSL_VERSION "#version 130"
 #define GRID_LENGTH 100
@@ -395,8 +396,8 @@ void ModuleEditor::PanelObjects()
 		{
 			if (it->first == "Camera") PanelCamera((Camera*)it->second);
 			else if (it->first == "CameraControl") PanelCameraControl((CameraControl*)it->second);
+			else if (it->first == "MeshRenderer") PanelMeshRenderer((MeshRenderer*)it->second);
 			else ImGui::Text(it->first);
-			ImGui::Separator();
 		}
 	}
 
@@ -460,9 +461,28 @@ void ModuleEditor::PanelCamera(Camera* component) const
 void ModuleEditor::PanelCameraControl(CameraControl* component) const
 {
 	assert(component);
-	if (ImGui::CollapsingHeader("Camera Control"))
+	if (ImGui::CollapsingHeader(component->GetName()))
 	{
 		ImGui::InputFloat("Velocity", &component->velocity);
 		ImGui::InputFloat("Angular Velocity", &component->angularVelocity);
+	}
+}
+
+void ModuleEditor::PanelMeshRenderer(MeshRenderer * component) const
+{
+	if (ImGui::CollapsingHeader(component->GetName()))
+	{
+		for (unsigned int i = 0; i < component->meshes.size(); ++i)
+		{
+			ImGui::Text("Mesh (%i)", i);
+			ImGui::Text("Numer of Triangles: %d", component->meshes[i].num_triangles);
+			std::string s = "Display Texture " + std::to_string(i);
+			ImGui::Checkbox(s.c_str(), &component->meshes[i].display_texture);
+			if (component->meshes[i].display_texture)
+				ImGui::Image((ImTextureID)component->meshes[i].textureID, ImVec2(75, 75),ImVec2(0,0), ImVec2(1,1), ImVec4(1,1,1,1));
+			else
+				ImGui::Image((ImTextureID)component->meshes[i].textureID, ImVec2(75, 75), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0.6F, 0.6F, 0.6F, 1));
+			ImGui::Separator();
+		}
 	}
 }

@@ -187,6 +187,8 @@ namespace MyEngine
 
 	void Shader::EnableTexture2D(unsigned int textureID)
 	{
+		Bind();
+
 		GLCall(glActiveTexture(GL_TEXTURE0));
 		GLCall(glBindTexture(GL_TEXTURE_2D, textureID));
 
@@ -196,9 +198,10 @@ namespace MyEngine
 		GLCall(glUniform1i(location, 0));
 	}
 
-	void Shader::DisableTexture2D(unsigned int textureID)
+	void Shader::DisableTexture2D()
 	{
 		GLCall(glBindTexture(GL_TEXTURE_2D, 0));
+		
 	}
 
 	void Shader::RemoveTexture2D(unsigned int textureID)

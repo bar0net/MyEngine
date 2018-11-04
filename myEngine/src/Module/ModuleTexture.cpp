@@ -23,6 +23,8 @@ bool ModuleTexture::Init()
 	iluInit();
 	ilutInit();
 
+	checkers = LoadTexture("checkers.png");
+
 	return true;
 }
 

@@ -23,6 +23,7 @@ struct Mesh
 	MyEngine::VertexArray *vao;
 	unsigned int num_triangles;
 	unsigned int textureID;
+	bool display_texture = true;
 };
 
 class MeshRenderer : public Component

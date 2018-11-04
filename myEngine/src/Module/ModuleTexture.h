@@ -18,6 +18,7 @@ public:
 	unsigned int LoadTexture(const char* filename);
 	void UnLoadTexture(unsigned int id);
 
+	unsigned int checkers;
 	std::unordered_map<const char*, unsigned int> file2texture;
 
 };

@@ -5,6 +5,7 @@
 #include "../../Globals.h"
 #include "../../Module/ModuleRenderer.h"
 #include "../../Module/ModuleModelLoader.h"
+#include "../../Module/ModuleTexture.h"
 #include "../../Module/ModuleTime.h"
 #include "../../Utils/Shader.h"
 #include "../../Utils/VertexBuffer.h"
@@ -66,10 +67,18 @@ void MeshRenderer::Update()
 
 	for (Mesh mesh : meshes)
 	{
-		if (MyEngine::Globals::active_texture != mesh.textureID)
+		unsigned int texture;
+
+		if (mesh.display_texture)
+			texture = mesh.textureID;
+		else
+			texture = App->texture->checkers;
+
+		if (MyEngine::Globals::active_texture != texture)
 		{
-			shader->EnableTexture2D(mesh.textureID);
-			MyEngine::Globals::active_texture = mesh.textureID;
+			shader->DisableTexture2D();
+			shader->EnableTexture2D(texture);
+			MyEngine::Globals::active_texture = texture;
 		}
 
 		App->renderer->Draw(mesh.vao, mesh.ibo, shader);

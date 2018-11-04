@@ -17,6 +17,7 @@ namespace MyEngine
 class GameObject;
 class Camera;
 class CameraControl;
+class MeshRenderer;
 
 class ModuleEditor : public Module
 {
@@ -40,7 +41,8 @@ private:
 
 	void PanelCamera(Camera* component) const;
 	void PanelCameraControl(CameraControl* component) const;
-
+	void PanelMeshRenderer(MeshRenderer* component) const;
+		 
 	ImGuiIO* io = nullptr;
 	MovingArray* fps = nullptr;
 	MovingArray* avg_ms_array = nullptr;

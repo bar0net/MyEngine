@@ -31,7 +31,7 @@ namespace MyEngine
 
 		//void AddTexture2D(unsigned int textureID);
 		void EnableTexture2D(unsigned int textureID);
-		void DisableTexture2D(unsigned int textureID);
+		void DisableTexture2D();
 		void RemoveTexture2D(unsigned int textureID);
 
 		unsigned int program = 0;
