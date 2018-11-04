@@ -17,7 +17,7 @@ namespace MyEngine
 }
 
 
-struct Mesh
+struct Model
 {
 	bool valid = true;
 	std::vector<float> vertices;
@@ -25,7 +25,7 @@ struct Mesh
 	MyEngine::VertexBufferLayout layout;
 
 	unsigned int num_triangles = 0;
-	std::string texture_path;
+	unsigned int textureID = 0;
 };
 
 
@@ -35,7 +35,7 @@ public:
 	ModuleModelLoader();
 	virtual ~ModuleModelLoader();
 
-	static Mesh Load(const char* filename);
+	static bool Load(const char * filename, std::vector<Model>& models);
 
 private:
 	static void ParseMesh(const aiMesh* const mesh, std::vector<float>* const vertices, std::vector<unsigned int>* const indices, std::unordered_map<std::string, unsigned int>* vertex2index);

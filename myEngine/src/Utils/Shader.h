@@ -3,7 +3,7 @@
 
 #include "LogSystem.h"
 
-#include <vector>
+#include <set>
 
 #define SHADER_VIEW_OFFSET sizeof(float4x4)
 #define SHADER_PROJ_OFFSET 0
@@ -29,7 +29,10 @@ namespace MyEngine
 		void SetUniform4(const char* name, math::float4& entry) const;
 		void SetUniform4(const char* name, float x, float y, float z, float w) const;
 
-		void AddTexture2D(unsigned int textureID);
+		//void AddTexture2D(unsigned int textureID);
+		void EnableTexture2D(unsigned int textureID);
+		void DisableTexture2D(unsigned int textureID);
+		void RemoveTexture2D(unsigned int textureID);
 
 		unsigned int program = 0;
 
@@ -37,7 +40,7 @@ namespace MyEngine
 		const char* ReadFile(const char* filename) const;
 		unsigned int CompileShader(const char* filename, int type) const;
 
-		std::vector<unsigned int> textures;
+		std::set<unsigned int> textures;
 	};
 
 }

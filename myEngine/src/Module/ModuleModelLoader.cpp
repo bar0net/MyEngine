@@ -12,6 +12,7 @@
 
 #include "../Application.h"
 #include "../Module/ModuleRenderer.h"
+#include "../Module/ModuleTexture.h"
 #include "../Utils/VertexBufferLayout.h"
 
 
@@ -26,34 +27,49 @@ ModuleModelLoader::~ModuleModelLoader()
 {
 }
 
-Mesh ModuleModelLoader::Load(const char * filename)
+bool ModuleModelLoader::Load(const char * filename, std::vector<Model>& models)
 {
 	LOGINFO("Loading 3D Model: %s", filename);
-	Mesh output;
 
 	const aiScene* scene = aiImportFile(filename, 0);
 	if (scene == NULL) 
 	{
 		const char* error = aiGetErrorString();
 		LOGERROR("Error loading %s: %s", filename, error);
-		output.valid = false;
-		return output;
+		return false;
 	}
 
-	std::unordered_map<std::string, unsigned int> vertex2index;
-	for (unsigned int i = 0; i < scene->mNumMeshes; ++i) ParseMesh(scene->mMeshes[i], &(output.vertices), &(output.indices), &vertex2index);
+	models.empty();
+	models.reserve(scene->mNumMeshes);
 
-	aiString path;
-	scene->mMaterials[0]->GetTexture(aiTextureType_DIFFUSE, 0, &path, (aiTextureMapping*)aiTextureMapping_UV, 0);
-	output.texture_path = std::string(path.C_Str());
+	std::vector<unsigned int> materials;
+	materials.reserve(scene->mNumMaterials);
 
-	//MyEngine::Shader* shader = App->renderer->CreateShader("default", "default.vs", "default.fs");
-	output.layout.Push<float>(NUM_POSITIONS);
-	output.layout.Push<float>(NUM_UVW_COORD);
+	for (unsigned int i = 0; i < scene->mNumMaterials; ++i)
+	{
+		aiString path;
+		scene->mMaterials[i]->GetTexture(aiTextureType_DIFFUSE, 0, &path, (aiTextureMapping*)aiTextureMapping_UV, 0);
+		
+		materials.emplace_back( App->texture->LoadTexture(path.C_Str()) );
+	}
+
+	for (unsigned int i = 0; i < scene->mNumMeshes; ++i)
+	{
+		Model m;
+		std::unordered_map<std::string, unsigned int> vertex2index;
+		ParseMesh(scene->mMeshes[i], &(m.vertices), &(m.indices), &vertex2index);
+		m.textureID = materials[scene->mMeshes[i]->mMaterialIndex];
+		m.layout.Push<float>(NUM_POSITIONS);
+		m.layout.Push<float>(NUM_UVW_COORD);
+		m.num_triangles = scene->mMeshes[i]->mNumFaces;
+		models.emplace_back(m);
+	}
+
+
 
 	LOGINFO("%s Loaded successfully.", filename);
-	output.valid = true;
-	return output;
+
+	return true;
 }
 
 

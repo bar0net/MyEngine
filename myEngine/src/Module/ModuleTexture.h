@@ -4,6 +4,7 @@
 #include "Module.h"
 
 #include <unordered_set>
+#include <unordered_map>
 
 class ModuleTexture : public Module
 {
@@ -16,9 +17,8 @@ public:
 
 	unsigned int LoadTexture(const char* filename);
 	void UnLoadTexture(unsigned int id);
-	std::unordered_set<unsigned int> textures;
 
-private:
+	std::unordered_map<const char*, unsigned int> file2texture;
 
 };
 

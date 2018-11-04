@@ -67,18 +67,21 @@ bool ModuleScene::Init()
 	//gameObjects["Pyramid"]->AddComponent(new MeshRenderer(&triangle, &layout, &indices, texture_shader));
 
 
+	const char* model_file = "BakerHouse.fbx";
+	std::vector<Model> models;
+	if (ModuleModelLoader::Load(model_file, models))
+	{
+		gameObjects["Model"] = new GameObject("Model");
+		shader = App->renderer->CreateShader("texture", "texture.vs", "texture.fs");
+		gameObjects["Model"]->AddComponent(new MeshRenderer(models, shader));
 
-	Mesh mesh = ModuleModelLoader::Load("BakerHouse.fbx");
-	gameObjects["Model"] = new GameObject("Model");
-	MyEngine::Shader* texture_shader = App->renderer->CreateShader("texture", "texture.vs", "texture.fs");
-	unsigned int textureID = App->texture->LoadTexture(mesh.texture_path.c_str());
-	texture_shader->AddTexture2D(textureID);
-	gameObjects["Model"]->AddComponent(new MeshRenderer(&mesh.vertices, &mesh.layout, &mesh.indices, texture_shader));
-
-	gameObjects["Model"]->SetPosition(0.0F, 0.0F, 0.0F);
-	gameObjects["Model"]->SetRotation(0.0F, 0.0F, 0.0F);
-	
-
+		gameObjects["Model"]->SetPosition(0.0F, 0.0F, 0.0F);
+		gameObjects["Model"]->SetRotation(0.0F, 0.0F, 0.0F);
+	}
+	else
+	{
+		LOGERROR("Could not load %s.", model_file);
+	}
 
 	gameObjects["Camera"] = new GameObject("Camera");
 	gameObjects["Camera"]->SetPosition(0.0F, 1.0F, 10.0F);

@@ -5,6 +5,8 @@
 
 #include <vector>
 
+struct Model;
+
 namespace MyEngine 
 {
 	class VertexBuffer;
@@ -14,18 +16,25 @@ namespace MyEngine
 	class VertexArray;
 }
 
+struct Mesh
+{
+	MyEngine::VertexBuffer *vbo;
+	MyEngine::IndexBuffer *ibo;
+	MyEngine::VertexArray *vao;
+	unsigned int num_triangles;
+	unsigned int textureID;
+};
+
 class MeshRenderer : public Component
 {
 public:
-	MeshRenderer(const std::vector<float>* vertices, const MyEngine::VertexBufferLayout* layout, const std::vector<unsigned int>* indices, MyEngine::Shader* shader);
+	MeshRenderer(const std::vector<Model>& models, MyEngine::Shader* shader);
 	virtual ~MeshRenderer();
 
 	void Update();
 
+	std::vector<Mesh> meshes;
 	MyEngine::Shader *shader;
-	MyEngine::VertexBuffer *vbo;
-	MyEngine::IndexBuffer *ibo;
-	MyEngine::VertexArray *vao;
 };
 
 #endif // !_MYENGINE_MESHRENDERER_H

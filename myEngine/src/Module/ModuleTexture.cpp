@@ -1,4 +1,5 @@
 #include "ModuleTexture.h"
+#include "../Globals.h"
 
 #include <assert.h>
 
@@ -21,22 +22,21 @@ bool ModuleTexture::Init()
 	ilInit();
 	iluInit();
 	ilutInit();
-	textures.empty();
 
 	return true;
 }
 
 bool ModuleTexture::CleanUp()
 {
-	LOGINFO("Deleting all remaining loaded textures (%i textures)", textures.size());
+	LOGINFO("Deleting all remaining loaded textures (%i textures)", file2texture.size());
 
 
-	for (std::unordered_set<unsigned int>::iterator it = textures.begin(); it != textures.end(); ++it)
+	for (std::unordered_map<const char*, unsigned int>::iterator it = file2texture.begin(); it != file2texture.end(); ++it)
 	{
-		glDeleteTextures(1, &(*it));
+		glDeleteTextures(1, &(it->second));
 	}
 
-	textures.clear();
+	file2texture.clear();
 
 	return true;
 }
@@ -44,6 +44,11 @@ bool ModuleTexture::CleanUp()
 unsigned int ModuleTexture::LoadTexture(const char* filename)
 {
 	assert(filename);
+	if (file2texture.find(filename) != file2texture.end())
+	{
+		return file2texture[filename];
+	}
+
 	LOGINFO("Loading Texture %s", filename);
 
 	ILuint imageID;
@@ -55,6 +60,7 @@ unsigned int ModuleTexture::LoadTexture(const char* filename)
 
 	if (ilLoadImage(filename))
 	{
+
 		GLuint textureID;
 		GLCall(glGenTextures(1, &textureID));
 		GLCall(glBindTexture(GL_TEXTURE_2D, textureID));
@@ -84,8 +90,9 @@ unsigned int ModuleTexture::LoadTexture(const char* filename)
 		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
 
 		ilDeleteImages(1, &imageID);
-		textures.insert(textureID);
+		file2texture[filename] = textureID;
 		GLCall(glBindTexture(GL_TEXTURE_2D, 0));
+
 		LOGINFO("Texture %s loaded successfully.", filename);
 		return textureID;
 	}
@@ -97,14 +104,25 @@ unsigned int ModuleTexture::LoadTexture(const char* filename)
 
 void ModuleTexture::UnLoadTexture(const unsigned int id)
 {
-	if (id == 0 || textures.find(id) == textures.end())
+	if (id == 0)
 	{
-		LOGWARNING("Trying to unload texture %i but it is not registered.", id);
+		LOGWARNING("Trying to unload texture with id 0.");
 		return;
 	}
 
-	LOGINFO("Deleting texture %i.", id);
-	glDeleteTextures(1, &id);
+
+	for (std::unordered_map<const char*, unsigned int>::iterator it = file2texture.begin(); it != file2texture.end(); ++it)
+	{
+		if (it->second == id)
+		{
+			LOGINFO("Unloading texture %s (id: %i).", it->first, id);
+			file2texture.erase(it->first);
+			glDeleteTextures(1, &id);
+			return;
+		}
+	}
+
+	LOGWARNING("Trying to unload texture %i but it is not registered.", id);
 }
 
 

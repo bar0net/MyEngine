@@ -8,6 +8,7 @@ namespace MyEngine
 		static unsigned int active_vao = 0;
 		static unsigned int active_ibo = 0;
 		static unsigned int active_vbo = 0;
+		static unsigned int active_texture = 0;
 	}
 }
 
