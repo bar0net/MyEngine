@@ -60,6 +60,8 @@ private:
 	bool show_grid = true;
 	float grid_color[4] = { 1.0f,1.0f,1.0f,1.0f };
 
+	unsigned int prev_log_size = 0;
+
 	bool debug_window = true;
 	bool config_window = true;
 	bool inspect_window = true;

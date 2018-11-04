@@ -12,7 +12,7 @@ enum class KeyState
 	KEY_REPEAT,
 	KEY_UP
 };
-#include <SDL.h>
+
 enum class KeyCode
 {
 	A = 4,
@@ -38,6 +38,8 @@ public:
 	bool Init();
 	UpdateState PreUpdate();
 	bool CleanUp();
+
+	void ManageDropFile(const char* file);
 
 	bool GetKeyDown(KeyCode k)	{ return keyboard[(int)k] == KeyState::KEY_DOWN; }
 	bool GetKey(KeyCode k)		{ return keyboard[(int)k] == KeyState::KEY_REPEAT; }

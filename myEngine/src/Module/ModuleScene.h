@@ -21,10 +21,12 @@ public:
 	bool Start();
 	UpdateState Update();
 	bool CleanUp();
+
+	void NewModel(const char* file);
 	
 	MyEngine::Shader* shader = nullptr;
 
-	std::unordered_map<const char*, GameObject*> gameObjects;
+	std::unordered_map<std::string, GameObject*> gameObjects;
 };
 
 

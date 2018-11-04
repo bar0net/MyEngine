@@ -367,9 +367,9 @@ void ModuleEditor::PanelObjects()
 
 	ImVec2 panel_size = ImGui::GetWindowSize();
 
-	for (std::unordered_map<const char*, GameObject*>::iterator it = App->scene->gameObjects.begin(); it != App->scene->gameObjects.end(); ++it)
+	for (std::unordered_map<std::string, GameObject*>::iterator it = App->scene->gameObjects.begin(); it != App->scene->gameObjects.end(); ++it)
 	{
-		if (ImGui::Button(it->first, ImVec2(panel_size.x - 17, 0))) 
+		if (ImGui::Button(it->first.c_str(), ImVec2(panel_size.x - 17, 0))) 
 		{
 			inspect_object = it->second; 
 		}
@@ -444,6 +444,14 @@ void ModuleEditor::PanelConsole()
 			break;
 		}
 	}
+
+	// Set Scrolling at the end when a new line is added to the log.
+	if (prev_log_size != logger->history.size())
+	{
+		prev_log_size = logger->history.size();
+		ImGui::SetScrollHereY();
+	}
+
 	ImGui::EndChild();
 }
 

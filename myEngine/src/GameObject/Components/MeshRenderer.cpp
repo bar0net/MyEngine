@@ -18,9 +18,6 @@
 
 MeshRenderer::MeshRenderer(const std::vector<Model>& models, MyEngine::Shader* shader) : Component("MeshRenderer"), shader(shader)
 {
-	//math::float4x4 I = math::float4x4::identity;
-	//this->shader->SetUniform4x4("model", I); 
-
 	meshes.clear();
 	meshes.reserve(models.size());
 
@@ -58,12 +55,13 @@ MeshRenderer::~MeshRenderer()
 
 void MeshRenderer::Update()
 {
-	if (this->gameObject->transformChanged)
+	this->shader->Bind();
+	this->shader->SetUniform4x4("model", *gameObject->ModelMatrix());
+
+	/*if (this->gameObject->transformChanged)
 	{
-		this->shader->Bind();
-		this->shader->SetUniform4x4("model", *gameObject->ModelMatrix());
 		this->gameObject->transformChanged = false;
-	}
+	}*/
 
 	for (Mesh mesh : meshes)
 	{

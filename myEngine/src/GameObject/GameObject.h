@@ -13,7 +13,7 @@
 class GameObject
 {
 public:
-	GameObject(const char* name) : name(name) {};
+	GameObject(const char* name) { this->name = std::string(name); }
 
 	virtual ~GameObject();
 
@@ -39,7 +39,7 @@ public:
 
 	void AddComponent(Component* component);
 
-	const char* GetName() { return name; }
+	const char* GetName() { return name.c_str(); }
 
 	math::float3 position = math::float3::zero;
 	math::float3 rotation = math::float3::zero;
@@ -50,7 +50,7 @@ public:
 
 private:
 	math::float4x4 transform = math::float4x4::identity;
-	const char* name;
+	std::string name;
 };
 
 #endif // !_GAME_OBJECT_H

@@ -66,22 +66,7 @@ bool ModuleScene::Init()
 	//texture_shader->AddTexture2D(textureID);
 	//gameObjects["Pyramid"]->AddComponent(new MeshRenderer(&triangle, &layout, &indices, texture_shader));
 
-
-	const char* model_file = "BakerHouse.fbx";
-	std::vector<Model> models;
-	if (ModuleModelLoader::Load(model_file, models))
-	{
-		gameObjects["Model"] = new GameObject("Model");
-		shader = App->renderer->CreateShader("texture", "texture.vs", "texture.fs");
-		gameObjects["Model"]->AddComponent(new MeshRenderer(models, shader));
-
-		gameObjects["Model"]->SetPosition(0.0F, 0.0F, 0.0F);
-		gameObjects["Model"]->SetRotation(0.0F, 0.0F, 0.0F);
-	}
-	else
-	{
-		LOGERROR("Could not load %s.", model_file);
-	}
+	NewModel("BakerHouse.fbx");
 
 	gameObjects["Camera"] = new GameObject("Camera");
 	gameObjects["Camera"]->SetPosition(0.0F, 1.0F, 10.0F);
@@ -94,7 +79,7 @@ bool ModuleScene::Init()
 
 bool ModuleScene::Start()
 {
-	for (std::unordered_map<const char*, GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it)
+	for (std::unordered_map<std::string, GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it)
 		it->second->Start();
 
 	return true;
@@ -102,7 +87,7 @@ bool ModuleScene::Start()
 
 UpdateState ModuleScene::Update()
 {
-	for (std::unordered_map<const char*, GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it)
+	for (std::unordered_map<std::string, GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it)
 		it->second->Update();
 
 	return UpdateState::Update_Continue;
@@ -110,16 +95,42 @@ UpdateState ModuleScene::Update()
 
 bool ModuleScene::CleanUp()
 {
-	for (std::unordered_map<const char*, GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it)
+	for (std::unordered_map<std::string, GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it)
 		it->second->End();
 
-	for (std::unordered_map<const char*, GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it)
+	for (std::unordered_map<std::string, GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it)
 		it->second->CleanUp();
 
 	// Delete all gameobjects
-	for (std::unordered_map<const char*, GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it)
+	for (std::unordered_map<std::string, GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it)
 		delete(it->second);
 	gameObjects.clear();
 
 	return true;
+}
+
+void ModuleScene::NewModel(const char * file)
+{
+	std::string name = "Model";
+	std::string root = "Model ";
+	unsigned int count = 0;
+
+	while (App->scene->gameObjects.find(name.c_str()) != App->scene->gameObjects.end())
+		name = root + std::to_string(++count);
+
+	std::vector<Model> models;
+	if (ModuleModelLoader::Load(file, models))
+	{
+		gameObjects[name] = new GameObject(name.data());
+		shader = App->renderer->CreateShader("texture", "texture.vs", "texture.fs");
+		gameObjects[name]->AddComponent(new MeshRenderer(models, shader));
+
+		gameObjects[name]->SetPosition(0.0F, 0.0F, 0.0F);
+		gameObjects[name]->SetRotation(0.0F, 0.0F, 0.0F);
+	}
+	else
+	{
+		LOGERROR("Could not load %s.", file);
+	}
+
 }

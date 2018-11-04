@@ -75,6 +75,12 @@ bool ModuleModelLoader::Load(const char * filename, std::vector<Model>& models)
 
 void ModuleModelLoader::ParseMesh(const aiMesh* const mesh, std::vector<float>* const vertices, std::vector<unsigned int>* const indices, std::unordered_map<std::string, unsigned int>* vertex2index)
 {
+	if (mesh->mNumUVComponents[0] != NUM_UVW_COORD)
+	{
+		LOGERROR("%i uvw mesh coordinates not supported!", mesh->mNumUVComponents[0]);
+		return;
+	}
+
 	for (unsigned int j = 0; j < mesh->mNumVertices; ++j)
 	{
 		float* vertex = (float*)&mesh->mVertices[j];
