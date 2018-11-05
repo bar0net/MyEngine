@@ -229,6 +229,7 @@ UpdateState ModuleEditor::Update()
 			ImGui::MenuItem("Console", NULL, &console_window);
 			ImGui::MenuItem("Debug Tools", NULL, &debug_window);
 			ImGui::MenuItem("Inspector", NULL, &inspect_window);
+			ImGui::MenuItem("Scene", NULL, &scene_window);
 			ImGui::EndMenu();
 		}
 
@@ -239,6 +240,36 @@ UpdateState ModuleEditor::Update()
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
+	}
+
+	if (scene_window)
+	{
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+		ImGui::Begin("Scene", &scene_window, ImGuiWindowFlags_NoScrollbar);
+		ImVec2 size = ImGui::GetContentRegionAvail();
+		ImVec2 imgSize = size; 
+		float space = 0;
+
+		if (size.x * App->renderer->height < size.y * App->renderer->width)
+		{
+			imgSize.y = (size.x * App->renderer->height / App->renderer->width);
+			space = (size.y - imgSize.y) / 2.0F;
+			ImGui::Dummy(ImVec2(0, space));
+		}
+		else
+		{
+			imgSize.x = (size.y * App->renderer->width / App->renderer->height);
+			space = (size.x - imgSize.x) / 2.0F;
+			ImGui::Dummy(ImVec2(space, 0)); ImGui::SameLine();
+		}
+
+		ImGui::Image((ImTextureID)App->renderer->render_texture, imgSize, ImVec2(0,1), ImVec2(1,0));
+
+		scene_width = imgSize.x;
+		scene_height = imgSize.y;
+
+		ImGui::End();
+		ImGui::PopStyleVar();
 	}
 
 	if(config_window) 
@@ -275,6 +306,11 @@ UpdateState ModuleEditor::Update()
 
 void ModuleEditor::FrameStart()
 {
+	//App->texture->DrawViewTexture(App->renderer->frame_buffer, App->renderer->render_texture, App->renderer->depth_buffer);
+
+	MyEngine::RenderUtils::UnBindFrameBuffer(App->renderer->width, App->renderer->height);
+	MyEngine::RenderUtils::ClearViewport();
+
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->renderer->data->window);
 	ImGui::NewFrame();
@@ -295,6 +331,8 @@ void ModuleEditor::FrameEnd() const
 		ImGui::UpdatePlatformWindows();
 		ImGui::RenderPlatformWindowsDefault();
 	}
+
+	//MyEngine::RenderUtils::BindFrameBuffer(App->renderer->frame_buffer, App->renderer->width, App->renderer->height);
 }
 
 void ModuleEditor::ProcessEvent(void* event) const
@@ -309,7 +347,8 @@ void ModuleEditor::PanelPerformance() const
 	ImGui::PushItemWidth(ImGui::GetWindowWidth() - 25);
 	ImGui::PlotHistogram("", MovingArray::Get, fps, fps->size, 1, "", 0, 120, ImVec2(0, 50));
 	ImGui::Text("Average ms/frame: %ims - FPS: %i", avg_ms / (avg_ms_array->size), (int)(1000.0F * avg_ms_array->size / avg_ms));
-	ImGui::Text("Width: %ipx - Height: %ipx", App->renderer->width, App->renderer->height);
+	ImGui::Text("Window: %ipx x %ipx", App->renderer->width, App->renderer->height);
+	ImGui::Text("Scene View: %ipx x %ipx", scene_width, scene_height);
 
 	bool vsyncEnabled = App->renderer->vsyncEnabled;
 	ImGui::Checkbox("VSync", &vsyncEnabled);

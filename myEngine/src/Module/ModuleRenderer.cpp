@@ -11,6 +11,7 @@
 #include "../Application.h"
 
 #include "ModuleScene.h"
+#include "ModuleTexture.h"
 #include "../GameObject/GameObject.h"
 #include "../GameObject/Components/Camera.h"
 
@@ -40,12 +41,15 @@ bool ModuleRenderer::Init()
 
 	MyEngine::RenderUtils::CreateViewport(width, height, { 0.3F, 0.3F, 0.3F, 1.0F }, 1.0F);
 
+	App->texture->InitViewTexture(width, height, frame_buffer, render_texture, depth_buffer);
+
 	return true;
 }
 
 
 UpdateState ModuleRenderer::PreUpdate()
 {
+	MyEngine::RenderUtils::BindFrameBuffer(frame_buffer, width, height);
 	MyEngine::RenderUtils::ClearViewport();
 
 	return UpdateState::Update_Continue;

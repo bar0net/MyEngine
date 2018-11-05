@@ -30,6 +30,8 @@ namespace MyEngine {
 		static const char* Version();
 		static const char* Vendor();
 		static const char* Renderer();
+		static void BindFrameBuffer(unsigned int textureID, unsigned int width, unsigned int height);
+		static void UnBindFrameBuffer(unsigned int width, unsigned int height);
 
 	};
 }

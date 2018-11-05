@@ -43,6 +43,11 @@ public:
 
 	int width = 1280;
 	int height = 720;
+
+	unsigned int frame_buffer = 0;
+	unsigned int render_texture = 0;
+	unsigned int depth_buffer = 0;
+
 	bool vsyncEnabled = true;
 	bool showWireframe = false;
 	float clearColor[4] = { 0.3f, 0.3f, 0.3f, 1.0f };

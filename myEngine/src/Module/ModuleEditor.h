@@ -47,6 +47,8 @@ private:
 	MovingArray* fps = nullptr;
 	MovingArray* avg_ms_array = nullptr;
 	unsigned int avg_ms = 0;
+	unsigned int scene_width = 0;
+	unsigned int scene_height = 0;
 
 	MyEngine::VertexArray* vao_gizmo = nullptr;
 	MyEngine::IndexBuffer* ibo_gizmo = nullptr;
@@ -66,6 +68,7 @@ private:
 	bool config_window = true;
 	bool inspect_window = true;
 	bool console_window = true;
+	bool scene_window = true;
 	GameObject* inspect_object = nullptr;
 
 	bool show_info = true;

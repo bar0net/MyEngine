@@ -43,6 +43,29 @@ bool ModuleTexture::CleanUp()
 	return true;
 }
 
+void ModuleTexture::InitViewTexture(unsigned int width, unsigned int height, unsigned int& frameBuffer, unsigned int& textureID, unsigned int& depthBuffer)
+{
+	glGenFramebuffers(1, &frameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+
+	GLCall(glGenTextures(1, &textureID));
+	GLCall(glBindTexture(GL_TEXTURE_2D, textureID));
+	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
+	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0));
+
+	GLCall(glGenRenderbuffers(1, &depthBuffer));
+	GLCall(glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer));
+	GLCall(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height));
+
+	GLCall(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer));
+
+	GLCall(glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, textureID, 0));
+
+	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
+	GLCall(glDrawBuffers(1, DrawBuffers));
+}
+
 unsigned int ModuleTexture::LoadTexture(const char* filename)
 {
 	assert(filename);
@@ -125,6 +148,11 @@ void ModuleTexture::UnLoadTexture(const unsigned int id)
 	}
 
 	LOGWARNING("Trying to unload texture %i but it is not registered.", id);
+}
+
+void ModuleTexture::BindTexture(unsigned int textureID)
+{
+	GLCall(glBindTexture(GL_TEXTURE_2D, textureID));
 }
 
 

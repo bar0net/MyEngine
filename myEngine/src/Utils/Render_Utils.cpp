@@ -94,12 +94,12 @@ namespace MyEngine {
 
 	void RenderUtils::ModifyViewportSize(unsigned int width, unsigned int height)
 	{
-		glViewport(0, 0, width, height);
+		GLCall(glViewport(0, 0, width, height));
 	}
 
 	void RenderUtils::ChangeClearColor(float r, float g, float b, float a)
 	{
-		glClearColor(r, g, b, a);
+		GLCall(glClearColor(r, g, b, a));
 	}
 
 	void RenderUtils::EnableVSync(bool enabled)
@@ -132,5 +132,15 @@ namespace MyEngine {
 	const char * RenderUtils::Renderer()
 	{
 		return (const char*)glGetString(GL_RENDERER);
+	}
+	void RenderUtils::BindFrameBuffer(unsigned int textureID, unsigned int width, unsigned int height)
+	{
+		GLCall(glBindFramebuffer(GL_FRAMEBUFFER, textureID));
+		GLCall(glViewport(0, 0, width, height));
+	}
+	void RenderUtils::UnBindFrameBuffer(unsigned int width, unsigned int height)
+	{
+		GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+		GLCall(glViewport(0, 0, width, height));
 	}
 }

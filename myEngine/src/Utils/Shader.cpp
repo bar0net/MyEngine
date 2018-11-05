@@ -195,13 +195,13 @@ namespace MyEngine
 	{
 		Bind();
 
-		GLCall(glActiveTexture(GL_TEXTURE0));
+		GLCall(glActiveTexture(GL_TEXTURE1));
 		GLCall(glBindTexture(GL_TEXTURE_2D, textureID));
 
 		GLCall(int location = glGetUniformLocation(program, "texture0"));
 		if (location == -1) LOGWARNING("Cannot find Uniform texture0 in this shader.");
 
-		GLCall(glUniform1i(location, 0));
+		GLCall(glUniform1i(location, 1));
 	}
 
 	void Shader::DisableTexture2D()
