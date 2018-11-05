@@ -80,11 +80,13 @@ bool ModuleRenderer::CleanUp()
 void ModuleRenderer::Draw(const MyEngine::VertexArray* vao, const MyEngine::IndexBuffer * ibo, const MyEngine::Shader * shader) const
 {
 	assert(vao && ibo && shader);
-
+	
 	shader->Bind();
 	vao->Bind();
 	ibo->Bind();
-	ibo->Draw();
+
+	if (showWireframe)	ibo->DrawWires();
+	else ibo->Draw();
 }
 
 void ModuleRenderer::DrawLines(const MyEngine::VertexArray * vao, const MyEngine::IndexBuffer * ibo, const MyEngine::Shader * shader, float line_width) const
@@ -95,6 +97,16 @@ void ModuleRenderer::DrawLines(const MyEngine::VertexArray * vao, const MyEngine
 	vao->Bind();
 	ibo->Bind();
 	ibo->DrawLines(line_width);
+}
+
+void ModuleRenderer::DrawPoints(const MyEngine::VertexArray * vao, const MyEngine::IndexBuffer * ibo, const MyEngine::Shader * shader, float point_size) const
+{
+	assert(vao && ibo && shader);
+
+	shader->Bind();
+	vao->Bind();
+	ibo->Bind();
+	ibo->DrawPoints(point_size);
 }
 
 MyEngine::Shader* ModuleRenderer::CreateShader(const char* name, const char* vShader_file, const char* fShader_file)

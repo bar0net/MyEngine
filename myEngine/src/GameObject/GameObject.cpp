@@ -53,7 +53,7 @@ void GameObject::AddComponent(Component* const component)
 {
 	if (components.find(component->GetName()) == components.end())
 	{
-		LOGINFO("Adding component %s to gameObject %s", component->GetName(), name);
+		LOGINFO("Adding component %s to gameObject %s", component->GetName(), name.c_str());
 		component->SetGameObject(this);
 		components[component->GetName()] = component;
 		component->Init();

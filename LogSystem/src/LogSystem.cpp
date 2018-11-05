@@ -51,7 +51,7 @@ void MyEngine::LogSystem::Log(LogLevel level, const char* file, int line, const 
 	unsigned int i = 0;
 	while (true)
 	{
-		i = s.find('%');
+		i = s.find('%', i+1);
 		if (i == std::string::npos || s.size() < i + 1) break;
 
 		switch (s[i+1])

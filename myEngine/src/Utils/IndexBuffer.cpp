@@ -47,4 +47,15 @@ namespace MyEngine {
 		GLCall(glDrawElements(GL_LINES, elements, GL_UNSIGNED_INT, NULL));
 	}
 
+	void IndexBuffer::DrawPoints(float point_size) const
+	{
+		GLCall(glPointSize(point_size));
+		GLCall(glDrawElements(GL_POINTS, elements, GL_UNSIGNED_INT, NULL));
+	}
+
+	void IndexBuffer::DrawWires() const
+	{
+		GLCall(glDrawElements(GL_LINE_LOOP, elements, GL_UNSIGNED_INT, NULL));
+	}
+
 }

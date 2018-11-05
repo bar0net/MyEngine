@@ -27,6 +27,7 @@ public:
 	bool CleanUp();
 	void Draw(const MyEngine::VertexArray* vao, const MyEngine::IndexBuffer* ibo, const MyEngine::Shader* shader) const;
 	void DrawLines(const MyEngine::VertexArray* vao, const MyEngine::IndexBuffer* ibo, const MyEngine::Shader* shader, float line_width = 1.0f) const;
+	void DrawPoints(const MyEngine::VertexArray * vao, const MyEngine::IndexBuffer * ibo, const MyEngine::Shader * shader, float point_size = 1.0f) const;
 
 	MyEngine::Shader* CreateShader(const char* name, const char* vShader_file, const char* fShader_file);
 	MyEngine::Shader* GetShader(const char* name);
@@ -43,7 +44,9 @@ public:
 	int width = 1280;
 	int height = 720;
 	bool vsyncEnabled = true;
+	bool showWireframe = false;
 	float clearColor[4] = { 0.3f, 0.3f, 0.3f, 1.0f };
+	float wireColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 };
 
 

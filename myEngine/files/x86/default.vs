@@ -10,7 +10,6 @@ layout(std140) uniform GlobalMatrices
 
 uniform mat4 model;
 
-
 void main() 
 {    
 	gl_Position = proj * view * model * vec4(vertex_position, 1.0); 

@@ -358,6 +358,7 @@ void ModuleEditor::PanelEditor()
 	}
 
 	ImGui::Checkbox("Show Grid", &show_grid);
+	ImGui::Checkbox("Wireframe", &App->renderer->showWireframe);
 		
 }
 
@@ -490,6 +491,22 @@ void ModuleEditor::PanelMeshRenderer(MeshRenderer * component) const
 				ImGui::Image((ImTextureID)component->meshes[i].textureID, ImVec2(75, 75),ImVec2(0,0), ImVec2(1,1), ImVec4(1,1,1,1));
 			else
 				ImGui::Image((ImTextureID)component->meshes[i].textureID, ImVec2(75, 75), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0.6F, 0.6F, 0.6F, 1));
+			
+			ImGui::SameLine();
+
+			std::string popupID = std::string("MeshAlbedo") + std::to_string(i);
+			std::string albedoID = std::string("Albedo (") + std::to_string(i) + std::string(")");
+
+			bool open_albedo = ImGui::ColorButton(albedoID.c_str(), *(ImVec4*)&component->meshes[i].albedo, 0, ImVec2(10,75));
+			ImGui::SameLine(); ImGui::Text("Albedo");
+
+			if (open_albedo) ImGui::OpenPopup(popupID.c_str());
+			if (ImGui::BeginPopup(popupID.c_str()))
+			{
+				ImGui::ColorPicker4(albedoID.c_str(), component->meshes[i].albedo);
+				ImGui::EndPopup();
+			}
+
 			ImGui::Separator();
 		}
 	}

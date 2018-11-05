@@ -72,6 +72,8 @@ void MeshRenderer::Update()
 		else
 			texture = App->texture->checkers;
 
+		shader->SetUniform4("albedo", mesh.albedo[0], mesh.albedo[1], mesh.albedo[2], mesh.albedo[3]);
+
 		if (MyEngine::Globals::active_texture != texture)
 		{
 			shader->DisableTexture2D();
@@ -79,6 +81,19 @@ void MeshRenderer::Update()
 			MyEngine::Globals::active_texture = texture;
 		}
 
-		App->renderer->Draw(mesh.vao, mesh.ibo, shader);
+		switch (mesh.polygon)
+		{
+		case (1):
+			App->renderer->DrawPoints(mesh.vao, mesh.ibo, shader);
+			break;
+		case (2):
+			App->renderer->DrawLines(mesh.vao, mesh.ibo, shader);
+			break;
+		case (3):
+			App->renderer->Draw(mesh.vao, mesh.ibo, shader);
+			break;
+		default:
+			break;
+		}
 	}
 }

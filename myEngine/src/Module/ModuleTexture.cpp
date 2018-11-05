@@ -91,16 +91,16 @@ unsigned int ModuleTexture::LoadTexture(const char* filename)
 		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
 		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
 
-		ilDeleteImages(1, &imageID);
 		file2texture[filename] = textureID;
-		GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 
 		LOGINFO("Texture %s loaded successfully.", filename);
 		return textureID;
 	}
+	ilDeleteImages(1, &imageID);
+	GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 
 	error = ilGetError();
-	LOGERROR("Image load failed - IL reports error: %i - %s", (int)error, iluErrorString(error));
+	LOGERROR("Image load failed (%s) - IL reports error: %i - %s", filename, (int)error, iluErrorString(error));
 	return 0;
 }
 

@@ -162,6 +162,12 @@ namespace MyEngine
 		GLCall(glUniform4f(glGetUniformLocation(program, name), x, y, z, w));
 	}
 
+	void Shader::SetUniform1(const char * name, int value) const
+	{
+		this->Bind();
+		GLCall(glUniform1i(glGetUniformLocation(program, name), value));
+	}
+
 	/*void Shader::AddTexture2D(unsigned int textureID)
 	{
 		if (textures.find(textureID) != textures.end())

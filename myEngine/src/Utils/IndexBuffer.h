@@ -14,6 +14,8 @@ namespace MyEngine {
 		void UnBind() const;
 		void Draw() const;
 		void DrawLines(float line_width) const;
+		void DrawPoints(float point_size) const;
+		void DrawWires() const;
 
 		unsigned int ibo = 0;
 		unsigned int elements = 0;
