@@ -8,8 +8,14 @@
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleModelLoader.h"
 
+#include "Utils/Chrono.h"
+
 Application::Application()
 {
+	MyEngine::uChrono uchrono;
+	MyEngine::Chrono chrono;
+	chrono.Start();
+	uchrono.Start();
 	modules.push_back(renderer = new ModuleRenderer());
 	modules.push_back(texture = new ModuleTexture());
 	modules.push_back(input = new ModuleInput());
@@ -17,6 +23,12 @@ Application::Application()
 	modules.push_back(scene = new ModuleScene());
 	modules.push_back(editor = new ModuleEditor());
 	modules.push_back(models = new ModuleModelLoader());
+
+
+	float a = uchrono.Stop();
+	unsigned int b = chrono.Stop();
+	LOGERROR("float test %f", 0.9876F);
+	LOGDEBUG("App Start: %sms -- %sms", std::to_string(a).c_str() , std::to_string(b).c_str());
 }
 
 
@@ -27,6 +39,10 @@ Application::~Application()
 
 bool Application::Start()
 {
+	MyEngine::uChrono uchrono;
+	MyEngine::Chrono chrono;
+	chrono.Start();
+	uchrono.Start();
 	bool ret = true;
 
 	for (std::list<Module *>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
@@ -35,6 +51,9 @@ bool Application::Start()
 	for (std::list<Module *>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
 		ret = (*it)->Start();
 
+	float a = uchrono.Stop();
+	float b = chrono.Stop();
+	LOGDEBUG("App Start: %fms -- %fms",a, b);
 	return ret;
 }
 

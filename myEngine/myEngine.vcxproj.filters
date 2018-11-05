@@ -473,6 +473,9 @@
     <ClInclude Include="src\Module\ModuleModelLoader.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="src\Utils\Chrono.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="files\default.fs" />

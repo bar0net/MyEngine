@@ -11,29 +11,29 @@
 
 void CameraControl::Update()
 {
-	if (App->input->GetKey(KeyCode::Q)) gameObject->Translate( gameObject->Up() * velocity * App->time->DeltaTime());
-	if (App->input->GetKey(KeyCode::E)) gameObject->Translate(-gameObject->Up() * velocity * App->time->DeltaTime());
+	if (App->input->GetKey(KeyCode::Q)) gameObject->Translate( gameObject->Up() * velocity * App->time->UnscaledDeltaTime());
+	if (App->input->GetKey(KeyCode::E)) gameObject->Translate(-gameObject->Up() * velocity * App->time->UnscaledDeltaTime());
 
-	if (App->input->GetKey(KeyCode::W)) gameObject->Translate( gameObject->Front() * velocity * App->time->DeltaTime());
-	if (App->input->GetKey(KeyCode::S)) gameObject->Translate(-gameObject->Front() * velocity * App->time->DeltaTime());
+	if (App->input->GetKey(KeyCode::W)) gameObject->Translate( gameObject->Front() * velocity * App->time->UnscaledDeltaTime());
+	if (App->input->GetKey(KeyCode::S)) gameObject->Translate(-gameObject->Front() * velocity * App->time->UnscaledDeltaTime());
 
-	if (App->input->GetKey(KeyCode::D)) gameObject->Translate( gameObject->Right() * velocity * App->time->DeltaTime());
-	if (App->input->GetKey(KeyCode::A)) gameObject->Translate(-gameObject->Right() * velocity * App->time->DeltaTime());
+	if (App->input->GetKey(KeyCode::D)) gameObject->Translate( gameObject->Right() * velocity * App->time->UnscaledDeltaTime());
+	if (App->input->GetKey(KeyCode::A)) gameObject->Translate(-gameObject->Right() * velocity * App->time->UnscaledDeltaTime());
 
-	if (App->input->GetKey(KeyCode::J)) gameObject->Rotate(0, angularVelocity * App->time->DeltaTime(), 0);
-	if (App->input->GetKey(KeyCode::L)) gameObject->Rotate(0, -angularVelocity * App->time->DeltaTime(), 0);
+	if (App->input->GetKey(KeyCode::J)) gameObject->Rotate(0, angularVelocity * App->time->UnscaledDeltaTime(), 0);
+	if (App->input->GetKey(KeyCode::L)) gameObject->Rotate(0, -angularVelocity * App->time->UnscaledDeltaTime(), 0);
 
 	if (gameObject->Up().y < 0)
 	{
-		if (App->input->GetKey(KeyCode::I))	gameObject->Rotate(-angularVelocity * App->time->DeltaTime(), 0, 0);
-		if (App->input->GetKey(KeyCode::K)) gameObject->Rotate( angularVelocity * App->time->DeltaTime(), 0, 0);
+		if (App->input->GetKey(KeyCode::I))	gameObject->Rotate(-angularVelocity * App->time->UnscaledDeltaTime(), 0, 0);
+		if (App->input->GetKey(KeyCode::K)) gameObject->Rotate( angularVelocity * App->time->UnscaledDeltaTime(), 0, 0);
 	}
 	else 
 	{
-		if (App->input->GetKey(KeyCode::I))	gameObject->Rotate( angularVelocity * App->time->DeltaTime(), 0, 0);
-		if (App->input->GetKey(KeyCode::K)) gameObject->Rotate(-angularVelocity * App->time->DeltaTime(), 0, 0);
+		if (App->input->GetKey(KeyCode::I))	gameObject->Rotate( angularVelocity * App->time->UnscaledDeltaTime(), 0, 0);
+		if (App->input->GetKey(KeyCode::K)) gameObject->Rotate(-angularVelocity * App->time->UnscaledDeltaTime(), 0, 0);
 	}
 
-	if (App->input->GetKey(KeyCode::U))	gameObject->Rotate(0, 0, angularVelocity * App->time->DeltaTime());
-	if (App->input->GetKey(KeyCode::O)) gameObject->Rotate(0, 0, -angularVelocity * App->time->DeltaTime());
+	if (App->input->GetKey(KeyCode::U))	gameObject->Rotate(0, 0, angularVelocity * App->time->UnscaledDeltaTime());
+	if (App->input->GetKey(KeyCode::O)) gameObject->Rotate(0, 0, -angularVelocity * App->time->UnscaledDeltaTime());
 }

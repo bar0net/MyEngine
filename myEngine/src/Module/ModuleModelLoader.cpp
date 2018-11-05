@@ -31,6 +31,7 @@ bool ModuleModelLoader::Load(const char * filename, std::vector<Model>& models)
 {
 	LOGINFO("Loading 3D Model: %s", filename);
 
+	//const aiScene* scene = aiImportFile(filename, aiProcess_Triangulate);
 	const aiScene* scene = aiImportFile(filename, 0);
 
 	if (scene == NULL) 

@@ -14,6 +14,7 @@ UpdateState ModuleTime::Update()
 {
 	deltaTime = SDL_GetTicks() - lastTime;
 	lastTime = SDL_GetTicks();
+	frameCount++;
 
 	return UpdateState::Update_Continue;
 }

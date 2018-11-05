@@ -9,14 +9,21 @@ public:
 	bool Init();
 	UpdateState Update();
 
-	float DeltaTime() { return (float)deltaTime/1000.f; }
-	unsigned int DeltaTimeMS() { return deltaTime; }
+	float Time() { return (float)(lastTime - startTime) * timeScale / 1000.0F; };
+	float DeltaTime() { return (float)deltaTime * timeScale / 1000.f; };
+
+	float UnscaledTime() { return (float)(lastTime - startTime) / 1000.0F; }
+	float UnscaledDeltaTime() { return (float)deltaTime/1000.f; }
+
+	unsigned int UnscaledDeltaTimeMS() { return deltaTime; }
 	float FPS() { return 1000.0f / (float)deltaTime; }
 
 private:
+	unsigned long long int frameCount = 0;
 	unsigned int startTime = 0;
 	unsigned int lastTime = 0;
 	unsigned int deltaTime = 0;
+	float timeScale = 1.0F;
 };
 
 

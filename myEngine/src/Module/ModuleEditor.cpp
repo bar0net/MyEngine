@@ -281,8 +281,8 @@ void ModuleEditor::FrameStart()
 
 	fps->push((unsigned int)App->time->FPS());
 	avg_ms -= (*avg_ms_array)[0];
-	avg_ms_array->push(App->time->DeltaTimeMS());
-	avg_ms += App->time->DeltaTimeMS();
+	avg_ms_array->push(App->time->UnscaledDeltaTimeMS());
+	avg_ms += App->time->UnscaledDeltaTimeMS();
 }
 
 void ModuleEditor::FrameEnd() const
