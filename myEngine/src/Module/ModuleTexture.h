@@ -6,6 +6,13 @@
 #include <unordered_set>
 #include <unordered_map>
 
+namespace MyEngine
+{
+	class FrameBuffer;
+	class Texture2D;
+	class RenderBuffer;
+}
+
 class ModuleTexture : public Module
 {
 public:
@@ -14,8 +21,6 @@ public:
 
 	bool Init();
 	bool CleanUp();
-
-	void InitViewTexture(unsigned int width, unsigned int height, unsigned int& frameBuffer, unsigned int& textureID, unsigned int& depthBuffer);
 
 	unsigned int LoadTexture(const char* filename);
 	void UnLoadTexture(unsigned int id);

@@ -1,5 +1,7 @@
 #ifndef _MYENGINE_GLOBALS_H
 
+#define MYENGINE_VERSION "0.1.0"
+
 namespace MyEngine
 {
 	namespace Globals
@@ -9,6 +11,7 @@ namespace MyEngine
 		static unsigned int active_ibo = 0;
 		static unsigned int active_vbo = 0;
 		static unsigned int active_texture = 0;
+		static unsigned int active_framebuffer = 0;
 	}
 }
 

@@ -1,8 +1,9 @@
 #ifndef _MYENGINE_SHADER_H
 #define _MYENGINE_SHADER_H
 
-#include "LogSystem.h"
+#include "GLBuffer.h"
 
+#include "LogSystem.h"
 #include <set>
 
 #define SHADER_VIEW_OFFSET sizeof(float4x4)
@@ -16,7 +17,7 @@ namespace math
 
 namespace MyEngine
 {
-	class Shader 
+	class Shader : public GLBuffer
 	{
 	public:
 		Shader(const char* vShader_file, const char* fShader_file);

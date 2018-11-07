@@ -3,6 +3,10 @@
 
 #include "Module.h"
 
+#include "Editor/PanelPerformance.h"
+#include "Editor/PanelConsole.h"
+#include "Editor/PanelEditor.h"
+
 struct ImGuiIO;
 class MovingArray;
 
@@ -12,6 +16,9 @@ namespace MyEngine
 	class VertexBuffer;
 	class VertexArray;
 	class Shader;
+	class Texture2D;
+	class FrameBuffer;
+	class RenderBuffer;
 }
 
 class GameObject;
@@ -30,46 +37,55 @@ public:
 	
 	void ProcessEvent(void* event) const;
 
+	MyEngine::FrameBuffer* frameBuffer;
+	MyEngine::RenderBuffer* renderBuffer;
+	MyEngine::Texture2D* renderTexture;
+
 private:
 	void FrameStart();
 	void FrameEnd() const;
 
-	void PanelPerformance() const;
-	void PanelEditor();
 	void PanelObjects();
-	void PanelConsole();
 
+	void CreateGrid();
+	void CreateGizmo();
+
+	void MainMenuBar();
 	void PanelCamera(Camera* component) const;
 	void PanelCameraControl(CameraControl* component) const;
 	void PanelMeshRenderer(MeshRenderer* component) const;
-		 
-	ImGuiIO* io = nullptr;
-	MovingArray* fps = nullptr;
-	MovingArray* avg_ms_array = nullptr;
-	unsigned int avg_ms = 0;
-	unsigned int scene_width = 0;
-	unsigned int scene_height = 0;
 
+public:
+	// ===== Grid =====
+	float grid_color[4] = { 1.0f,1.0f,1.0f,1.0f };
+	MyEngine::VertexArray* vao_grid = nullptr;
+	MyEngine::IndexBuffer* ibo_grid = nullptr;
+	MyEngine::VertexBuffer* vbo_grid = nullptr;
+	MyEngine::Shader* shader_grid = nullptr;
+
+	// ===== Origin Gizmo =====
 	MyEngine::VertexArray* vao_gizmo = nullptr;
 	MyEngine::IndexBuffer* ibo_gizmo = nullptr;
 	MyEngine::VertexBuffer* vbo_gizmo = nullptr;
 	MyEngine::Shader* shader_gizmo = nullptr;
 
-	MyEngine::VertexArray* vao_grid = nullptr;
-	MyEngine::IndexBuffer* ibo_grid = nullptr;
-	MyEngine::VertexBuffer* vbo_grid = nullptr;
-	MyEngine::Shader* shader_grid = nullptr;
-	bool show_grid = true;
-	float grid_color[4] = { 1.0f,1.0f,1.0f,1.0f };
 
-	unsigned int prev_log_size = 0;
+private:
+	ImGuiIO* io = nullptr;
+	float scene_width = 0;
+	float scene_height = 0;
+	GameObject* inspect_object = nullptr;
+
+	// Panels
+	PanelPerfomance* panel_performance;
+	PanelConsole* panel_console;
+	PanelEditor* panel_editor;
 
 	bool debug_window = true;
 	bool config_window = true;
 	bool inspect_window = true;
 	bool console_window = true;
 	bool scene_window = true;
-	GameObject* inspect_object = nullptr;
 
 	bool show_info = true;
 	bool show_debug = true;

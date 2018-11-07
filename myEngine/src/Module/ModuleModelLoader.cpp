@@ -10,10 +10,10 @@
 #include "assimp/material.h"
 #include "assimp/mesh.h"
 
-#include "../Application.h"
-#include "../Module/ModuleRenderer.h"
-#include "../Module/ModuleTexture.h"
-#include "../Utils/VertexBufferLayout.h"
+#include "Application.h"
+#include "Module/ModuleRenderer.h"
+#include "Module/ModuleTexture.h"
+#include "GL_Buffers/VertexBufferLayout.h"
 
 
 #define NUM_POSITIONS 3

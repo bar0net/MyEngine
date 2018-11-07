@@ -1,8 +1,9 @@
 #include "GameObject.h"
 
-#include "Component.h"
-#include "../_Vendor/MathGeoLib/Math/MathAll.h"
 #include "LogSystem.h"
+
+#include "Component.h"
+#include "_Vendor/MathGeoLib/Math/MathAll.h"
 
 
 GameObject::~GameObject()

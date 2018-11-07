@@ -1,15 +1,15 @@
 #include "Camera.h"
 
-#include "../../_Vendor/MathGeoLib/Math/float3.h"
-#include "../../Application.h"
-#include "../../Module/ModuleRenderer.h"
-#include "../../Utils/Shader.h"
-#include "../../Utils/UniformBuffer.h"
-#include "../GameObject.h"
+#include "_Vendor/MathGeoLib/Math/float3.h"
+#include "Application.h"
+#include "GL_Buffers/Shader.h"
+#include "GL_Buffers/UniformBuffer.h"
+#include "Module/ModuleRenderer.h"
+#include "GameObject/GameObject.h"
 
 Camera::Camera() : Component("Camera")
 {
-	ubo = new UniformBuffer;
+	ubo = new MyEngine::UniformBuffer;
 	UpdateFrustum();
 }
 

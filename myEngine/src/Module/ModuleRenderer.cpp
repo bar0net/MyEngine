@@ -2,18 +2,24 @@
 
 #include <vector>
 
-#include "../Utils/Window_Utils.h"
-#include "../Utils/Render_Utils.h"
-#include "../Utils/VertexBuffer.h"
-#include "../Utils/IndexBuffer.h"
-#include "../Utils/VertexArray.h"
-#include "../Utils/Shader.h"
-#include "../Application.h"
+#include "GL_Buffers/VertexBuffer.h"
+#include "GL_Buffers/IndexBuffer.h"
+#include "GL_Buffers/VertexArray.h"
+#include "GL_Buffers/Shader.h"
+#include "GL_Buffers/FrameBuffer.h"
+#include "GL_Buffers/Texture2D.h"
+#include "GL_Buffers/RenderBuffer.h"
+
+#include "Application.h"
+#include "GameObject/GameObject.h"
+#include "GameObject/Components/Camera.h"
+#include "Utils/Render_Utils.h"
+#include "Utils/Window_Utils.h"
 
 #include "ModuleScene.h"
 #include "ModuleTexture.h"
-#include "../GameObject/GameObject.h"
-#include "../GameObject/Components/Camera.h"
+
+#include "ModuleEditor.h"
 
 ModuleRenderer::ModuleRenderer()
 {
@@ -41,15 +47,13 @@ bool ModuleRenderer::Init()
 
 	MyEngine::RenderUtils::CreateViewport(width, height, { 0.3F, 0.3F, 0.3F, 1.0F }, 1.0F);
 
-	App->texture->InitViewTexture(width, height, frame_buffer, render_texture, depth_buffer);
-
 	return true;
 }
 
 
 UpdateState ModuleRenderer::PreUpdate()
 {
-	MyEngine::RenderUtils::BindFrameBuffer(frame_buffer, width, height);
+	//MyEngine::RenderUtils::BindRenderBuffer(App->editor->frameBuffer->ID(), App->renderer->width, App->renderer->height);
 	MyEngine::RenderUtils::ClearViewport();
 
 	return UpdateState::Update_Continue;

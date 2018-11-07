@@ -1,10 +1,12 @@
 #ifndef _MYENGINE_INDEXBUFFER_H
 #define _MYENGINE_INDEXBUFFER_H
 
+#include "GLBuffer.h"
+
 #include <vector>
 
 namespace MyEngine {
-	class IndexBuffer
+	class IndexBuffer : public GLBuffer
 	{
 	public:
 		IndexBuffer(const std::vector<unsigned int>* indices);

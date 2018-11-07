@@ -5,8 +5,9 @@
 #include "ModuleEditor.h"
 #include "ModuleRenderer.h"
 #include "ModuleScene.h"
-#include "../Application.h"
-#include "../Utils/Window_Utils.h"
+
+#include "Application.h"
+#include "Utils/Window_Utils.h"
 
 #define MAX_KEYS 300
 

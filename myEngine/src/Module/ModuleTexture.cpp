@@ -1,5 +1,4 @@
 #include "ModuleTexture.h"
-#include "../Globals.h"
 
 #include <assert.h>
 
@@ -7,7 +6,13 @@
 #include "IL/il.h"
 #include "IL/ilut.h"
 
-#include "../Utils/Render_Utils.h"
+#include "Globals.h"
+
+#include "Utils/Render_Utils.h"
+
+#include "GL_Buffers/FrameBuffer.h"
+#include "GL_Buffers/Texture2D.h"
+#include "GL_Buffers/RenderBuffer.h"
 
 ModuleTexture::ModuleTexture()
 {
@@ -43,6 +48,7 @@ bool ModuleTexture::CleanUp()
 	return true;
 }
 
+/*
 void ModuleTexture::InitViewTexture(unsigned int width, unsigned int height, unsigned int& frameBuffer, unsigned int& textureID, unsigned int& depthBuffer)
 {
 	glGenFramebuffers(1, &frameBuffer);
@@ -65,6 +71,8 @@ void ModuleTexture::InitViewTexture(unsigned int width, unsigned int height, uns
 	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
 	GLCall(glDrawBuffers(1, DrawBuffers));
 }
+*/
+
 
 unsigned int ModuleTexture::LoadTexture(const char* filename)
 {
@@ -106,10 +114,6 @@ unsigned int ModuleTexture::LoadTexture(const char* filename)
 
 		GLCall(glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_FORMAT), width, height, 0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, data));
 
-		// Set texture clamping method
-		//GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
-		//GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
-
 		// Texture Interpolation
 		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
 		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
@@ -119,6 +123,7 @@ unsigned int ModuleTexture::LoadTexture(const char* filename)
 		LOGINFO("Texture %s loaded successfully.", filename);
 		return textureID;
 	}
+
 	ilDeleteImages(1, &imageID);
 	GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 

@@ -1,11 +1,11 @@
 #include "VertexArray.h"
 
-#include "Render_Utils.h"
+#include "Utils/Render_Utils.h"
 #include "GL/glew.h"
 
 #include "VertexBuffer.h"
 #include "VertexBufferLayout.h"
-#include "../Globals.h"
+#include "Globals.h"
 
 #include "LogSystem.h"
 

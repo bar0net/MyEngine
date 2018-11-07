@@ -2,13 +2,13 @@
 
 #include <assert.h>
 #include <vector>
-
 #include "GL/glew.h"
-#include "Render_Utils.h"
-#include "../Globals.h"
 
-#include "../_Vendor/MathGeoLib/Math/float4x4.h"
-#include "../_Vendor/MathGeoLib/Math/float4.h"
+#include "Globals.h"
+#include "Utils/Render_Utils.h"
+
+#include "_Vendor/MathGeoLib/Math/float4x4.h"
+#include "_Vendor/MathGeoLib/Math/float4.h"
 
 namespace MyEngine 
 {

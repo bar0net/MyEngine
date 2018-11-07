@@ -2,8 +2,9 @@
 #define _MYENGINE_RENDERER_H
 
 #include "Module.h"
+
 #include <unordered_map>
- 
+
 namespace MyEngine 
 {
 	struct WindowData;
@@ -43,10 +44,6 @@ public:
 
 	int width = 1280;
 	int height = 720;
-
-	unsigned int frame_buffer = 0;
-	unsigned int render_texture = 0;
-	unsigned int depth_buffer = 0;
 
 	bool vsyncEnabled = true;
 	bool showWireframe = false;

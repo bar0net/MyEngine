@@ -1,8 +1,9 @@
 #include "IndexBuffer.h"
 
 #include "GL/glew.h"
-#include "Render_Utils.h"
-#include "../Globals.h"
+
+#include "Utils/Render_Utils.h"
+#include "Globals.h"
 
 namespace MyEngine {
 	IndexBuffer::IndexBuffer(const std::vector<unsigned int>* indices)

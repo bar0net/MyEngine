@@ -1,16 +1,15 @@
 #ifndef _VERTEX_ARRAY_H
 #define _VERTEX_ARRAY_H
 
+#include "GLBuffer.h"
+
 #include <queue>
 #include "VertexBuffer.h"
 #include "VertexBufferLayout.h"
 
-class VertexBuffer;
-class VertexBufferLayout;
-
 namespace MyEngine
 {
-	class VertexArray
+	class VertexArray : public GLBuffer
 	{
 	public:
 		VertexArray();

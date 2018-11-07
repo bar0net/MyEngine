@@ -1,90 +1,45 @@
 #include "ModuleEditor.h"
 
 #include <assert.h>
+#include "GL/glew.h"
 
-#include "../_Vendor/imgui-docking/imgui.h"
-#include "../_Vendor/imgui-docking/imgui_impl_sdl.h"
-#include "../_Vendor/imgui-docking/imgui_impl_opengl3.h"
-#include "../_Vendor/MathGeoLib/Math/float4x4.h"
-#include "../_Vendor/MathGeoLib/Math/float3.h"
+#include "_Vendor/imgui-docking/imgui.h"
+#include "_Vendor/imgui-docking/imgui_impl_sdl.h"
+#include "_Vendor/imgui-docking/imgui_impl_opengl3.h"
+#include "_Vendor/MathGeoLib/Math/float4x4.h"
+#include "_Vendor/MathGeoLib/Math/float3.h"
 
-#include "../Application.h"
-#include "../Utils/Window_Utils.h"
-#include "../Utils/Render_Utils.h"
-#include "../Utils/MovingArray.h"
-#include "../Utils/VertexBuffer.h"
-#include "../Utils/VertexArray.h"
-#include "../Utils/Shader.h"
-#include "../Utils/IndexBuffer.h"
-#include "../Utils/VertexBufferLayout.h"
+#include "Application.h"
+#include "Utils/Window_Utils.h"
+#include "Utils/Render_Utils.h"
+#include "Utils/MovingArray.h"
+
+#include "GL_Buffers/VertexBuffer.h"
+#include "GL_Buffers/VertexArray.h"
+#include "GL_Buffers/Shader.h"
+#include "GL_Buffers/IndexBuffer.h"
+#include "GL_Buffers/VertexBufferLayout.h"
+#include "GL_Buffers/RenderBuffer.h"
+#include "GL_Buffers/FrameBuffer.h"
+#include "GL_Buffers/Texture2D.h"
 
 #include "ModuleRenderer.h"
 #include "ModuleTime.h"
 #include "ModuleScene.h"
 #include "ModuleTexture.h"
 
-#include "../GameObject/GameObject.h"
-#include "../GameObject/Components/Camera.h"
-#include "../GameObject/Components/CameraControl.h"
-#include "../GameObject/Components/MeshRenderer.h"
+#include "GameObject/GameObject.h"
+#include "GameObject/Components/Camera.h"
+#include "GameObject/Components/CameraControl.h"
+#include "GameObject/Components/MeshRenderer.h"
 
 #define GLSL_VERSION "#version 130"
 #define GRID_LENGTH 100
 #define GIZMO_LENGTH 0.5F
 
-#define DISABLEDTEXT_COLOR ImVec4(0.7F, 0.7F, 0.7F, 1.0F)
-#define DISABLED_COLOR ImVec4(0.5F, 0.5F, 0.5F, 1.0F)
-#define DISABLED_HIGHLIGHT_COLOR ImVec4(0.6F, 0.6F, 0.6F, 1.0F)
-#define NONE_COLOR ImVec4(0.0F, 1.0F, 0.0F, 1.0F)
-#define DEBUG_COLOR ImVec4(0.0F, 1.0F, 1.0F, 1.0F)
-#define INFO_COLOR ImVec4(1.0F, 1.0F, 1.0F, 1.0F)
-#define WARNING_COLOR ImVec4(1.0F, 1.0F, 0.0F, 1.0F)
-#define ERROR_COLOR ImVec4(1.0F, 0.0F, 0.0F, 1.0F)
-
-void AddConsoleButton(const char* text, bool& active, MyEngine::LogLevel type)
-{
-	unsigned int i = 0;
-	if (active)
-	{
-		switch (type)
-		{
-		case MyEngine::LogLevel::None:
-			ImGui::PushStyleColor(ImGuiCol_Text, NONE_COLOR);
-			break;
-		case MyEngine::LogLevel::Debug:
-			ImGui::PushStyleColor(ImGuiCol_Text, DEBUG_COLOR);
-			break;
-		case MyEngine::LogLevel::Info:
-			ImGui::PushStyleColor(ImGuiCol_Text, INFO_COLOR);
-			break;
-		case MyEngine::LogLevel::Warning:
-			ImGui::PushStyleColor(ImGuiCol_Text, WARNING_COLOR);
-			break;
-		case MyEngine::LogLevel::Error:
-			ImGui::PushStyleColor(ImGuiCol_Text, ERROR_COLOR);
-			break;
-		default:
-			ImGui::PushStyleColor(ImGuiCol_Text, INFO_COLOR);
-			break;
-		}
-		++i;
-	}
-	else 
-	{
-		ImGui::PushStyleColor(ImGuiCol_Text, DISABLEDTEXT_COLOR); ++i;
-		ImGui::PushStyleColor(ImGuiCol_Button, DISABLED_COLOR); ++i;
-		ImGui::PushStyleColor(ImGuiCol_ButtonActive, DISABLED_HIGHLIGHT_COLOR); ++i;
-		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, DISABLED_HIGHLIGHT_COLOR); ++i;
-	}
-	if (ImGui::Button(text)) active = !active;
-	while(i-- > 0) ImGui::PopStyleColor();
-}
-
 bool ModuleEditor::Init()
 {
 	LOGINFO("Initializing Editor.");
-	fps = new MovingArray(300, 0);
-	avg_ms_array = new MovingArray(30, 0);
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -96,15 +51,174 @@ bool ModuleEditor::Init()
 	ImGui_ImplOpenGL3_Init(GLSL_VERSION);
 	ImGui::StyleColorsDark();
 
+	
+	CreateGrid();
+	CreateGizmo();
+
+	// Set Up Render to Texture
+	/*frameBuffer = new MyEngine::FrameBuffer();
+
+	renderTexture = new MyEngine::Texture2D(App->renderer->width, App->renderer->height);
+	renderTexture->SetParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	renderTexture->SetParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	renderBuffer = new MyEngine::RenderBuffer();
+	renderBuffer->SetStorage(App->renderer->width, App->renderer->height, GL_DEPTH_COMPONENT);
+
+	frameBuffer->SetRenderBuffer(renderBuffer->ID(), GL_DEPTH_ATTACHMENT);
+	frameBuffer->SetTexture(renderTexture->ID(), 0, GL_COLOR_ATTACHMENT0);
+
+	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
+	GLCall(glDrawBuffers(1, DrawBuffers));*/
+
+	panel_performance = new PanelPerfomance();
+	panel_console = new PanelConsole();
+	panel_editor = new PanelEditor();
+
+	return true;
+}
+
+bool ModuleEditor::Start()
+{
+	math::float4x4 I = math::float4x4::identity;
+	shader_grid->SetUniform4x4("model", I);
+
+	LOG("___ EDITOR: TESTING NONE LOG LEVELS ____");
+	LOGINFO("___ EDITOR: TESTING INFO LOG LEVELS ____");
+	LOGDEBUG("___ EDITOR: TESTING DEBUG LOG LEVEL ____");
+	LOGWARNING("___ EDITOR: TESTING WARNING LOG LEVEL ____");
+	LOGERROR("___ EDITOR: TESTING ERROR LOG LEVEL ____");
+
+	return true;
+}
+
+bool ModuleEditor::CleanUp()
+{
+	LOGINFO("Destroying Editor.");
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplSDL2_Shutdown();
+	ImGui::DestroyContext();
+
+	delete panel_performance;
+	delete panel_console;
+	delete panel_editor;
+
+	delete renderTexture;
+	delete frameBuffer;
+	delete renderBuffer;
+	
+	delete(vbo_grid);	delete(vbo_gizmo);
+	delete(ibo_grid);	delete(ibo_gizmo);
+	delete(shader_grid);delete(shader_gizmo);
+	delete(vao_grid);	delete(vao_gizmo);
+
+	return true;
+}
+
+UpdateState ModuleEditor::PreUpdate()
+{
+	if (panel_editor->show_grid)
+	{
+		App->renderer->DrawLines(vao_gizmo, ibo_gizmo, shader_gizmo, 2.5F);
+		App->renderer->DrawLines(vao_grid, ibo_grid, shader_grid);
+	}
+
+	return UpdateState::Update_Continue;
+}
+
+UpdateState ModuleEditor::Update()
+{
+	FrameStart();
+
+	// Drawing
+	MainMenuBar();
+
+	if (scene_window)
+	{
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+		ImGui::Begin("Scene", &scene_window, ImGuiWindowFlags_NoScrollbar);
+		ImVec2 size = ImGui::GetContentRegionAvail();
+		ImVec2 imgSize = size; 
+		float space = 0;
+
+		if (size.x * App->renderer->height < size.y * App->renderer->width)
+		{
+			imgSize.y = (size.x * App->renderer->height / App->renderer->width);
+			space = (size.y - imgSize.y) / 2.0F;
+			ImGui::Dummy(ImVec2(0, space));
+		}
+		else
+		{
+			imgSize.x = (size.y * App->renderer->width / App->renderer->height);
+			space = (size.x - imgSize.x) / 2.0F;
+			ImGui::Dummy(ImVec2(space, 0)); ImGui::SameLine();
+		}
+
+		ImGui::Image((ImTextureID)renderTexture, imgSize, ImVec2(0,1), ImVec2(1,0));
+
+		scene_width = imgSize.x;
+		scene_height = imgSize.y;
+
+		ImGui::End();
+		ImGui::PopStyleVar();
+	}
+
+	if(inspect_window)
+	{
+		ImGui::Begin("Inspector", &inspect_window);
+		PanelObjects();
+		ImGui::End();
+	}
+
+	if (config_window)	panel_editor->Draw(shader_grid, grid_color);
+	if (debug_window)	panel_performance->Draw(debug_window, scene_width, scene_height);
+	if (console_window) panel_console->Draw(console_window);
+
+	FrameEnd();
+	return UpdateState::Update_Continue;
+}
+
+void ModuleEditor::FrameStart()
+{
+	//MyEngine::RenderUtils::UnBindRenderBuffer(App->renderer->width, App->renderer->height);
+	//MyEngine::RenderUtils::ClearViewport();
+
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplSDL2_NewFrame(App->renderer->data->window);
+	ImGui::NewFrame();
+}
+
+void ModuleEditor::FrameEnd() const
+{
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+	if (io->ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+	}
+
+	//MyEngine::RenderUtils::BindRenderBuffer(frameBuffer->ID(), App->renderer->width, App->renderer->height);
+}
+
+void ModuleEditor::ProcessEvent(void* event) const
+{
+	assert(event);
+	ImGui_ImplSDL2_ProcessEvent((SDL_Event*)event);
+}
+
+void ModuleEditor::CreateGrid()
+{
 	math::float4x4 identity = math::float4x4::identity;
-	// Create Grid
+
 	std::vector<float> grid;
 	std::vector<unsigned int> grid_index;
 	unsigned int id = 0;
 
 	for (int i = -GRID_LENGTH; i <= GRID_LENGTH; ++i)
 	{
-		if (i == 0) 
+		if (i == 0)
 		{
 			grid.push_back((float)-GRID_LENGTH); grid.push_back(0); grid.push_back((float)i);
 			grid.push_back(0); grid.push_back(0); grid.push_back((float)i);
@@ -144,7 +258,12 @@ bool ModuleEditor::Init()
 	vao_grid = new MyEngine::VertexArray();
 	vao_grid->AddBuffer(*vbo_grid, grid_layout);
 	ibo_grid = new MyEngine::IndexBuffer(&grid_index);
-	
+}
+
+void ModuleEditor::CreateGizmo()
+{
+	math::float4x4 identity = math::float4x4::identity;
+
 	std::vector<float> gizmo =
 	{
 		0.0F,	0.0F,		0.0F,	0.0F, 0.0F, 0.0F,
@@ -164,57 +283,14 @@ bool ModuleEditor::Init()
 	vao_gizmo = new MyEngine::VertexArray();
 	vao_gizmo->AddBuffer(*vbo_gizmo, gizmo_layout);
 	ibo_gizmo = new MyEngine::IndexBuffer(&gizmo_index);
-
-	return true;
 }
 
-bool ModuleEditor::Start()
+// ====================================
+//				PANELS
+// ====================================
+
+void ModuleEditor::MainMenuBar()
 {
-	math::float4x4 I = math::float4x4::identity;
-	shader_grid->SetUniform4x4("model", I);
-
-	LOG("___ EDITOR: TESTING NONE LOG LEVELS ____");
-	LOGINFO("___ EDITOR: TESTING INFO LOG LEVELS ____");
-	LOGDEBUG("___ EDITOR: TESTING DEBUG LOG LEVEL ____");
-	LOGWARNING("___ EDITOR: TESTING WARNING LOG LEVEL ____");
-	LOGERROR("___ EDITOR: TESTING ERROR LOG LEVEL ____");
-
-	return true;
-}
-
-bool ModuleEditor::CleanUp()
-{
-	LOGINFO("Destroying Editor.");
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplSDL2_Shutdown();
-	ImGui::DestroyContext();
-
-	delete(fps);
-	delete(avg_ms_array);
-
-	delete(vbo_grid);	delete(vbo_gizmo);
-	delete(ibo_grid);	delete(ibo_gizmo);
-	delete(shader_grid);delete(shader_gizmo);
-	delete(vao_grid);	delete(vao_gizmo);
-
-	return true;
-}
-
-UpdateState ModuleEditor::PreUpdate()
-{
-	if (show_grid)
-	{
-		App->renderer->DrawLines(vao_gizmo, ibo_gizmo, shader_gizmo, 2.5F);
-		App->renderer->DrawLines(vao_grid, ibo_grid, shader_grid);
-	}
-
-	return UpdateState::Update_Continue;
-}
-
-UpdateState ModuleEditor::Update()
-{
-	FrameStart();
-
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
@@ -241,164 +317,6 @@ UpdateState ModuleEditor::Update()
 		}
 		ImGui::EndMainMenuBar();
 	}
-
-	if (scene_window)
-	{
-		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
-		ImGui::Begin("Scene", &scene_window, ImGuiWindowFlags_NoScrollbar);
-		ImVec2 size = ImGui::GetContentRegionAvail();
-		ImVec2 imgSize = size; 
-		float space = 0;
-
-		if (size.x * App->renderer->height < size.y * App->renderer->width)
-		{
-			imgSize.y = (size.x * App->renderer->height / App->renderer->width);
-			space = (size.y - imgSize.y) / 2.0F;
-			ImGui::Dummy(ImVec2(0, space));
-		}
-		else
-		{
-			imgSize.x = (size.y * App->renderer->width / App->renderer->height);
-			space = (size.x - imgSize.x) / 2.0F;
-			ImGui::Dummy(ImVec2(space, 0)); ImGui::SameLine();
-		}
-
-		ImGui::Image((ImTextureID)App->renderer->render_texture, imgSize, ImVec2(0,1), ImVec2(1,0));
-
-		scene_width = imgSize.x;
-		scene_height = imgSize.y;
-
-		ImGui::End();
-		ImGui::PopStyleVar();
-	}
-
-	if(config_window) 
-	{
-		ImGui::Begin("Configuration", &config_window);
-		if (ImGui::CollapsingHeader("Editor")) PanelEditor();
-		ImGui::End();
-	}
-
-	if(debug_window) 
-	{
-		ImGui::Begin("Debug Tools", &debug_window);
-		if (ImGui::CollapsingHeader("Performance")) PanelPerformance();
-		ImGui::End();
-	}
-
-	if(inspect_window)
-	{
-		ImGui::Begin("Inspector", &inspect_window);
-		PanelObjects();
-		ImGui::End();
-	}
-
-	if (console_window)
-	{
-		ImGui::Begin("Console", &console_window);
-		PanelConsole();
-		ImGui::End();
-	}
-
-	FrameEnd();
-	return UpdateState::Update_Continue;
-}
-
-void ModuleEditor::FrameStart()
-{
-	//App->texture->DrawViewTexture(App->renderer->frame_buffer, App->renderer->render_texture, App->renderer->depth_buffer);
-
-	MyEngine::RenderUtils::UnBindFrameBuffer(App->renderer->width, App->renderer->height);
-	MyEngine::RenderUtils::ClearViewport();
-
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplSDL2_NewFrame(App->renderer->data->window);
-	ImGui::NewFrame();
-
-	fps->push((unsigned int)App->time->FPS());
-	avg_ms -= (*avg_ms_array)[0];
-	avg_ms_array->push(App->time->DeltaTimeMS());
-	avg_ms += App->time->DeltaTimeMS();
-}
-
-void ModuleEditor::FrameEnd() const
-{
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-	if (io->ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
-	}
-
-	//MyEngine::RenderUtils::BindFrameBuffer(App->renderer->frame_buffer, App->renderer->width, App->renderer->height);
-}
-
-void ModuleEditor::ProcessEvent(void* event) const
-{
-	assert(event);
-	ImGui_ImplSDL2_ProcessEvent((SDL_Event*)event);
-}
-
-void ModuleEditor::PanelPerformance() const
-{
-	ImGui::Text("Frames per second");
-	ImGui::PushItemWidth(ImGui::GetWindowWidth() - 25);
-	ImGui::PlotHistogram("", MovingArray::Get, fps, fps->size, 1, "", 0, 120, ImVec2(0, 50));
-	ImGui::Text("Average ms/frame: %ims - FPS: %i", avg_ms / (avg_ms_array->size), (int)(1000.0F * avg_ms_array->size / avg_ms));
-	ImGui::Text("Window: %ipx x %ipx", App->renderer->width, App->renderer->height);
-	ImGui::Text("Scene View: %ipx x %ipx", scene_width, scene_height);
-
-	bool vsyncEnabled = App->renderer->vsyncEnabled;
-	ImGui::Checkbox("VSync", &vsyncEnabled);
-	if (vsyncEnabled != App->renderer->vsyncEnabled) App->renderer->EnableVSync(vsyncEnabled);
-
-	ImGui::Separator();
-	int major = 0; 
-	int minor = 0; 
-	int patch = 0;
-	MyEngine::WindowUtils::Version(major, minor, patch);
-
-	ImGui::Text("GPU");
-	ImGui::Text("%s", MyEngine::RenderUtils::Vendor());
-	ImGui::Text("%s", MyEngine::RenderUtils::Renderer());
-
-	ImGui::Separator();
-	ImGui::Text("Libraries");
-	ImGui::Text("Glew %s", MyEngine::RenderUtils::Version());
-	ImGui::Text("SDL %d.%d.%d", major, minor, patch);
-	ImGui::Text("ImGui %s", ImGui::GetVersion());
-	ImGui::Text("MathGeoLib 1.5"); 
-}
-
-void ModuleEditor::PanelEditor()
-{
-	// Background Color
-	ImVec4 bgcolor(App->renderer->clearColor[0], App->renderer->clearColor[1], App->renderer->clearColor[2], App->renderer->clearColor[3]);
-	bool open_bgcolor = ImGui::ColorButton("BGButton", bgcolor);
-	ImGui::SameLine(); ImGui::Text("Background Color");
-	if (open_bgcolor) ImGui::OpenPopup("BackgroundPicker");
-	if (ImGui::BeginPopup("BackgroundPicker"))
-	{
-		if (ImGui::ColorPicker4("Background Color", App->renderer->clearColor)) App->renderer->UpdateClearColor();
-		ImGui::EndPopup();
-	}
-
-	// Grid Color
-	bool open_gridcolor = ImGui::ColorButton("GridColorButton", *(ImVec4*)&grid_color);
-	ImGui::SameLine(); ImGui::Text("Grid Color");
-	if (open_gridcolor) ImGui::OpenPopup("GridColorPicker");
-	if (ImGui::BeginPopup("GridColorPicker"))
-	{
-		if (ImGui::ColorPicker4("Grid Color", grid_color))
-			shader_grid->SetUniform4("albedo", grid_color[0], grid_color[1], grid_color[2], grid_color[3]);
-		ImGui::EndPopup();
-	}
-
-	ImGui::Checkbox("Show Grid", &show_grid);
-	ImGui::Checkbox("Wireframe", &App->renderer->showWireframe);
-		
 }
 
 void ModuleEditor::PanelObjects() 
@@ -441,58 +359,6 @@ void ModuleEditor::PanelObjects()
 		}
 	}
 
-}
-
-void ModuleEditor::PanelConsole()
-{
-	// Clear Button
-	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0F, 0.55F, 0.55F, 1.0F));
-	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.0F, 0.6F, 0.6F, 1.0F));
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.0F, 0.62F, 0.62F, 1.0F));
-	if (ImGui::Button("Clear")) logger->history.clear();
-	ImGui::PopStyleColor(); 
-	ImGui::PopStyleColor(); 
-	ImGui::PopStyleColor();
-	ImGui::SameLine(); ImGui::Spacing(); ImGui::SameLine();
-
-	// Log Level Buttons
-	AddConsoleButton("Info", show_info, MyEngine::LogLevel::Info);			ImGui::SameLine();
-	AddConsoleButton("Debug", show_debug, MyEngine::LogLevel::Debug);		ImGui::SameLine();
-	AddConsoleButton("Warning", show_warning, MyEngine::LogLevel::Warning);	ImGui::SameLine();
-	AddConsoleButton("Error", show_error, MyEngine::LogLevel::Error);		ImGui::Separator();
-
-	// Console Text
-	ImGui::BeginChild("Scrolling");
-	for (std::list<MyEngine::LogData>::iterator it = logger->history.begin(); it != logger->history.end(); ++it)
-	{
-		switch(it->type)
-		{
-		case MyEngine::LogLevel::Info:
-			if(show_info) ImGui::TextColored(INFO_COLOR, it->message.c_str());
-			break;
-		case MyEngine::LogLevel::Debug:
-			if(show_debug) ImGui::TextColored(DEBUG_COLOR, it->message.c_str());
-			break;
-		case MyEngine::LogLevel::Warning:
-			if(show_warning) ImGui::TextColored(WARNING_COLOR, it->message.c_str());
-			break;
-		case MyEngine::LogLevel::Error:
-			if (show_error) ImGui::TextColored(ERROR_COLOR, it->message.c_str());
-			break;
-		default:
-			if (show_info) ImGui::TextColored(NONE_COLOR, it->message.c_str());
-			break;
-		}
-	}
-
-	// Set Scrolling at the end when a new line is added to the log.
-	if (prev_log_size != logger->history.size())
-	{
-		prev_log_size = logger->history.size();
-		ImGui::SetScrollHereY();
-	}
-
-	ImGui::EndChild();
 }
 
 void ModuleEditor::PanelCamera(Camera* component) const

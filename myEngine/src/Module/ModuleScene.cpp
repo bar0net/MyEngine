@@ -5,15 +5,18 @@
 #include "ModuleRenderer.h"
 #include "ModuleModelLoader.h"
 
-#include "../Application.h"
-#include "../GameObject/GameObject.h"
-#include "../GameObject/Components/MeshRenderer.h"
-#include "../GameObject/Components/Camera.h"
-#include "../GameObject/Components/CameraControl.h"
-#include "../Utils/VertexBufferLayout.h"
-#include "../Module/ModuleTexture.h"
-#include "../Module/ModuleModelLoader.h"
-#include "../Utils/Shader.h"
+#include "Application.h"
+
+#include "ModuleTexture.h"
+#include "ModuleModelLoader.h"
+
+#include "GameObject/GameObject.h"
+#include "GameObject/Components/MeshRenderer.h"
+#include "GameObject/Components/Camera.h"
+#include "GameObject/Components/CameraControl.h"
+
+#include "GL_Buffers/VertexBufferLayout.h"
+#include "GL_Buffers/Shader.h"
 
 //#include "../Utils/Shader.h"
 

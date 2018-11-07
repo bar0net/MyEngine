@@ -91,7 +91,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)LogSystem\src;$(SolutionDir)Dependencies\SDL2-2.0.8\include;$(SolutionDir)Dependencies\DevIL\include;$(SolutionDir)Dependencies\Assimp\include;$(SolutionDir)Dependencies\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)LogSystem\src;$(SolutionDir)myEngine\src;$(SolutionDir)Dependencies\SDL2-2.0.8\include;$(SolutionDir)Dependencies\DevIL\include;$(SolutionDir)Dependencies\Assimp\include;$(SolutionDir)Dependencies\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\DevIL\lib\x86\Release;$(SolutionDir)Dependencies\Assimp\lib\x86;$(SolutionDir)Dependencies\glew-2.1.0\lib\Release\Win32\;$(SolutionDir)Dependencies\SDL2-2.0.8\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -119,7 +119,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)LogSystem\src;$(SolutionDir)Dependencies\SDL2-2.0.8\include;$(SolutionDir)Dependencies\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)LogSystem\src;$(SolutionDir)myEngine\src;$(SolutionDir)Dependencies\SDL2-2.0.8\include;$(SolutionDir)Dependencies\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -151,6 +151,9 @@
     <ClCompile Include="src\GameObject\Components\CameraControl.cpp" />
     <ClCompile Include="src\GameObject\Components\MeshRenderer.cpp" />
     <ClCompile Include="src\GameObject\GameObject.cpp" />
+    <ClCompile Include="src\GL_Buffers\FrameBuffer.cpp" />
+    <ClCompile Include="src\GL_Buffers\RenderBuffer.cpp" />
+    <ClCompile Include="src\GL_Buffers\Texture2D.cpp" />
     <ClCompile Include="src\Module\ModuleModelLoader.cpp" />
     <ClCompile Include="src\Module\ModuleScene.cpp" />
     <ClCompile Include="src\Module\ModuleTexture.cpp" />
@@ -161,13 +164,13 @@
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Module\ModuleTime.cpp" />
-    <ClCompile Include="src\Utils\IndexBuffer.cpp" />
+    <ClCompile Include="src\GL_Buffers\IndexBuffer.cpp" />
     <ClCompile Include="src\Utils\Render_Utils.cpp" />
-    <ClCompile Include="src\Utils\UniformBuffer.cpp" />
-    <ClCompile Include="src\Utils\VertexArray.cpp" />
+    <ClCompile Include="src\GL_Buffers\UniformBuffer.cpp" />
+    <ClCompile Include="src\GL_Buffers\VertexArray.cpp" />
     <ClCompile Include="src\Utils\Window_Utils.cpp" />
-    <ClCompile Include="src\Utils\Shader.cpp" />
-    <ClCompile Include="src\Utils\VertexBuffer.cpp" />
+    <ClCompile Include="src\GL_Buffers\Shader.cpp" />
+    <ClCompile Include="src\GL_Buffers\VertexBuffer.cpp" />
     <ClCompile Include="src\_Vendor\imgui-docking\imgui.cpp" />
     <ClCompile Include="src\_Vendor\imgui-docking\imgui_demo.cpp" />
     <ClCompile Include="src\_Vendor\imgui-docking\imgui_draw.cpp" />
@@ -219,6 +222,13 @@
     <ClInclude Include="src\GameObject\Components\CameraControl.h" />
     <ClInclude Include="src\GameObject\Components\MeshRenderer.h" />
     <ClInclude Include="src\GameObject\GameObject.h" />
+    <ClInclude Include="src\GL_Buffers\FrameBuffer.h" />
+    <ClInclude Include="src\GL_Buffers\GLBuffer.h" />
+    <ClInclude Include="src\GL_Buffers\RenderBuffer.h" />
+    <ClInclude Include="src\GL_Buffers\Texture2D.h" />
+    <ClInclude Include="src\Module\Editor\PanelConsole.h" />
+    <ClInclude Include="src\Module\Editor\PanelEditor.h" />
+    <ClInclude Include="src\Module\Editor\PanelPerformance.h" />
     <ClInclude Include="src\Module\ModuleModelLoader.h" />
     <ClInclude Include="src\Module\ModuleScene.h" />
     <ClInclude Include="src\Module\ModuleTexture.h" />
@@ -229,14 +239,14 @@
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Module\Module.h" />
     <ClInclude Include="src\Module\ModuleTime.h" />
-    <ClInclude Include="src\Utils\IndexBuffer.h" />
+    <ClInclude Include="src\GL_Buffers\IndexBuffer.h" />
     <ClInclude Include="src\Utils\Render_Utils.h" />
-    <ClInclude Include="src\Utils\UniformBuffer.h" />
-    <ClInclude Include="src\Utils\VertexArray.h" />
-    <ClInclude Include="src\Utils\VertexBufferLayout.h" />
+    <ClInclude Include="src\GL_Buffers\UniformBuffer.h" />
+    <ClInclude Include="src\GL_Buffers\VertexArray.h" />
+    <ClInclude Include="src\GL_Buffers\VertexBufferLayout.h" />
     <ClInclude Include="src\Utils\Window_Utils.h" />
-    <ClInclude Include="src\Utils\Shader.h" />
-    <ClInclude Include="src\Utils\VertexBuffer.h" />
+    <ClInclude Include="src\GL_Buffers\Shader.h" />
+    <ClInclude Include="src\GL_Buffers\VertexBuffer.h" />
     <ClInclude Include="src\_Vendor\imgui-docking\imconfig.h" />
     <ClInclude Include="src\_Vendor\imgui-docking\imgui.h" />
     <ClInclude Include="src\_Vendor\imgui-docking\imgui_impl_opengl3.h" />

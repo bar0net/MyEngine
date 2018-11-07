@@ -3,10 +3,10 @@
 
 #include "../Component.h"
 
-#include "../../_Vendor/MathGeoLib/Geometry/Frustum.h"
-#include "../../_Vendor/MathGeoLib/Math/float4x4.h"
+#include "_Vendor/MathGeoLib/Geometry/Frustum.h"
+#include "_Vendor/MathGeoLib/Math/float4x4.h"
 
-class UniformBuffer;
+namespace MyEngine { class UniformBuffer; }
 
 enum class ProjectionType
 {
@@ -38,7 +38,7 @@ public:
 
 private:
 	math::Frustum frustum;
-	UniformBuffer* ubo = nullptr;
+	MyEngine::UniformBuffer* ubo = nullptr;
 };
 
 #endif // !_MYENGINE_COMPONENT_CAMERA_H

@@ -1,11 +1,11 @@
 #include "CameraControl.h"
 
-#include "../../Application.h"
+#include "Application.h"
 #include "../GameObject.h"
-#include "../../Module/ModuleInput.h"
-#include "../../Module/ModuleTime.h"
+#include "Module/ModuleInput.h"
+#include "Module/ModuleTime.h"
 
-#include "../../_Vendor/MathGeoLib/Math/float4.h"
+#include "_Vendor/MathGeoLib/Math/float4.h"
 
 
 

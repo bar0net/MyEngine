@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <string>
 
-#include "../Utils/VertexBufferLayout.h"
+#include "GL_Buffers/VertexBufferLayout.h"
 
 class aiMesh;
 

@@ -133,12 +133,14 @@ namespace MyEngine {
 	{
 		return (const char*)glGetString(GL_RENDERER);
 	}
-	void RenderUtils::BindFrameBuffer(unsigned int textureID, unsigned int width, unsigned int height)
+
+	void RenderUtils::BindRenderBuffer(unsigned int renderBuffer, unsigned int width, unsigned int height)
 	{
-		GLCall(glBindFramebuffer(GL_FRAMEBUFFER, textureID));
+		GLCall(glBindFramebuffer(GL_FRAMEBUFFER, renderBuffer));
 		GLCall(glViewport(0, 0, width, height));
 	}
-	void RenderUtils::UnBindFrameBuffer(unsigned int width, unsigned int height)
+
+	void RenderUtils::UnBindRenderBuffer(unsigned int width, unsigned int height)
 	{
 		GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 		GLCall(glViewport(0, 0, width, height));
