@@ -3,12 +3,15 @@
 #include "LogSystem.h"
 #include "Application.h"
 
+
 #define _DEV_MODE_ 0
 
 #if (_DEV_MODE_==1)
 	#define _CRTDBG_MAP_ALLOC  
 	#include <stdlib.h>  
 	#include <crtdbg.h> 
+
+	#include "GL_Buffers/GLBuffer.h"
 #endif
 
 enum class AppStatus 
@@ -65,6 +68,7 @@ int main(int argc, const char* argv[])
 	delete(App);
 
 	#if (_DEV_MODE_==1)
+		LOGWARNING("GL Buffers in Memory: %i", open_buffers);
 		_CrtDumpMemoryLeaks();
 		LOGINFO("Press Enter to close.");
 		std::cin.get();

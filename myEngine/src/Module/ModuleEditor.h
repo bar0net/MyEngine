@@ -50,7 +50,7 @@ private:
 	void CreateGrid();
 	void CreateGizmo();
 
-	void MainMenuBar();
+	bool MainMenuBar();
 	void PanelCamera(Camera* component) const;
 	void PanelCameraControl(CameraControl* component) const;
 	void PanelMeshRenderer(MeshRenderer* component) const;
@@ -91,6 +91,8 @@ private:
 	bool show_debug = true;
 	bool show_warning = true;
 	bool show_error = true;
+
+	GameObject* editor_camera = nullptr;
 };
 
 

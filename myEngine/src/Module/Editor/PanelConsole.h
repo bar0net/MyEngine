@@ -63,7 +63,7 @@ private:
 	}
 
 public:
-	void Draw(bool enabled)
+	void Draw(bool& enabled)
 	{
 		ImGui::Begin("Console", &enabled);
 

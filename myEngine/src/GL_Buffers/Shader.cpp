@@ -58,25 +58,13 @@ namespace MyEngine
 		if (Globals::active_shader == program) return;
 
 		GLCall(glUseProgram(program));
-		/*
-		for (unsigned int i = 0; i < textures.size(); i++)
-		{
-			GLCall(glActiveTexture(GL_TEXTURE0 + i));
-
-			GLCall(glBindTexture(GL_TEXTURE_2D, textures[i]));
-
-			std::string location = std::string("texture") + std::to_string(i);
-
-			GLCall(glUniform1i(glGetUniformLocation(program, location.c_str()), i));
-		}*/
-
 		Globals::active_shader = program;
 	}
 
 
 	void Shader::UnBind() const
 	{
-		if (Globals::active_shader == 0) return;
+		if (Globals::active_shader != program) return;
 
 		GLCall(glUseProgram(0));
 		Globals::active_shader = 0;

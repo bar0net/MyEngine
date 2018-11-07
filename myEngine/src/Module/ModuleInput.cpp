@@ -10,16 +10,22 @@
 #include "Utils/Window_Utils.h"
 
 #define MAX_KEYS 300
+#define MOUSE_KEYS 3
+#define MOUSE_SENSITIVITY 0.1F
 
 ModuleInput::ModuleInput() : Module()
 {
 	keyboard = new KeyState[MAX_KEYS];
+	mouse = new KeyState[MOUSE_KEYS];
+
 	memset(keyboard, 0, MAX_KEYS * sizeof(KeyState));
+	memset(mouse, 0, MOUSE_KEYS * sizeof(KeyState));
 }
 
 ModuleInput::~ModuleInput()
 {
-	delete[]keyboard;
+	delete[] keyboard;
+	delete[] mouse;
 }
 
 bool ModuleInput::Init()
@@ -57,23 +63,57 @@ UpdateState ModuleInput::PreUpdate()
 		}
 	}
 
+	for (unsigned int i = 0; i < MOUSE_KEYS; ++i) 
+	{
+		if (mouse[i] == KeyState::KEY_DOWN)		
+			mouse[i] = KeyState::KEY_REPEAT;
+		else if (mouse[i] == KeyState::KEY_UP)	
+			mouse[i] = KeyState::KEY_IDLE;
+	}
+
 	while (SDL_PollEvent(&event) != 0)
 	{
 		App->editor->ProcessEvent(&event);
-		if (event.type == SDL_QUIT)
-			return UpdateState::Update_End;
-		
-		if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED && (int)event.window.windowID == MyEngine::WindowUtils::WindowID(App->renderer->data))
-				App->renderer->ResizedWindow();		
 
-		if (event.type == SDL_DROPFILE)
+		switch (event.type)
 		{
+		case SDL_QUIT:
+			return UpdateState::Update_End;
+			break;
+
+		case SDL_WINDOWEVENT:
+			if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED && (int)event.window.windowID == MyEngine::WindowUtils::WindowID(App->renderer->data))
+				App->renderer->ResizedWindow();
+			break;
+
+		case SDL_MOUSEBUTTONDOWN:
+			if (event.button.button == SDL_BUTTON_LEFT)			mouse[0] = KeyState::KEY_DOWN;
+			else if (event.button.button == SDL_BUTTON_RIGHT)	mouse[1] = KeyState::KEY_DOWN;
+			else if (event.button.button == SDL_BUTTON_MIDDLE)	mouse[2] = KeyState::KEY_DOWN;
+			break;
+
+		case SDL_MOUSEBUTTONUP:
+			if (event.button.button == SDL_BUTTON_LEFT)			mouse[0] = KeyState::KEY_UP;
+			else if (event.button.button == SDL_BUTTON_RIGHT)	mouse[1] = KeyState::KEY_UP;
+			else if (event.button.button == SDL_BUTTON_MIDDLE)	mouse[2] = KeyState::KEY_UP;
+			break;
+
+		case SDL_DROPFILE:
 			char* drop_file = event.drop.file;
 			LOG("Drop file detected");
 			ManageDropFile(drop_file);
 			SDL_free(drop_file);
+			break;
 		}
 	}
+
+	return UpdateState::Update_Continue;
+}
+
+UpdateState ModuleInput::PostUpdate()
+{
+	SDL_GetMouseState(&mouse_x, &mouse_y);
+
 
 	return UpdateState::Update_Continue;
 }
@@ -97,4 +137,19 @@ void ModuleInput::ManageDropFile(const char* file)
 	LOGDEBUG("FBX file Droped!");
 
 	App->scene->NewModel(file);
+}
+
+void ModuleInput::GetMouseMovement(float * x, float * y)
+{
+	int curr_x;
+	int curr_y;
+
+	SDL_GetMouseState(&curr_x, &curr_y);
+	*x = (int)((curr_x - mouse_x) * MOUSE_SENSITIVITY);
+	*y = (int)((curr_y - mouse_y) * MOUSE_SENSITIVITY);
+}
+
+void ModuleInput::GetMousePosition(int * x, int * y)
+{
+	SDL_GetMouseState(x, y);
 }

@@ -27,6 +27,7 @@
 #include "ModuleTime.h"
 #include "ModuleScene.h"
 #include "ModuleTexture.h"
+#include "ModuleInput.h"
 
 #include "GameObject/GameObject.h"
 #include "GameObject/Components/Camera.h"
@@ -50,7 +51,6 @@ bool ModuleEditor::Init()
 	ImGui_ImplSDL2_InitForOpenGL(App->renderer->data->window, App->renderer->data->context);
 	ImGui_ImplOpenGL3_Init(GLSL_VERSION);
 	ImGui::StyleColorsDark();
-
 	
 	CreateGrid();
 	CreateGizmo();
@@ -89,6 +89,7 @@ bool ModuleEditor::Start()
 	LOGWARNING("___ EDITOR: TESTING WARNING LOG LEVEL ____");
 	LOGERROR("___ EDITOR: TESTING ERROR LOG LEVEL ____");
 
+	assert(editor_camera = App->scene->Find("Camera"));
 	return true;
 }
 
@@ -129,9 +130,21 @@ UpdateState ModuleEditor::PreUpdate()
 UpdateState ModuleEditor::Update()
 {
 	FrameStart();
+	if (App->input->GetKeyDown(KeyCode::F))
+	{
+		if (inspect_object != nullptr && inspect_object->GetName() != "Camera")
+		{
+			float3 p = inspect_object->position - 10 * editor_camera->Front() + 2 * editor_camera->Up();
+			editor_camera->SetPosition(p.x, p.y, p.z);
+		}
+		else
+		{
+			LOGDEBUG("No object selected to focus view. Select an object on the inspector.");
+		}
+	}
 
 	// Drawing
-	MainMenuBar();
+	if (!MainMenuBar()) return UpdateState::Update_End;
 
 	if (scene_window)
 	{
@@ -170,7 +183,7 @@ UpdateState ModuleEditor::Update()
 		ImGui::End();
 	}
 
-	if (config_window)	panel_editor->Draw(shader_grid, grid_color);
+	if (config_window)	panel_editor->Draw(config_window, shader_grid, grid_color);
 	if (debug_window)	panel_performance->Draw(debug_window, scene_width, scene_height);
 	if (console_window) panel_console->Draw(console_window);
 
@@ -289,13 +302,13 @@ void ModuleEditor::CreateGizmo()
 //				PANELS
 // ====================================
 
-void ModuleEditor::MainMenuBar()
+bool ModuleEditor::MainMenuBar()
 {
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("Quit")) return UpdateState::Update_End;
+			if (ImGui::MenuItem("Quit")) return false;
 			ImGui::EndMenu();
 		}
 
@@ -317,6 +330,8 @@ void ModuleEditor::MainMenuBar()
 		}
 		ImGui::EndMainMenuBar();
 	}
+
+	return true;
 }
 
 void ModuleEditor::PanelObjects() 
@@ -325,13 +340,19 @@ void ModuleEditor::PanelObjects()
 
 	ImVec2 panel_size = ImGui::GetWindowSize();
 
+	ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0, 0));
 	for (std::unordered_map<std::string, GameObject*>::iterator it = App->scene->gameObjects.begin(); it != App->scene->gameObjects.end(); ++it)
 	{
-		if (ImGui::Button(it->first.c_str(), ImVec2(panel_size.x - 17, 0))) 
-		{
-			inspect_object = it->second; 
-		}
+		if (inspect_object == it->second) 
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2F, 0.3F, 0.7F, 1.0F));
+		else 
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0F, 0.0F, 0.0F, 0.0F));
+
+		if (ImGui::Button(it->first.c_str(), ImVec2(panel_size.x - 17, 0))) inspect_object = it->second; 
+
+		ImGui::PopStyleColor();
 	}
+	ImGui::PopStyleVar();
 
 	ImGui::Spacing();
 	ImGui::Separator();

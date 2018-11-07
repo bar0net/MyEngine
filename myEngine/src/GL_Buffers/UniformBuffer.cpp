@@ -1,5 +1,6 @@
 #include "UniformBuffer.h"
 
+#include "Globals.h"
 #include "GL/glew.h"
 #include "Utils/Render_Utils.h"
 #include "_Vendor/MathGeoLib/Math/float4x4.h"
@@ -9,10 +10,9 @@ namespace MyEngine {
 	{
 		// Uniform Buffer
 		GLCall(glGenBuffers(1, &ubo));
-		GLCall(glBindBuffer(GL_UNIFORM_BUFFER, ubo));
-		GLCall(glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(float4x4), NULL, GL_STREAM_DRAW));
-		GLCall(glBindBuffer(GL_UNIFORM_BUFFER, 0));
+		Bind();
 
+		GLCall(glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(float4x4), NULL, GL_STREAM_DRAW));
 		GLCall(glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo, 0, 2 * 16 * sizeof(float)));
 	}
 
@@ -25,13 +25,19 @@ namespace MyEngine {
 
 	void UniformBuffer::Bind() const
 	{
+		if (Globals::active_ubo == ubo) return;
+
 		GLCall(glBindBuffer(GL_UNIFORM_BUFFER, ubo));
+		Globals::active_ubo = ubo;
 	}
 
 
 	void UniformBuffer::UnBind() const
 	{
+		if (Globals::active_ubo != ubo) return;
+
 		GLCall(glBindBuffer(GL_UNIFORM_BUFFER, 0));
+		Globals::active_ubo = 0;
 	}
 
 

@@ -137,3 +137,13 @@ void ModuleScene::NewModel(const char * file)
 	}
 
 }
+
+GameObject * ModuleScene::Find(const char * name)
+{
+	for (std::unordered_map<std::string, GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it)
+	{
+		if (it->first == std::string(name)) 
+			return it->second;
+	}
+	return nullptr;
+}

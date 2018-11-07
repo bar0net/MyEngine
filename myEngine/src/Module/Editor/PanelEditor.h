@@ -13,9 +13,9 @@ public:
 	//float grid_color[4] = { 1.0F, 1.0F, 1.0F, 1.0F };
 	bool show_grid = true;
 
-	void Draw(MyEngine::Shader* shader_grid, float* grid_color)
+	void Draw(bool& enabled, MyEngine::Shader* shader_grid, float* grid_color)
 	{
-		ImGui::Begin("Configuration", &config_window);
+		ImGui::Begin("Configuration", &enabled);
 
 		// Background Color
 		ImVec4 bgcolor(App->renderer->clearColor[0], App->renderer->clearColor[1], App->renderer->clearColor[2], App->renderer->clearColor[3]);

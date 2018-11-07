@@ -33,7 +33,7 @@ public:
 		delete avg_ms_array;
 	}
 
-	void Draw(bool enabled, unsigned int scene_width, unsigned int scene_height)
+	void Draw(bool& enabled, unsigned int scene_width, unsigned int scene_height)
 	{
 		ImGui::Begin("Debug Tools", &enabled);
 

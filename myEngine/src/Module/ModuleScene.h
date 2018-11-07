@@ -23,6 +23,7 @@ public:
 	bool CleanUp();
 
 	void NewModel(const char* file);
+	GameObject* Find(const char* name);
 	
 	MyEngine::Shader* shader = nullptr;
 

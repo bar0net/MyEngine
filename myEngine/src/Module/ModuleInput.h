@@ -18,6 +18,7 @@ enum class KeyCode
 	A = 4,
 	D = 7,
 	E = 8,
+	F = 9,
 	I = 12,
 	J = 13,
 	K = 14,
@@ -29,6 +30,13 @@ enum class KeyCode
 	W = 26
 };
 
+enum class MouseButton
+{
+	MOUSE_LEFT = 0,
+	MOUSE_RIGHT = 1,
+	MOUSE_MIDDLE = 2
+};
+
 class ModuleInput : public Module
 {
 public:
@@ -37,6 +45,7 @@ public:
 
 	bool Init();
 	UpdateState PreUpdate();
+	UpdateState PostUpdate();
 	bool CleanUp();
 
 	void ManageDropFile(const char* file);
@@ -45,7 +54,17 @@ public:
 	bool GetKey(KeyCode k)		{ return keyboard[(int)k] == KeyState::KEY_REPEAT; }
 	bool GetKeyUP(KeyCode k)	{ return keyboard[(int)k] == KeyState::KEY_UP; }
 
+	bool GetMouseButtonDown(MouseButton button) { return mouse[(int)button] == KeyState::KEY_DOWN; }
+	bool GetMouseButton(MouseButton button) { return mouse[(int)button] == KeyState::KEY_REPEAT; }
+	bool GetMouseButtonUp(MouseButton button) { return mouse[(int)button] == KeyState::KEY_UP; }
+	void GetMouseMovement(float* x, float* y);
+	void GetMousePosition(int* x, int* y);
+
 	KeyState* keyboard;
+	KeyState* mouse;
+	int mouse_x = 0;
+	int mouse_y = 0;
+	float mouse_wheel = 0;
 };
 
 #endif // !_MODEL_INPUT_H

@@ -20,20 +20,18 @@ MyEngine::FrameBuffer::~FrameBuffer()
 
 void MyEngine::FrameBuffer::Bind() const
 {
-	if (Globals::active_framebuffer != bufferID)
-	{
-		GLCall(glBindFramebuffer(GL_FRAMEBUFFER, bufferID));
-		Globals::active_framebuffer = bufferID;
-	}
+	if (Globals::active_framebuffer == bufferID) return;
+
+	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, bufferID));
+	Globals::active_framebuffer = bufferID;
 }
 
 void MyEngine::FrameBuffer::UnBind() const
 {
-	if (Globals::active_framebuffer == bufferID)
-	{
-		GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
-		Globals::active_framebuffer = 0;
-	}
+	if (Globals::active_framebuffer != bufferID) return;
+
+	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+	Globals::active_framebuffer = 0;
 }
 
 void MyEngine::FrameBuffer::SetTexture(unsigned int textureID, unsigned int slot, unsigned int type) const
