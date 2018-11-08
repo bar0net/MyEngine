@@ -11,6 +11,8 @@
 
 void CameraControl::Update()
 {
+	if (!enabled) return;
+
 	if (App->input->GetKey(KeyCode::Q)) gameObject->Translate( gameObject->Up() * velocity * App->time->DeltaTime());
 	if (App->input->GetKey(KeyCode::E)) gameObject->Translate(-gameObject->Up() * velocity * App->time->DeltaTime());
 

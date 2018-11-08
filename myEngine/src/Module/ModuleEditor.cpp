@@ -198,10 +198,16 @@ UpdateState ModuleEditor::Update()
 
 			ImVec2 wPos = ImGui::GetWindowPos();
 			bool hovering_image = ImGui::IsMouseHoveringRect(ImVec2(wPos.x + x_space, wPos.y + y_space), ImVec2(wPos.x + x_space + scene_width, wPos.y + y_space + scene_height));
-			if (ImGui::IsWindowFocused() && hovering_image)
-				((CameraControl*)editor_camera->components["CameraControl"])->mouse_enabled = true;
+			if (ImGui::IsWindowFocused())
+			{
+				((CameraControl*)editor_camera->components["CameraControl"])->enabled = true;
+				if (hovering_image) ((CameraControl*)editor_camera->components["CameraControl"])->mouse_enabled = true;
+				else ((CameraControl*)editor_camera->components["CameraControl"])->mouse_enabled = false;
+			}
 			else
-				((CameraControl*)editor_camera->components["CameraControl"])->mouse_enabled = false;
+			{
+				((CameraControl*)editor_camera->components["CameraControl"])->enabled = false;
+			}
 
 			ImGui::End();
 			ImGui::PopStyleVar(2);
@@ -394,13 +400,13 @@ void ModuleEditor::PanelObjects()
 	{
 		ImGui::TextColored(ImVec4(0.3F, 0.5F, 0.8F, 1.0F), inspect_object->GetName());
 		float pos[3] = { this->inspect_object->position.x, this->inspect_object->position.y, this->inspect_object->position.z };
-		if (ImGui::InputFloat3("Position", pos, 2)) this->inspect_object->SetPosition(pos[0], pos[1], pos[2]);			
+		if (ImGui::DragFloat3("Position", pos, 2)) this->inspect_object->SetPosition(pos[0], pos[1], pos[2]);			
 
 		float rot[3] = { this->inspect_object->rotation.x, this->inspect_object->rotation.y, this->inspect_object->rotation.z };
-		if (ImGui::InputFloat3("Rotation", rot, 2)) this->inspect_object->SetRotation(rot[0], rot[1], rot[2]);
+		if (ImGui::DragFloat3("Rotation", rot, 2)) this->inspect_object->SetRotation(rot[0], rot[1], rot[2]);
 			
 		float scale[3] = { this->inspect_object->scale.x, this->inspect_object->scale.y, this->inspect_object->scale.z };
-		if (ImGui::InputFloat3("Scale", scale, 2)) this->inspect_object->SetScale(scale[0], scale[1], scale[2]);
+		if (ImGui::DragFloat3("Scale", scale, 2)) this->inspect_object->SetScale(scale[0], scale[1], scale[2]);
 			
 
 		ImGui::Separator();
