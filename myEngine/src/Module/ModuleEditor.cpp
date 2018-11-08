@@ -56,21 +56,18 @@ bool ModuleEditor::Init()
 	CreateGizmo();
 
 	// Set Up Render to Texture
-	/*frameBuffer = new MyEngine::FrameBuffer();
-
+	frameBuffer = new MyEngine::FrameBuffer();
 	renderTexture = new MyEngine::Texture2D(App->renderer->width, App->renderer->height);
-	renderTexture->SetParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	renderTexture->SetParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
 	renderBuffer = new MyEngine::RenderBuffer();
+	
 	renderBuffer->SetStorage(App->renderer->width, App->renderer->height, GL_DEPTH_COMPONENT);
-
 	frameBuffer->SetRenderBuffer(renderBuffer->ID(), GL_DEPTH_ATTACHMENT);
 	frameBuffer->SetTexture(renderTexture->ID(), 0, GL_COLOR_ATTACHMENT0);
 
 	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
-	GLCall(glDrawBuffers(1, DrawBuffers));*/
+	GLCall(glDrawBuffers(1, DrawBuffers));
 
+	// Create Panels
 	panel_performance = new PanelPerfomance();
 	panel_console = new PanelConsole();
 	panel_editor = new PanelEditor();
@@ -144,48 +141,57 @@ UpdateState ModuleEditor::Update()
 	}
 
 	// Drawing
+
 	if (!MainMenuBar()) return UpdateState::Update_End;
-
-	if (scene_window)
+	
+	// TODO: The top of the viewport gets ocluded by the menu and it doesn't allow docked
+	// windows to move (cannot access their "title bar" either because its hidden).
+	// This is kind of servicable for the scene view (don't want to move the window on mouse 
+	// button down over the image) 
+	ImGui::DockSpaceOverViewport(0);
 	{
-		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
-		ImGui::Begin("Scene", &scene_window, ImGuiWindowFlags_NoScrollbar);
-		ImVec2 size = ImGui::GetContentRegionAvail();
-		ImVec2 imgSize = size; 
-		float space = 0;
-
-		if (size.x * App->renderer->height < size.y * App->renderer->width)
+		if (scene_window)
 		{
-			imgSize.y = (size.x * App->renderer->height / App->renderer->width);
-			space = (size.y - imgSize.y) / 2.0F;
-			ImGui::Dummy(ImVec2(0, space));
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+			ImGui::Begin("Scene", &scene_window, ImGuiWindowFlags_NoScrollbar );
+			ImVec2 size = ImGui::GetContentRegionAvail();
+			ImVec2 imgSize = size;
+			float space = 0;
+
+			if (size.x * App->renderer->height < size.y * App->renderer->width)
+			{
+				imgSize.y = (size.x * App->renderer->height / App->renderer->width);
+				space = (size.y - imgSize.y) / 2.0F;
+				ImGui::Dummy(ImVec2(0, space));
+			}
+			else
+			{
+				imgSize.x = (size.y * App->renderer->width / App->renderer->height);
+				space = (size.x - imgSize.x) / 2.0F;
+				ImGui::Dummy(ImVec2(space, 0)); ImGui::SameLine();
+			}
+
+			ImGui::Image((ImTextureID)renderTexture->ID(), imgSize, ImVec2(0, 1), ImVec2(1, 0));
+
+			scene_width = imgSize.x;
+			scene_height = imgSize.y;
+
+			ImGui::End();
+			ImGui::PopStyleVar();
 		}
-		else
+
+		if (inspect_window)
 		{
-			imgSize.x = (size.y * App->renderer->width / App->renderer->height);
-			space = (size.x - imgSize.x) / 2.0F;
-			ImGui::Dummy(ImVec2(space, 0)); ImGui::SameLine();
+			ImGui::Begin("Inspector", &inspect_window);
+			PanelObjects();
+			ImGui::End();
 		}
 
-		ImGui::Image((ImTextureID)renderTexture, imgSize, ImVec2(0,1), ImVec2(1,0));
-
-		scene_width = imgSize.x;
-		scene_height = imgSize.y;
-
-		ImGui::End();
-		ImGui::PopStyleVar();
+		if (config_window)	panel_editor->Draw(config_window, shader_grid, grid_color);
+		if (debug_window)	panel_performance->Draw(debug_window, scene_width, scene_height);
+		if (console_window) panel_console->Draw(console_window);
 	}
 
-	if(inspect_window)
-	{
-		ImGui::Begin("Inspector", &inspect_window);
-		PanelObjects();
-		ImGui::End();
-	}
-
-	if (config_window)	panel_editor->Draw(config_window, shader_grid, grid_color);
-	if (debug_window)	panel_performance->Draw(debug_window, scene_width, scene_height);
-	if (console_window) panel_console->Draw(console_window);
 
 	FrameEnd();
 	return UpdateState::Update_Continue;
@@ -193,8 +199,8 @@ UpdateState ModuleEditor::Update()
 
 void ModuleEditor::FrameStart()
 {
-	//MyEngine::RenderUtils::UnBindRenderBuffer(App->renderer->width, App->renderer->height);
-	//MyEngine::RenderUtils::ClearViewport();
+	frameBuffer->UnBind();
+	MyEngine::RenderUtils::ClearViewport();
 
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->renderer->data->window);
@@ -212,7 +218,7 @@ void ModuleEditor::FrameEnd() const
 		ImGui::RenderPlatformWindowsDefault();
 	}
 
-	//MyEngine::RenderUtils::BindRenderBuffer(frameBuffer->ID(), App->renderer->width, App->renderer->height);
+	frameBuffer->Bind();
 }
 
 void ModuleEditor::ProcessEvent(void* event) const
@@ -304,8 +310,8 @@ void ModuleEditor::CreateGizmo()
 
 bool ModuleEditor::MainMenuBar()
 {
-	if (ImGui::BeginMainMenuBar())
 	{
+		ImGui::BeginMainMenuBar();
 		if (ImGui::BeginMenu("File"))
 		{
 			if (ImGui::MenuItem("Quit")) return false;

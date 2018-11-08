@@ -53,7 +53,6 @@ bool ModuleRenderer::Init()
 
 UpdateState ModuleRenderer::PreUpdate()
 {
-	//MyEngine::RenderUtils::BindRenderBuffer(App->editor->frameBuffer->ID(), App->renderer->width, App->renderer->height);
 	MyEngine::RenderUtils::ClearViewport();
 
 	return UpdateState::Update_Continue;

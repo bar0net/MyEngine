@@ -66,6 +66,7 @@ public:
 	void Draw(bool& enabled)
 	{
 		ImGui::Begin("Console", &enabled);
+		//ImGui::Beeg("Console");
 
 		// Clear Button
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0F, 0.55F, 0.55F, 1.0F));
