@@ -37,7 +37,7 @@ void CameraControl::Update()
 	if (App->input->GetKey(KeyCode::U))	gameObject->Rotate(0, 0, angularVelocity * App->time->DeltaTime());
 	if (App->input->GetKey(KeyCode::O)) gameObject->Rotate(0, 0, -angularVelocity * App->time->DeltaTime());
 
-	if (App->input->GetMouseButton(MouseButton::MOUSE_LEFT) && !App->input->GetMouseButton(MouseButton::MOUSE_RIGHT))
+	if (mouse_enabled && App->input->GetMouseButton(MouseButton::MOUSE_LEFT) && !App->input->GetMouseButton(MouseButton::MOUSE_RIGHT))
 	{
 		float x = 0;
 		float y = 0;
@@ -45,7 +45,7 @@ void CameraControl::Update()
 		gameObject->Translate(-x * gameObject->Right() + y * gameObject->Up());
 	}
 
-	if (!App->input->GetMouseButton(MouseButton::MOUSE_LEFT) && App->input->GetMouseButton(MouseButton::MOUSE_RIGHT))
+	if (mouse_enabled && !App->input->GetMouseButton(MouseButton::MOUSE_LEFT) && App->input->GetMouseButton(MouseButton::MOUSE_RIGHT))
 	{
 		float x = 0;
 		float y = 0;

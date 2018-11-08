@@ -10,6 +10,7 @@ public:
 
 	void Update();
 
+	float mouse_enabled = false;
 	float velocity = 4.0f;
 	float angularVelocity = 90.0f;
 };

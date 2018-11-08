@@ -144,19 +144,43 @@ UpdateState ModuleEditor::Update()
 
 	if (!MainMenuBar()) return UpdateState::Update_End;
 	
-	// TODO: The top of the viewport gets ocluded by the menu and it doesn't allow docked
-	// windows to move (cannot access their "title bar" either because its hidden).
-	// This is kind of servicable for the scene view (don't want to move the window on mouse 
-	// button down over the image) 
-	ImGui::DockSpaceOverViewport(0);
+	// Background Dockspace
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Pos.y));
+	ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, viewport->Size.y));
+	ImGui::SetNextWindowViewport(viewport->ID);
+	ImGui::SetNextWindowBgAlpha(0.0F);
+	bool p_open = true;
+
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0F);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0F);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0F, 0.0F));
+	ImGui::Begin("DockSpace Demo", &p_open, window_flags);
+	ImGui::PopStyleVar(3);
+
+	ImGuiID dockspace_id = ImGui::GetID("MyDockspace");
+	ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruDockspace;
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0F, 0.0F), dockspace_flags);
+	ImGui::End();
+
 	{
 		if (scene_window)
 		{
+
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
 			ImGui::Begin("Scene", &scene_window, ImGuiWindowFlags_NoScrollbar );
 			ImVec2 size = ImGui::GetContentRegionAvail();
 			ImVec2 imgSize = size;
 			float space = 0;
+
+			if (ImGui::IsMouseHoveringWindow())
+				((CameraControl*)editor_camera->components["CameraControl"])->mouse_enabled = true;
+			else
+				((CameraControl*)editor_camera->components["CameraControl"])->mouse_enabled = false;
 
 			if (size.x * App->renderer->height < size.y * App->renderer->width)
 			{
