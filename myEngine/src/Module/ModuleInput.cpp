@@ -11,7 +11,7 @@
 
 #define MAX_KEYS 300
 #define MOUSE_KEYS 3
-#define MOUSE_SENSITIVITY 0.1F
+#define MOUSE_SENSITIVITY 0.3F
 
 ModuleInput::ModuleInput() : Module()
 {
@@ -145,8 +145,8 @@ void ModuleInput::GetMouseMovement(float * x, float * y)
 	int curr_y;
 
 	SDL_GetMouseState(&curr_x, &curr_y);
-	*x = (int)((curr_x - mouse_x) * MOUSE_SENSITIVITY);
-	*y = (int)((curr_y - mouse_y) * MOUSE_SENSITIVITY);
+	*x = ((curr_x - mouse_x) * MOUSE_SENSITIVITY);
+	*y = ((curr_y - mouse_y) * MOUSE_SENSITIVITY);
 }
 
 void ModuleInput::GetMousePosition(int * x, int * y)
