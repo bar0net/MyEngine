@@ -22,6 +22,9 @@ MeshRenderer::MeshRenderer(const std::vector<Model>& models, MyEngine::Shader* s
 	meshes.clear();
 	meshes.reserve(models.size());
 
+	float mins[3] = { INFINITY,  INFINITY,  INFINITY };
+	float maxs[3] = { -INFINITY, -INFINITY, -INFINITY };
+
 	for (unsigned int i = 0; i < models.size(); i++)
 	{
 		Mesh mesh;
@@ -34,8 +37,20 @@ MeshRenderer::MeshRenderer(const std::vector<Model>& models, MyEngine::Shader* s
 		mesh.ibo = new MyEngine::IndexBuffer(&models[i].indices);
 
 		meshes.emplace_back(mesh);
+
+		for (unsigned int j = 0; j < 3; j++)
+		{
+			if (models[i].maxs[j] > maxs[j]) maxs[j] = models[i].maxs[j];
+			if (models[i].mins[j] < mins[j]) mins[j] = models[i].mins[j];
+		}
 	}
 	
+	for (unsigned int i = 0; i < 3; i++)
+	{
+		center[i] = 0.5F * (maxs[i] + mins[i]);
+		dimensions[i] = (maxs[i] - mins[i]);
+	}
+
 	this->shader->SetUniform4("albedo", 0.2F, 0.8F, 0.2F, 1.0F);
 
 	LOGINFO("Creating Mesh Renderer.");

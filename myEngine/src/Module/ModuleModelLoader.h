@@ -27,6 +27,9 @@ struct Model
 	unsigned int num_triangles = 0;
 	unsigned int textureID = 0;
 	unsigned int poylygon = 3;
+
+	float mins[3] = {  INFINITY,  INFINITY,  INFINITY };
+	float maxs[3] = { -INFINITY, -INFINITY, -INFINITY };
 };
 
 
@@ -39,7 +42,7 @@ public:
 	static bool Load(const char * filename, std::vector<Model>& models);
 
 private:
-	static void ParseMesh(const aiMesh* const mesh, unsigned int num_positions, std::vector<float>* const vertices, std::vector<unsigned int>* const indices, std::unordered_map<std::string, unsigned int>* vertex2index);
+	static void ParseMesh(const aiMesh* const mesh, Model* model, std::unordered_map<std::string, unsigned int>* vertex2index);
 
 };
 

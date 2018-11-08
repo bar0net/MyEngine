@@ -31,7 +31,7 @@ bool ModuleModelLoader::Load(const char * filename, std::vector<Model>& models)
 {
 	LOGINFO("Loading 3D Model: %s", filename);
 
-	const aiScene* scene = aiImportFile(filename, 0);
+	const aiScene* scene = aiImportFile(filename, aiProcess_Triangulate);
 
 	if (scene == NULL) 
 	{
@@ -79,7 +79,7 @@ bool ModuleModelLoader::Load(const char * filename, std::vector<Model>& models)
 		}
 
 		std::unordered_map<std::string, unsigned int> vertex2index;
-		ParseMesh(scene->mMeshes[i], m.poylygon, &(m.vertices), &(m.indices), &vertex2index);
+		ParseMesh(scene->mMeshes[i], &m,&vertex2index);
 		m.textureID = materials[scene->mMeshes[i]->mMaterialIndex];
 		m.layout.Push<float>(m.poylygon);
 		if (scene->mMeshes[i]->mNumUVComponents[0] > 0)
@@ -95,7 +95,7 @@ bool ModuleModelLoader::Load(const char * filename, std::vector<Model>& models)
 }
 
 
-void ModuleModelLoader::ParseMesh(const aiMesh* const mesh, unsigned int num_positions, std::vector<float>* const vertices, std::vector<unsigned int>* const indices, std::unordered_map<std::string, unsigned int>* vertex2index)
+void ModuleModelLoader::ParseMesh(const aiMesh* const mesh, Model* model, std::unordered_map<std::string, unsigned int>* vertex2index)
 {
 	unsigned int num_uvw_coord = mesh->mNumUVComponents[0];
 
@@ -105,19 +105,24 @@ void ModuleModelLoader::ParseMesh(const aiMesh* const mesh, unsigned int num_pos
 		float* uvw = (float*)&mesh->mTextureCoords[0][j];
 		std::string s;
 
-		for (unsigned int k = 0; k < num_positions; ++k)  s += std::to_string(vertex[k]);
+		for (unsigned int k = 0; k < 3; ++k)  s += std::to_string(vertex[k]);
 		for (unsigned int k = 0; k < num_uvw_coord; ++k) s += std::to_string(uvw[k]);
 
 		if (vertex2index->find(s) == vertex2index->end())
 		{
-			for (unsigned int k = 0; k < num_positions; ++k)  vertices->push_back(vertex[k]);
-			for (unsigned int k = 0; k < num_uvw_coord; ++k) vertices->push_back(uvw[k]);
-			indices->push_back(vertex2index->size());
+			for (unsigned int k = 0; k < 3; ++k)
+			{
+				model->vertices.push_back(vertex[k]);
+				if (vertex[k] < model->mins[k]) model->mins[k] = vertex[k];
+				if (vertex[k] > model->maxs[k]) model->maxs[k] = vertex[k];
+			}
+			for (unsigned int k = 0; k < num_uvw_coord; ++k) model->vertices.push_back(uvw[k]);
+			model->indices.push_back(vertex2index->size());
 			(*vertex2index)[s] = vertex2index->size();
 		}
 		else
 		{
-			indices->push_back((*vertex2index)[s]);
+			model->indices.push_back((*vertex2index)[s]);
 		}
 	}
 }

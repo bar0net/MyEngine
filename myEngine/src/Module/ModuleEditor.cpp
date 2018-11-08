@@ -118,7 +118,7 @@ UpdateState ModuleEditor::PreUpdate()
 	if (panel_editor->show_grid)
 	{
 		App->renderer->DrawLines(vao_gizmo, ibo_gizmo, shader_gizmo, 2.5F);
-		App->renderer->DrawLines(vao_grid, ibo_grid, shader_grid);
+		App->renderer->DrawLines(vao_grid, ibo_grid, shader_grid,2);
 	}
 
 	return UpdateState::Update_Continue;
@@ -170,29 +170,25 @@ UpdateState ModuleEditor::Update()
 	{
 		if (scene_window)
 		{
-
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(20, 10));
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
 			ImGui::Begin("Scene", &scene_window, ImGuiWindowFlags_NoScrollbar );
 			ImVec2 size = ImGui::GetContentRegionAvail();
 			ImVec2 imgSize = size;
-			float space = 0;
-
-			if (ImGui::IsMouseHoveringWindow())
-				((CameraControl*)editor_camera->components["CameraControl"])->mouse_enabled = true;
-			else
-				((CameraControl*)editor_camera->components["CameraControl"])->mouse_enabled = false;
+			float x_space = 0;
+			float y_space = 0;
 
 			if (size.x * App->renderer->height < size.y * App->renderer->width)
 			{
 				imgSize.y = (size.x * App->renderer->height / App->renderer->width);
-				space = (size.y - imgSize.y) / 2.0F;
-				ImGui::Dummy(ImVec2(0, space));
+				y_space = (size.y - imgSize.y) / 2.0F;
+				ImGui::Dummy(ImVec2(0, y_space));
 			}
 			else
 			{
 				imgSize.x = (size.y * App->renderer->width / App->renderer->height);
-				space = (size.x - imgSize.x) / 2.0F;
-				ImGui::Dummy(ImVec2(space, 0)); ImGui::SameLine();
+				x_space = (size.x - imgSize.x) / 2.0F;
+				ImGui::Dummy(ImVec2(x_space, 0)); ImGui::SameLine();
 			}
 
 			ImGui::Image((ImTextureID)renderTexture->ID(), imgSize, ImVec2(0, 1), ImVec2(1, 0));
@@ -200,8 +196,15 @@ UpdateState ModuleEditor::Update()
 			scene_width = imgSize.x;
 			scene_height = imgSize.y;
 
+			ImVec2 wPos = ImGui::GetWindowPos();
+			bool hovering_image = ImGui::IsMouseHoveringRect(ImVec2(wPos.x + x_space, wPos.y + y_space), ImVec2(wPos.x + x_space + scene_width, wPos.y + y_space + scene_height));
+			if (ImGui::IsWindowFocused() && hovering_image)
+				((CameraControl*)editor_camera->components["CameraControl"])->mouse_enabled = true;
+			else
+				((CameraControl*)editor_camera->components["CameraControl"])->mouse_enabled = false;
+
 			ImGui::End();
-			ImGui::PopStyleVar();
+			ImGui::PopStyleVar(2);
 		}
 
 		if (inspect_window)
@@ -437,9 +440,14 @@ void ModuleEditor::PanelMeshRenderer(MeshRenderer * component) const
 {
 	if (ImGui::CollapsingHeader(component->GetName()))
 	{
+		ImGui::Text("Bounding Box");
+		ImGui::Text("Local Center: (%f, %f, %f)", component->center[0], component->center[1], component->center[2]);
+		ImGui::Text("Width: %f, Height: %f, Depth: %f", component->dimensions[0], component->dimensions[1], component->dimensions[2]);
+		ImGui::Separator();
+
 		for (unsigned int i = 0; i < component->meshes.size(); ++i)
 		{
-			ImGui::Text("Mesh (%i)", i);
+			ImGui::Text("SubMesh (%i)", i);
 			ImGui::Text("Numer of Triangles: %d", component->meshes[i].num_triangles);
 			std::string s = "Display Texture " + std::to_string(i);
 			ImGui::Checkbox(s.c_str(), &component->meshes[i].display_texture);
