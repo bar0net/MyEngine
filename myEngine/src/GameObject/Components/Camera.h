@@ -33,7 +33,7 @@ public:
 
 	ProjectionType type = ProjectionType::Prespective;
 	float nearPlane = 0.5f;
-	float farPlane = 100.0f;
+	float farPlane = 1000.0f;
 	float fov = 90;
 
 private:

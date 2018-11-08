@@ -16,6 +16,7 @@ public:
 	virtual void CleanUp() {};
 
 	virtual void SetGameObject(GameObject* const gameObject);
+	virtual GameObject* GetGameObject() { return gameObject; }
 
 	const char* const GetName() const { return name; }
 

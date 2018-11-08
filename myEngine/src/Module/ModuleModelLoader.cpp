@@ -29,6 +29,8 @@ ModuleModelLoader::~ModuleModelLoader()
 
 bool ModuleModelLoader::Load(const char * filename, std::vector<Model>& models, math::float4x4* transform)
 {
+	assert(filename && transform);
+
 	LOGINFO("Loading 3D Model: %s", filename);
 
 	const aiScene* scene = aiImportFile(filename, aiProcess_Triangulate);
@@ -103,6 +105,7 @@ bool ModuleModelLoader::Load(const char * filename, std::vector<Model>& models, 
 
 void ModuleModelLoader::ParseMesh(const aiMesh* const mesh, const aiNode* const node, Model* model, std::unordered_map<std::string, unsigned int>* vertex2index)
 {
+	assert(mesh && node && model && vertex2index);
 	unsigned int num_uvw_coord = mesh->mNumUVComponents[0];
 
 	for (unsigned int j = 0; j < mesh->mNumVertices; ++j)
