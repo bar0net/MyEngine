@@ -27,7 +27,7 @@ ModuleModelLoader::~ModuleModelLoader()
 {
 }
 
-bool ModuleModelLoader::Load(const char * filename, std::vector<Model>& models)
+bool ModuleModelLoader::Load(const char * filename, std::vector<Model>& models, math::float4x4* transform)
 {
 	LOGINFO("Loading 3D Model: %s", filename);
 
@@ -45,6 +45,10 @@ bool ModuleModelLoader::Load(const char * filename, std::vector<Model>& models)
 
 	std::vector<unsigned int> materials;
 	materials.reserve(scene->mNumMaterials);
+
+	float* v = new float[16];
+	v = &scene->mRootNode->mTransformation[0][0];
+	transform->Set(v);
 
 	for (unsigned int i = 0; i < scene->mNumMaterials; ++i)
 	{
@@ -79,7 +83,9 @@ bool ModuleModelLoader::Load(const char * filename, std::vector<Model>& models)
 		}
 
 		std::unordered_map<std::string, unsigned int> vertex2index;
-		ParseMesh(scene->mMeshes[i], &m,&vertex2index);
+
+		ParseMesh(scene->mMeshes[i], scene->mRootNode->mChildren[i], &m, &vertex2index);
+
 		m.textureID = materials[scene->mMeshes[i]->mMaterialIndex];
 		m.layout.Push<float>(m.poylygon);
 		if (scene->mMeshes[i]->mNumUVComponents[0] > 0)
@@ -95,13 +101,15 @@ bool ModuleModelLoader::Load(const char * filename, std::vector<Model>& models)
 }
 
 
-void ModuleModelLoader::ParseMesh(const aiMesh* const mesh, Model* model, std::unordered_map<std::string, unsigned int>* vertex2index)
+void ModuleModelLoader::ParseMesh(const aiMesh* const mesh, const aiNode* const node, Model* model, std::unordered_map<std::string, unsigned int>* vertex2index)
 {
 	unsigned int num_uvw_coord = mesh->mNumUVComponents[0];
 
 	for (unsigned int j = 0; j < mesh->mNumVertices; ++j)
 	{
-		float* vertex = (float*)&mesh->mVertices[j];
+		aiVector3D v = node->mTransformation * mesh->mVertices[j];
+
+		float* vertex = (float*)&v;
 		float* uvw = (float*)&mesh->mTextureCoords[0][j];
 		std::string s;
 
