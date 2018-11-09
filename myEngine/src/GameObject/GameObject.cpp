@@ -50,6 +50,15 @@ void GameObject::CleanUp()
 	components.clear();
 }
 
+void GameObject::SetModelMatrix(math::float4x4 * transform)
+{
+	this->transform = *transform;
+
+	this->position = transform->TranslatePart();
+	this->rotation = transform->ToEulerZYX();
+	this->scale = transform->GetScale();
+}
+
 void GameObject::AddComponent(Component* const component)
 {
 	if (components.find(component->GetName()) == components.end())

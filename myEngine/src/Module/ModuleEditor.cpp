@@ -144,8 +144,25 @@ UpdateState ModuleEditor::Update()
 	{
 		if (inspect_object != nullptr && inspect_object->GetName() != "Camera")
 		{
-			float3 p = inspect_object->position - 10 * editor_camera->Front() + 2 * editor_camera->Up();
-			editor_camera->SetPosition(p.x, p.y, p.z);
+			MeshRenderer* mr = (MeshRenderer*)inspect_object->components["MeshRenderer"];
+			if (mr != nullptr)
+			{
+				//TODO: Improve this.
+				// Look for a better solution to position the camera!
+				float ratio = mr->dimensions[0] * inspect_object->scale[0];
+				if (ratio < mr->dimensions[1]) ratio = mr->dimensions[1] * inspect_object->scale[1];
+				if (ratio < mr->dimensions[2]) ratio = mr->dimensions[2] * inspect_object->scale[2];
+				
+				float3 p =
+				{
+					mr->center[0] * inspect_object->scale[0],
+					(mr->center[1]* inspect_object->scale[1] + 0.5F*ratio) ,
+					(mr->center[2]* inspect_object->scale[2] + 0.5F*ratio) 
+				};
+
+				editor_camera->SetPosition(p.x, p.y + 2.0F, p.z + 10.0F);
+				editor_camera->SetRotation(0, 0, 0);
+			}
 		}
 		else
 		{
@@ -168,7 +185,7 @@ UpdateState ModuleEditor::Update()
 		PanelObjects();
 		ImGui::End();
 	}
-
+	
 	FrameEnd();
 	return UpdateState::Update_Continue;
 }
@@ -358,13 +375,13 @@ void ModuleEditor::PanelObjects()
 	{
 		ImGui::TextColored(ImVec4(0.3F, 0.5F, 0.8F, 1.0F), inspect_object->GetName());
 		float pos[3] = { this->inspect_object->position.x, this->inspect_object->position.y, this->inspect_object->position.z };
-		if (ImGui::InputFloat3("Position", pos, 2)) this->inspect_object->SetPosition(pos[0], pos[1], pos[2]);			
+		if (ImGui::DragFloat3("Position", pos, 2)) this->inspect_object->SetPosition(pos[0], pos[1], pos[2]);			
 
 		float rot[3] = { this->inspect_object->rotation.x, this->inspect_object->rotation.y, this->inspect_object->rotation.z };
-		if (ImGui::InputFloat3("Rotation", rot, 2)) this->inspect_object->SetRotation(rot[0], rot[1], rot[2]);
+		if (ImGui::DragFloat3("Rotation", rot, 2)) this->inspect_object->SetRotation(rot[0], rot[1], rot[2]);
 			
 		float scale[3] = { this->inspect_object->scale.x, this->inspect_object->scale.y, this->inspect_object->scale.z };
-		if (ImGui::InputFloat3("Scale", scale, 2)) this->inspect_object->SetScale(scale[0], scale[1], scale[2]);
+		if (ImGui::DragFloat3("Scale", scale, 2)) this->inspect_object->SetScale(scale[0], scale[1], scale[2]);
 			
 
 		ImGui::Separator();
@@ -405,8 +422,14 @@ void ModuleEditor::PanelMeshRenderer(MeshRenderer * component) const
 	if (ImGui::CollapsingHeader(component->GetName()))
 	{
 		ImGui::Text("Bounding Box");
-		ImGui::Text("Local Center: (%f, %f, %f)", component->center[0], component->center[1], component->center[2]);
-		ImGui::Text("Width: %f, Height: %f, Depth: %f", component->dimensions[0], component->dimensions[1], component->dimensions[2]);
+		ImGui::Text("Local Center: (%f, %f, %f)", 
+			component->center[0] * component->GetGameObject()->scale[0],
+			component->center[1] * component->GetGameObject()->scale[1],
+			component->center[2] * component->GetGameObject()->scale[2]);
+		ImGui::Text("Width: %f, Height: %f, Depth: %f", 
+			component->dimensions[0] * component->GetGameObject()->scale[0],
+			component->dimensions[1] * component->GetGameObject()->scale[1],
+			component->dimensions[2] * component->GetGameObject()->scale[2]);
 		ImGui::Separator();
 
 		for (unsigned int i = 0; i < component->meshes.size(); ++i)

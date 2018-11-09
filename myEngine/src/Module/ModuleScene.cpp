@@ -70,12 +70,13 @@ void ModuleScene::NewModel(const char * file)
 	std::string name = "Model";
 	std::string root = "Model ";
 	unsigned int count = 0;
+	float4x4 transform;
 
 	while (App->scene->gameObjects.find(name.c_str()) != App->scene->gameObjects.end())
 		name = root + std::to_string(++count);
 
 	std::vector<Model> models;
-	if (ModuleModelLoader::Load(file, models))
+	if (ModuleModelLoader::Load(file, models, &transform ))
 	{
 		gameObjects[name] = new GameObject(name.data());
 		shader = App->renderer->CreateShader("texture", "texture.vs", "texture.fs");
@@ -88,7 +89,6 @@ void ModuleScene::NewModel(const char * file)
 	{
 		LOGERROR("Could not load %s.", file);
 	}
-
 }
 
 GameObject * ModuleScene::Find(const char * name)
