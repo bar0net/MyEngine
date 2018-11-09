@@ -12,7 +12,7 @@
 
 #include "Application.h"
 #include "GameObject/GameObject.h"
-#include "GameObject/Components/Camera.h"
+#include "GameObject/Components/ComponentCamera.h"
 #include "Utils/Render_Utils.h"
 #include "Utils/Window_Utils.h"
 

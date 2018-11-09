@@ -6,6 +6,7 @@
 #include "Editor/PanelPerformance.h"
 #include "Editor/PanelConsole.h"
 #include "Editor/PanelEditor.h"
+#include "Editor/PanelScene.h"
 
 struct ImGuiIO;
 class MovingArray;
@@ -50,6 +51,7 @@ private:
 	void CreateGrid();
 	void CreateGizmo();
 
+	void CreateDockSpace();
 	bool MainMenuBar();
 	void PanelCamera(Camera* component) const;
 	void PanelCameraControl(CameraControl* component) const;
@@ -80,6 +82,7 @@ private:
 	PanelPerfomance* panel_performance;
 	PanelConsole* panel_console;
 	PanelEditor* panel_editor;
+	PanelScene* panel_scene;
 
 	bool debug_window = true;
 	bool config_window = true;

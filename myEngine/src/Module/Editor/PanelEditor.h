@@ -7,12 +7,9 @@
 #include "Module/ModuleRenderer.h"
 #include "GL_Buffers/Shader.h"
 
-struct PanelEditor
+class PanelEditor
 {
 public:
-	//float grid_color[4] = { 1.0F, 1.0F, 1.0F, 1.0F };
-	bool show_grid = true;
-
 	void Draw(bool& enabled, MyEngine::Shader* shader_grid, float* grid_color)
 	{
 		ImGui::Begin("Configuration", &enabled);
@@ -44,6 +41,9 @@ public:
 
 		ImGui::End();
 	}
+
+
+	bool show_grid = true;
 };
 
 #endif // !_PANEL_EDITOR_H

@@ -2,7 +2,7 @@
 
 #include "LogSystem.h"
 
-#include "Component.h"
+#include "Components/Component.h"
 #include "_Vendor/MathGeoLib/Math/MathAll.h"
 
 

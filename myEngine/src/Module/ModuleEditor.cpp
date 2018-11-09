@@ -24,15 +24,14 @@
 #include "GL_Buffers/Texture2D.h"
 
 #include "ModuleRenderer.h"
-#include "ModuleTime.h"
 #include "ModuleScene.h"
-#include "ModuleTexture.h"
 #include "ModuleInput.h"
 
 #include "GameObject/GameObject.h"
-#include "GameObject/Components/Camera.h"
-#include "GameObject/Components/CameraControl.h"
-#include "GameObject/Components/MeshRenderer.h"
+#include "GameObject/Components/ComponentCamera.h"
+#include "GameObject/Components/ComponentMeshRenderer.h"
+
+#define DELETE(x) if(x != nullptr) { delete x; } x = nullptr
 
 #define GLSL_VERSION "#version 130"
 #define GRID_LENGTH 100
@@ -71,6 +70,7 @@ bool ModuleEditor::Init()
 	panel_performance = new PanelPerfomance();
 	panel_console = new PanelConsole();
 	panel_editor = new PanelEditor();
+	panel_scene = new PanelScene();
 
 	return true;
 }
@@ -97,18 +97,19 @@ bool ModuleEditor::CleanUp()
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
 
-	delete panel_performance;
-	delete panel_console;
-	delete panel_editor;
+	DELETE(panel_performance);
+	DELETE(panel_console);
+	DELETE(panel_editor);
+	DELETE(panel_scene);
 
-	delete renderTexture;
-	delete frameBuffer;
-	delete renderBuffer;
+	DELETE(renderTexture);
+	DELETE(frameBuffer);
+	DELETE(renderBuffer);
 	
-	delete(vbo_grid);	delete(vbo_gizmo);
-	delete(ibo_grid);	delete(ibo_gizmo);
-	delete(shader_grid);delete(shader_gizmo);
-	delete(vao_grid);	delete(vao_gizmo);
+	DELETE(vbo_grid);		DELETE(vbo_gizmo);
+	DELETE(ibo_grid);		DELETE(ibo_gizmo);
+	DELETE(shader_grid);	DELETE(shader_gizmo);
+	DELETE(vao_grid);		DELETE(vao_gizmo);
 
 	return true;
 }
@@ -124,9 +125,21 @@ UpdateState ModuleEditor::PreUpdate()
 	return UpdateState::Update_Continue;
 }
 
+
+void ModuleEditor::FrameStart()
+{
+	frameBuffer->UnBind();
+	MyEngine::RenderUtils::ClearViewport();
+
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplSDL2_NewFrame(App->renderer->data->window);
+	ImGui::NewFrame();
+}
+
 UpdateState ModuleEditor::Update()
 {
 	FrameStart();
+
 	if (App->input->GetKeyDown(KeyCode::F))
 	{
 		if (inspect_object != nullptr && inspect_object->GetName() != "Camera")
@@ -140,98 +153,24 @@ UpdateState ModuleEditor::Update()
 		}
 	}
 
-	// Drawing
-
+	//  Panels
 	if (!MainMenuBar()) return UpdateState::Update_End;
-	
-	// Background Dockspace
-	ImGuiViewport* viewport = ImGui::GetMainViewport();
-	ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Pos.y));
-	ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, viewport->Size.y));
-	ImGui::SetNextWindowViewport(viewport->ID);
-	ImGui::SetNextWindowBgAlpha(0.0F);
-	bool p_open = true;
+	CreateDockSpace();
 
-	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+	if (scene_window)	panel_scene->Draw(scene_window, renderTexture->ID(), (CameraControl*)editor_camera->components["CameraControl"]);
+	if (config_window)	panel_editor->Draw(config_window, shader_grid, grid_color);
+	if (debug_window)	panel_performance->Draw(debug_window, scene_width, scene_height);
+	if (console_window) panel_console->Draw(console_window);
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0F);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0F);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0F, 0.0F));
-	ImGui::Begin("DockSpace Demo", &p_open, window_flags);
-	ImGui::PopStyleVar(3);
-
-	ImGuiID dockspace_id = ImGui::GetID("MyDockspace");
-	ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruDockspace;
-	ImGui::DockSpace(dockspace_id, ImVec2(0.0F, 0.0F), dockspace_flags);
-	ImGui::End();
-
+	if (inspect_window)
 	{
-		if (scene_window)
-		{
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(20, 10));
-			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
-			ImGui::Begin("Scene", &scene_window, ImGuiWindowFlags_NoScrollbar );
-			ImVec2 size = ImGui::GetContentRegionAvail();
-			ImVec2 imgSize = size;
-			float x_space = 0;
-			float y_space = 0;
-
-			if (size.x * App->renderer->height < size.y * App->renderer->width)
-			{
-				imgSize.y = (size.x * App->renderer->height / App->renderer->width);
-				y_space = (size.y - imgSize.y) / 2.0F;
-				ImGui::Dummy(ImVec2(0, y_space));
-			}
-			else
-			{
-				imgSize.x = (size.y * App->renderer->width / App->renderer->height);
-				x_space = (size.x - imgSize.x) / 2.0F;
-				ImGui::Dummy(ImVec2(x_space, 0)); ImGui::SameLine();
-			}
-
-			ImGui::Image((ImTextureID)renderTexture->ID(), imgSize, ImVec2(0, 1), ImVec2(1, 0));
-
-			scene_width = imgSize.x;
-			scene_height = imgSize.y;
-
-			ImVec2 wPos = ImGui::GetWindowPos();
-			bool hovering_image = ImGui::IsMouseHoveringRect(ImVec2(wPos.x + x_space, wPos.y + y_space), ImVec2(wPos.x + x_space + scene_width, wPos.y + y_space + scene_height));
-			if (ImGui::IsWindowFocused() && hovering_image)
-				((CameraControl*)editor_camera->components["CameraControl"])->mouse_enabled = true;
-			else
-				((CameraControl*)editor_camera->components["CameraControl"])->mouse_enabled = false;
-
-			ImGui::End();
-			ImGui::PopStyleVar(2);
-		}
-
-		if (inspect_window)
-		{
-			ImGui::Begin("Inspector", &inspect_window);
-			PanelObjects();
-			ImGui::End();
-		}
-
-		if (config_window)	panel_editor->Draw(config_window, shader_grid, grid_color);
-		if (debug_window)	panel_performance->Draw(debug_window, scene_width, scene_height);
-		if (console_window) panel_console->Draw(console_window);
+		ImGui::Begin("Inspector", &inspect_window);
+		PanelObjects();
+		ImGui::End();
 	}
-
 
 	FrameEnd();
 	return UpdateState::Update_Continue;
-}
-
-void ModuleEditor::FrameStart()
-{
-	frameBuffer->UnBind();
-	MyEngine::RenderUtils::ClearViewport();
-
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplSDL2_NewFrame(App->renderer->data->window);
-	ImGui::NewFrame();
 }
 
 void ModuleEditor::FrameEnd() const
@@ -334,6 +273,31 @@ void ModuleEditor::CreateGizmo()
 // ====================================
 //				PANELS
 // ====================================
+
+void ModuleEditor::CreateDockSpace()
+{
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Pos.y));
+	ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, viewport->Size.y));
+	ImGui::SetNextWindowViewport(viewport->ID);
+	ImGui::SetNextWindowBgAlpha(0.0F);
+	bool p_open = true;
+
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0F);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0F);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0F, 0.0F));
+	ImGui::Begin("DockSpace Demo", &p_open, window_flags);
+	ImGui::PopStyleVar(3);
+
+	ImGuiID dockspace_id = ImGui::GetID("MyDockspace");
+	ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruDockspace;
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0F, 0.0F), dockspace_flags);
+	ImGui::End();
+}
 
 bool ModuleEditor::MainMenuBar()
 {

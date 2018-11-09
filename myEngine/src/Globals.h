@@ -1,6 +1,5 @@
 #ifndef _MYENGINE_GLOBALS_H
 
-
 #define MYENGINE_VERSION "0.1.0"
 
 namespace MyEngine

@@ -146,10 +146,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\GameObject\Component.cpp" />
-    <ClCompile Include="src\GameObject\Components\Camera.cpp" />
-    <ClCompile Include="src\GameObject\Components\CameraControl.cpp" />
-    <ClCompile Include="src\GameObject\Components\MeshRenderer.cpp" />
+    <ClCompile Include="src\GameObject\Components\Component.cpp" />
+    <ClCompile Include="src\GameObject\Components\ComponentCamera.cpp" />
+    <ClCompile Include="src\GameObject\Components\ComponentCameraControl.cpp" />
+    <ClCompile Include="src\GameObject\Components\ComponentMeshRenderer.cpp" />
     <ClCompile Include="src\GameObject\GameObject.cpp" />
     <ClCompile Include="src\GL_Buffers\FrameBuffer.cpp" />
     <ClCompile Include="src\GL_Buffers\RenderBuffer.cpp" />
@@ -217,10 +217,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Globals.h" />
-    <ClInclude Include="src\GameObject\Component.h" />
-    <ClInclude Include="src\GameObject\Components\Camera.h" />
-    <ClInclude Include="src\GameObject\Components\CameraControl.h" />
-    <ClInclude Include="src\GameObject\Components\MeshRenderer.h" />
+    <ClInclude Include="src\GameObject\Components\Component.h" />
+    <ClInclude Include="src\GameObject\Components\ComponentCamera.h" />
+    <ClInclude Include="src\GameObject\Components\ComponentCameraControl.h" />
+    <ClInclude Include="src\GameObject\Components\ComponentMeshRenderer.h" />
     <ClInclude Include="src\GameObject\GameObject.h" />
     <ClInclude Include="src\GL_Buffers\FrameBuffer.h" />
     <ClInclude Include="src\GL_Buffers\GLBuffer.h" />
@@ -229,6 +229,7 @@
     <ClInclude Include="src\Module\Editor\PanelConsole.h" />
     <ClInclude Include="src\Module\Editor\PanelEditor.h" />
     <ClInclude Include="src\Module\Editor\PanelPerformance.h" />
+    <ClInclude Include="src\Module\Editor\PanelScene.h" />
     <ClInclude Include="src\Module\ModuleModelLoader.h" />
     <ClInclude Include="src\Module\ModuleScene.h" />
     <ClInclude Include="src\Module\ModuleTexture.h" />

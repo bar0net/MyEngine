@@ -57,13 +57,7 @@
     <ClCompile Include="src\Module\ModuleTime.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameObject\Component.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="src\GameObject\GameObject.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GameObject\Components\MeshRenderer.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="src\Module\ModuleScene.cpp">
@@ -165,12 +159,6 @@
     <ClCompile Include="src\_Vendor\MathGeoLib\Time\Clock.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameObject\Components\Camera.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GameObject\Components\CameraControl.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="src\Module\ModuleTexture.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
@@ -202,6 +190,18 @@
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="src\GL_Buffers\RenderBuffer.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObject\Components\Component.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObject\Components\ComponentCamera.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObject\Components\ComponentCameraControl.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObject\Components\ComponentMeshRenderer.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
@@ -255,12 +255,6 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="src\GameObject\GameObject.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GameObject\Component.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GameObject\Components\MeshRenderer.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="src\Module\ModuleScene.h">
@@ -446,12 +440,6 @@
     <ClInclude Include="src\_Vendor\MathGeoLib\MathGeoLibFwd.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameObject\Components\Camera.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GameObject\Components\CameraControl.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="src\Module\ModuleTexture.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
@@ -501,6 +489,21 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="src\Module\Editor\PanelEditor.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Module\Editor\PanelScene.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameObject\Components\Component.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameObject\Components\ComponentCamera.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameObject\Components\ComponentCameraControl.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameObject\Components\ComponentMeshRenderer.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>

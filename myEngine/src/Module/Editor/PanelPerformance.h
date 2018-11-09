@@ -13,13 +13,8 @@
 #include "Utils/Render_Utils.h"
 #include "Utils/Window_Utils.h"
 
-struct PanelPerfomance
+class PanelPerfomance
 {
-private:
-	MovingArray * fps = nullptr;
-	MovingArray* avg_ms_array = nullptr;
-	unsigned int avg_ms = 0;
-
 public:
 	PanelPerfomance()
 	{
@@ -83,6 +78,10 @@ public:
 		ImGui::End();
 	}
 
+private:
+	MovingArray * fps = nullptr;
+	MovingArray* avg_ms_array = nullptr;
+	unsigned int avg_ms = 0;
 };
 
 #endif // !_PANEL_PERFORMANCE_H

@@ -14,15 +14,9 @@
 #define WARNING_COLOR ImVec4(1.0F, 1.0F, 0.0F, 1.0F)
 #define ERROR_COLOR ImVec4(1.0F, 0.0F, 0.0F, 1.0F)
 
-struct PanelConsole
+class PanelConsole
 {
 private:
-	unsigned int prev_log_size = 0;
-	bool show_info = true;
-	bool show_debug = true;
-	bool show_warning = true;
-	bool show_error = true;
-
 	void AddConsoleButton(const char* text, bool& active, MyEngine::LogLevel type)
 	{
 		unsigned int i = 0;
@@ -120,6 +114,12 @@ public:
 		ImGui::End();
 	}
 
+private:
+	unsigned int prev_log_size = 0;
+	bool show_info = true;
+	bool show_debug = true;
+	bool show_warning = true;
+	bool show_error = true;
 };
 
 #endif // !_PANEL_CONSOLE_H
