@@ -32,6 +32,8 @@
 #include "GameObject/Components/ComponentMeshRenderer.h"
 
 #include "Editor/PanelTexture.h"
+#include "Editor/PanelInspector.h"
+#include "Editor/PanelHierarchy.h"
 
 #define DELETE(x) if(x != nullptr) { delete x; } x = nullptr
 
@@ -73,7 +75,6 @@ bool ModuleEditor::Init()
 	panel_console = new PanelConsole();
 	panel_editor = new PanelEditor();
 	panel_scene = new PanelScene();
-	panel_texture = new PanelTexture();
 
 	return true;
 }
@@ -104,7 +105,6 @@ bool ModuleEditor::CleanUp()
 	DELETE(panel_console);
 	DELETE(panel_editor);
 	DELETE(panel_scene);
-	DELETE(panel_texture);
 
 	DELETE(renderTexture);
 	DELETE(frameBuffer);
@@ -190,15 +190,9 @@ UpdateState ModuleEditor::Update()
 	if (config_window)	panel_editor->Draw(config_window, shader_grid, grid_color);
 	if (debug_window)	panel_performance->Draw(debug_window, scene_width, scene_height);
 	if (console_window) panel_console->Draw(console_window);
-	bool enabled = true;
-	panel_texture->Draw(enabled);
-
-	if (inspect_window)
-	{
-		ImGui::Begin("Inspector", &inspect_window);
-		PanelObjects();
-		ImGui::End();
-	}
+	if (hierarchy_window) PanelHierarchy::Draw(&hierarchy_window, inspect_object);
+	if (inspect_window) PanelInspector::Draw(&inspect_window, inspect_object, editor_camera);
+	if (texture_window) PanelTexture::Draw(texture_window);
 	
 	FrameEnd();
 	return UpdateState::Update_Continue;
@@ -345,6 +339,7 @@ bool ModuleEditor::MainMenuBar()
 		ImGui::MenuItem("Configuration", NULL, &config_window);
 		ImGui::MenuItem("Console", NULL, &console_window);
 		ImGui::MenuItem("Debug Tools", NULL, &debug_window);
+		ImGui::MenuItem("Hierarchy", NULL, &hierarchy_window);
 		ImGui::MenuItem("Inspector", NULL, &inspect_window);
 		ImGui::MenuItem("Scene", NULL, &scene_window);
 		ImGui::EndMenu();
@@ -362,152 +357,3 @@ bool ModuleEditor::MainMenuBar()
 	return true;
 }
 
-void ModuleEditor::PanelObjects() 
-{
-	if (App->scene->gameObjects.size() == 0) return;
-
-	ImVec2 panel_size = ImGui::GetWindowSize();
-
-	ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0, 0));
-	for (std::unordered_map<std::string, GameObject*>::iterator it = App->scene->gameObjects.begin(); it != App->scene->gameObjects.end(); ++it)
-	{
-		if (inspect_object == it->second) 
-			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2F, 0.3F, 0.7F, 1.0F));
-		else 
-			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0F, 0.0F, 0.0F, 0.0F));
-
-		if (ImGui::Button(it->first.c_str(), ImVec2(panel_size.x - 17, 0))) inspect_object = it->second; 
-
-		ImGui::PopStyleColor();
-	}
-	ImGui::PopStyleVar();
-
-	ImGui::Spacing();
-	ImGui::Separator();
-	ImGui::Spacing();
-	if (this->inspect_object != nullptr)
-	{
-		ImGui::TextColored(ImVec4(0.3F, 0.5F, 0.8F, 1.0F), inspect_object->GetName());
-		ImGui::SameLine(0.0F, 10.0F);
-
-		bool delete_object = false;
-		if (inspect_object != this->editor_camera)
-		{
-			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8F, 0.2F, 0.2F, 1.0F));
-			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.85F, 0.2F, 0.2F, 1.0F));
-			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.85F, 0.2F, 0.2F, 1.0F));
-			if (ImGui::SmallButton("Delete")) 
-			{ 
-				App->scene->DeleteGameObject(inspect_object); 
-				delete_object = true;
-			}
-			ImGui::PopStyleColor(3);
-		}
-
-		float pos[3] = { this->inspect_object->position.x, this->inspect_object->position.y, this->inspect_object->position.z };
-		if (ImGui::DragFloat3("Position", pos, 2)) this->inspect_object->SetPosition(pos[0], pos[1], pos[2]);			
-
-		float rot[3] = { this->inspect_object->rotation.x, this->inspect_object->rotation.y, this->inspect_object->rotation.z };
-		if (ImGui::DragFloat3("Rotation", rot, 2)) this->inspect_object->SetRotation(rot[0], rot[1], rot[2]);
-			
-		float scale[3] = { this->inspect_object->scale.x, this->inspect_object->scale.y, this->inspect_object->scale.z };
-		if (ImGui::DragFloat3("Scale", scale, 2)) this->inspect_object->SetScale(scale[0], scale[1], scale[2]);
-			
-
-		ImGui::Separator();
-		for (std::unordered_map<ComponentType, std::vector<Component*>>::iterator it = inspect_object->components.begin(); it != inspect_object->components.end(); ++it)
-		{
-			switch (it->first)
-			{
-			case ComponentType::CAMERA:
-				for (std::vector<Component*>::iterator jt = it->second.begin(); jt != it->second.end(); ++jt)
-					PanelCamera((Camera*)(*jt));
-				break;
-
-			case ComponentType::CAMERA_CONTROL:
-				for (std::vector<Component*>::iterator jt = it->second.begin(); jt != it->second.end(); ++jt)
-					PanelCameraControl((CameraControl*)(*jt));
-				break;
-
-			case ComponentType::MESH_RENDERER:
-				for (std::vector<Component*>::iterator jt = it->second.begin(); jt != it->second.end(); ++jt)
-					PanelMeshRenderer((MeshRenderer*)(*jt));
-				break;
-
-			default:
-				for (std::vector<Component*>::iterator jt = it->second.begin(); jt != it->second.end(); ++jt)
-					ImGui::Text( (*jt)->GetName() );
-				break;
-			}
-		}
-
-		if (delete_object) inspect_object = nullptr;
-	}
-}
-
-void ModuleEditor::PanelCamera(Camera* component) const
-{
-	assert(component);
-	if (ImGui::CollapsingHeader("Camera Properties"))
-	{
-		if (ImGui::InputFloat("Near Plane", &component->nearPlane)) component->UpdateFrustum();
-		if (ImGui::InputFloat("Far Plane", &component->farPlane)) component->UpdateFrustum();
-		if (ImGui::SliderFloat("FOV", &component->fov, 60, 120)) component->UpdateFrustum();
-	}
-}
-
-void ModuleEditor::PanelCameraControl(CameraControl* component) const
-{
-	assert(component);
-	if (ImGui::CollapsingHeader(component->GetName()))
-	{
-		ImGui::InputFloat("Velocity", &component->velocity);
-		ImGui::InputFloat("Angular Velocity", &component->angularVelocity);
-	}
-}
-
-void ModuleEditor::PanelMeshRenderer(MeshRenderer * component) const
-{
-	if (ImGui::CollapsingHeader(component->GetName()))
-	{
-		ImGui::Text("Bounding Box");
-		ImGui::Text("Local Center: (%f, %f, %f)", 
-			component->center[0] * component->GetGameObject()->scale[0],
-			component->center[1] * component->GetGameObject()->scale[1],
-			component->center[2] * component->GetGameObject()->scale[2]);
-		ImGui::Text("Width: %f, Height: %f, Depth: %f", 
-			component->dimensions[0] * component->GetGameObject()->scale[0],
-			component->dimensions[1] * component->GetGameObject()->scale[1],
-			component->dimensions[2] * component->GetGameObject()->scale[2]);
-		ImGui::Separator();
-
-		for (unsigned int i = 0; i < component->meshes.size(); ++i)
-		{
-			ImGui::Text("SubMesh (%i)", i);
-			ImGui::Text("Numer of Triangles: %d", component->meshes[i]->num_triangles);
-			std::string s = "Display Texture " + std::to_string(i);
-			ImGui::Checkbox(s.c_str(), &component->meshes[i]->display_texture);
-			if (component->meshes[i]->display_texture)
-				ImGui::Image((ImTextureID)component->meshes[i]->textureID, ImVec2(75, 75),ImVec2(0,0), ImVec2(1,1), ImVec4(1,1,1,1));
-			else
-				ImGui::Image((ImTextureID)component->meshes[i]->textureID, ImVec2(75, 75), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0.6F, 0.6F, 0.6F, 1));
-			
-			ImGui::SameLine();
-
-			std::string popupID = std::string("MeshAlbedo") + std::to_string(i);
-			std::string albedoID = std::string("Albedo (") + std::to_string(i) + std::string(")");
-
-			bool open_albedo = ImGui::ColorButton(albedoID.c_str(), *(ImVec4*)&component->meshes[i]->albedo, 0, ImVec2(10,75));
-			ImGui::SameLine(); ImGui::Text("Albedo");
-
-			if (open_albedo) ImGui::OpenPopup(popupID.c_str());
-			if (ImGui::BeginPopup(popupID.c_str()))
-			{
-				ImGui::ColorPicker4(albedoID.c_str(), component->meshes[i]->albedo);
-				ImGui::EndPopup();
-			}
-
-			ImGui::Separator();
-		}
-	}
-}

@@ -226,8 +226,13 @@
     <ClInclude Include="src\GL_Buffers\GLBuffer.h" />
     <ClInclude Include="src\GL_Buffers\RenderBuffer.h" />
     <ClInclude Include="src\GL_Buffers\Texture2D.h" />
+    <ClInclude Include="src\Module\Editor\Components\PanelCamera.h" />
+    <ClInclude Include="src\Module\Editor\Components\PanelCameraControl.h" />
+    <ClInclude Include="src\Module\Editor\Components\PanelMeshRenderer.h" />
     <ClInclude Include="src\Module\Editor\PanelConsole.h" />
     <ClInclude Include="src\Module\Editor\PanelEditor.h" />
+    <ClInclude Include="src\Module\Editor\PanelHierarchy.h" />
+    <ClInclude Include="src\Module\Editor\PanelInspector.h" />
     <ClInclude Include="src\Module\Editor\PanelPerformance.h" />
     <ClInclude Include="src\Module\Editor\PanelScene.h" />
     <ClInclude Include="src\Module\Editor\PanelTexture.h" />

@@ -41,10 +41,10 @@ public:
 	virtual void SetModelMatrix(math::float4x4* transform);
 
 	virtual void AddComponent(Component* component);
-	bool HasComponent(ComponentType type);
+	bool HasComponent(ComponentType type) const;
 	virtual void RemoveComponent() {}; // TODO: Implement remove component
 
-	const char* GetName() { return name.c_str(); }
+	const char* GetName() const { return name.c_str(); }
 
 	math::float3 position = math::float3::zero;
 	math::float3 rotation = math::float3::zero;

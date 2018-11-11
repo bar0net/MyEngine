@@ -10,7 +10,7 @@
 class PanelTexture
 {
 public:
-	void Draw(bool &enabled)
+	static void Draw(bool &enabled)
 	{
 		ImGui::Begin("Textures", &enabled);
 

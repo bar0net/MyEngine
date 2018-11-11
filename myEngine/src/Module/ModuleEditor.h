@@ -48,16 +48,11 @@ private:
 	void FrameStart();
 	void FrameEnd() const;
 
-	void PanelObjects();
-
 	void CreateGrid();
 	void CreateGizmo();
 
 	void CreateDockSpace();
 	bool MainMenuBar();
-	void PanelCamera(Camera* component) const;
-	void PanelCameraControl(CameraControl* component) const;
-	void PanelMeshRenderer(MeshRenderer* component) const;
 
 public:
 	// ===== Grid =====
@@ -74,10 +69,12 @@ public:
 	MyEngine::Shader* shader_gizmo = nullptr;
 
 
+
 private:
 	ImGuiIO* io = nullptr;
 	float scene_width = 0;
 	float scene_height = 0;
+
 	GameObject* inspect_object = nullptr;
 
 	// Panels
@@ -85,13 +82,14 @@ private:
 	PanelConsole* panel_console;
 	PanelEditor* panel_editor;
 	PanelScene* panel_scene;
-	PanelTexture* panel_texture;
 
 	bool debug_window = true;
 	bool config_window = true;
+	bool hierarchy_window = true;
 	bool inspect_window = true;
 	bool console_window = true;
 	bool scene_window = true;
+	bool texture_window = true;
 
 	bool show_info = true;
 	bool show_debug = true;
