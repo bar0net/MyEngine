@@ -1,6 +1,7 @@
 #include "GameObject.h"
 
 #include "LogSystem.h"
+#include "Globals.h"
 
 #include "Components/Component.h"
 #include "_Vendor/MathGeoLib/Math/MathAll.h"
@@ -8,46 +9,63 @@
 
 GameObject::~GameObject()
 {
-	for (std::unordered_map<const char*, Component*>::iterator it = components.begin(); it != components.end(); ++it)
+	for (std::unordered_map<ComponentType, std::vector<Component*>>::iterator it = components.begin(); it != components.end(); ++it)
 	{
-		delete (it->second);
+		for (std::vector<Component*>::iterator jt = it->second.begin(); jt != it->second.end(); ++jt)
+			delete *jt;
+		it->second.clear();
 	}
 	components.clear();
 }
 
 void GameObject::Init()
 {
-	for (std::unordered_map<const char*, Component*>::iterator it = components.begin(); it != components.end(); ++it)
-		it->second->Init();
+	for (std::unordered_map<ComponentType, std::vector<Component*>>::iterator it = components.begin(); it != components.end(); ++it)
+	{
+		for (std::vector<Component*>::iterator jt = it->second.begin(); jt != it->second.end(); ++jt)
+			(*jt)->Init();
+	}
 }
 
 void GameObject::Start()
 {
-	for (std::unordered_map<const char*, Component*>::iterator it = components.begin(); it != components.end(); ++it)
-		it->second->Start();
+	for (std::unordered_map<ComponentType, std::vector<Component*>>::iterator it = components.begin(); it != components.end(); ++it)
+	{
+		for (std::vector<Component*>::iterator jt = it->second.begin(); jt != it->second.end(); ++jt)
+			(*jt)->Start();
+	}
 }
 
 void GameObject::Update()
 {
-	for (std::unordered_map<const char*, Component*>::iterator it = components.begin(); it != components.end(); ++it)
-		it->second->Update();
+	for (std::unordered_map<ComponentType, std::vector<Component*>>::iterator it = components.begin(); it != components.end(); ++it)
+	{
+		for (std::vector<Component*>::iterator jt = it->second.begin(); jt != it->second.end(); ++jt)
+			(*jt)->Update();
+	}
 }
 
 void GameObject::End()
 {
-	for (std::unordered_map<const char*, Component*>::iterator it = components.begin(); it != components.end(); ++it)
-		it->second->End();
+	for (std::unordered_map<ComponentType, std::vector<Component*>>::iterator it = components.begin(); it != components.end(); ++it)
+	{
+		for (std::vector<Component*>::iterator jt = it->second.begin(); jt != it->second.end(); ++jt)
+			(*jt)->End();
+	}
 }
 
 void GameObject::CleanUp()
 {
-	for (std::unordered_map<const char*, Component*>::iterator it = components.begin(); it != components.end(); ++it)
+	for (std::unordered_map<ComponentType, std::vector<Component*>>::iterator it = components.begin(); it != components.end(); ++it)
 	{
-		it->second->CleanUp();
-		delete(it->second);
-		it->second = nullptr;
+		for (std::vector<Component*>::iterator jt = it->second.begin(); jt != it->second.end(); ++jt)
+		{
+			(*jt)->CleanUp();
+			delete(*jt);
+			*jt = nullptr;
+		}
+		it->second.clear();
 	}
-
 	components.clear();
 }
 
@@ -62,11 +80,11 @@ void GameObject::SetModelMatrix(math::float4x4 * transform)
 
 void GameObject::AddComponent(Component* const component)
 {
-	if (components.find(component->GetName()) == components.end())
+	if (components.find(component->GetType()) == components.end())
 	{
 		LOGINFO("Adding component %s to gameObject %s", component->GetName(), name.c_str());
 		component->SetGameObject(this);
-		components[component->GetName()] = component;
+		components[component->GetType()].push_back(component);
 		component->Init();
 	}
 	else

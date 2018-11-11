@@ -26,7 +26,6 @@ struct Mesh
 	bool display_texture = true;
 	unsigned int polygon = 3;
 	float albedo[4] = { 1.0F, 1.0F, 1.0F, 1.0F };
-
 };
 
 class MeshRenderer : public Component

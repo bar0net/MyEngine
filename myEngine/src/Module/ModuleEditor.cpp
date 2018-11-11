@@ -148,9 +148,9 @@ UpdateState ModuleEditor::Update()
 	{
 		if (inspect_object != nullptr && inspect_object->GetName() != "Camera")
 		{
-			if (inspect_object->components.find("MeshRenderer") != inspect_object->components.end())
+			if (inspect_object->components.find(ComponentType::MESH_RENDERER) != inspect_object->components.end())
 			{
-				MeshRenderer* mr = (MeshRenderer*)inspect_object->components["MeshRenderer"];
+				MeshRenderer* mr = (MeshRenderer*)inspect_object->components[ComponentType::MESH_RENDERER][0];
 				if (mr != nullptr)
 				{
 					//TODO: Improve this.
@@ -186,7 +186,7 @@ UpdateState ModuleEditor::Update()
 	if (!MainMenuBar()) return UpdateState::Update_End;
 	CreateDockSpace();
 
-	if (scene_window)	panel_scene->Draw(scene_window, renderTexture->ID(), (CameraControl*)editor_camera->components["CameraControl"], scene_width, scene_height);
+	if (scene_window)	panel_scene->Draw(scene_window, renderTexture->ID(), (CameraControl*)editor_camera->components[ComponentType::CAMERA_CONTROL][0], scene_width, scene_height);
 	if (config_window)	panel_editor->Draw(config_window, shader_grid, grid_color);
 	if (debug_window)	panel_performance->Draw(debug_window, scene_width, scene_height);
 	if (console_window) panel_console->Draw(console_window);
@@ -415,12 +415,30 @@ void ModuleEditor::PanelObjects()
 			
 
 		ImGui::Separator();
-		for (std::unordered_map<const char*, Component*>::iterator it = inspect_object->components.begin(); it != inspect_object->components.end(); ++it)
+		for (std::unordered_map<ComponentType, std::vector<Component*>>::iterator it = inspect_object->components.begin(); it != inspect_object->components.end(); ++it)
 		{
-			if (it->first == "Camera") PanelCamera((Camera*)it->second);
-			else if (it->first == "CameraControl") PanelCameraControl((CameraControl*)it->second);
-			else if (it->first == "MeshRenderer") PanelMeshRenderer((MeshRenderer*)it->second);
-			else ImGui::Text(it->first);
+			switch (it->first)
+			{
+			case ComponentType::CAMERA:
+				for (std::vector<Component*>::iterator jt = it->second.begin(); jt != it->second.end(); ++jt)
+					PanelCamera((Camera*)(*jt));
+				break;
+
+			case ComponentType::CAMERA_CONTROL:
+				for (std::vector<Component*>::iterator jt = it->second.begin(); jt != it->second.end(); ++jt)
+					PanelCameraControl((CameraControl*)(*jt));
+				break;
+
+			case ComponentType::MESH_RENDERER:
+				for (std::vector<Component*>::iterator jt = it->second.begin(); jt != it->second.end(); ++jt)
+					PanelMeshRenderer((MeshRenderer*)(*jt));
+				break;
+
+			default:
+				for (std::vector<Component*>::iterator jt = it->second.begin(); jt != it->second.end(); ++jt)
+					ImGui::Text( (*jt)->GetName() );
+				break;
+			}
 		}
 
 		if (delete_object) inspect_object = nullptr;

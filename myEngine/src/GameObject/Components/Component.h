@@ -3,6 +3,14 @@
 
 class GameObject;
 
+enum class ComponentType
+{
+	NONE = 0,
+	CAMERA,
+	CAMERA_CONTROL,
+	MESH_RENDERER
+};
+
 class Component
 {
 public:
@@ -19,10 +27,12 @@ public:
 	virtual GameObject* GetGameObject();
 
 	const char* const GetName() const { return name; }
+	const ComponentType GetType() const { return componentType; }
 
 protected:
-	GameObject* gameObject;
-	const char* name;
+	GameObject* gameObject = nullptr;
+	const char* name = nullptr;
+	ComponentType componentType = ComponentType::NONE;
 };
 
 #endif //!_GAMEOBJECT_COMPONENT_H

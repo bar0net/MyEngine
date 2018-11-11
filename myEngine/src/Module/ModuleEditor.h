@@ -32,11 +32,11 @@ class PanelTexture;
 class ModuleEditor : public Module
 {
 public:
-	bool Init();
-	bool Start();
-	UpdateState PreUpdate();
-	UpdateState Update();
-	bool CleanUp();
+	bool Init() override;
+	bool Start() override;
+	UpdateState PreUpdate() override;
+	UpdateState Update() override;
+	bool CleanUp() override;
 	
 	void ProcessEvent(void* event) const;
 

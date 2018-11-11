@@ -21,8 +21,7 @@ public:
 	Camera(ProjectionType type, float nearPlane, float farPlane, float fov);
 	virtual ~Camera();
 
-	void Init() {}
-	void Update();
+	void Update() override;
 
 	void SetGameObject(GameObject* gameObject);
 
@@ -31,9 +30,9 @@ public:
 
 	bool projectionChanged = true;
 
-	ProjectionType type = ProjectionType::Prespective;
+	ProjectionType projectionType = ProjectionType::Prespective;
 	float nearPlane = 0.5f;
-	float farPlane = 100.0f;
+	float farPlane = 1000.0f;
 	float fov = 90;
 
 private:

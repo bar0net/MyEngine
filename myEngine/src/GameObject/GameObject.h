@@ -2,14 +2,15 @@
 #define _GAME_OBJECT_H
 
 #include <unordered_map>
+#include <vector>
 
 #include "_Vendor/MathGeoLib/Math/float4x4.h"
 #include "_Vendor/MathGeoLib/Math/float3.h"
 
+#include "Components/Component.h"
+
 #define DEG2RAD 0.0174532925F
 #define RAD2DEG 57.2957795F
-
-class Component;
 
 class GameObject
 {
@@ -40,6 +41,7 @@ public:
 	virtual void SetModelMatrix(math::float4x4* transform);
 
 	virtual void AddComponent(Component* component);
+	bool HasComponent(ComponentType type);
 	virtual void RemoveComponent() {}; // TODO: Implement remove component
 
 	const char* GetName() { return name.c_str(); }
@@ -49,7 +51,7 @@ public:
 	math::float3 scale = math::float3::one;
 	bool transformChanged = false;
 
-	std::unordered_map<const char*, Component*> components;
+	std::unordered_map<ComponentType, std::vector<Component*>> components;
 
 private:
 	math::float4x4 transform = math::float4x4::identity;

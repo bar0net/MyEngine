@@ -22,8 +22,8 @@ public:
 	ModuleTexture();
 	virtual ~ModuleTexture();
 
-	bool Init();
-	bool CleanUp();
+	bool Init() override;
+	bool CleanUp() override;
 
 	unsigned int LoadTexture(const char* filename);
 	void AssignTexture(unsigned int textureID, Mesh* mesh);

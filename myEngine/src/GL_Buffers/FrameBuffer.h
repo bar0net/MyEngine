@@ -12,7 +12,7 @@ namespace MyEngine
 		virtual ~FrameBuffer();
 		unsigned int ID() { return bufferID; }
 
-		void Bind() const;
+		void Bind() const ;
 		void UnBind() const;
 
 		void SetTexture(unsigned int textureID, unsigned int slot = 0, unsigned int type = 0x8CE0) const;

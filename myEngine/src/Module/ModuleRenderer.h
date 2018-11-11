@@ -21,11 +21,12 @@ public:
 	ModuleRenderer();
 	virtual ~ModuleRenderer();
 
-	bool Init();
-	UpdateState PreUpdate();
-	UpdateState Update();
-	UpdateState PostUpdate();
-	bool CleanUp();
+	bool Init() override;
+	UpdateState PreUpdate() override;
+	UpdateState Update() override;
+	UpdateState PostUpdate() override;
+	bool CleanUp() override;
+
 	void Draw(const MyEngine::VertexArray* vao, const MyEngine::IndexBuffer* ibo, const MyEngine::Shader* shader) const;
 	void DrawLines(const MyEngine::VertexArray* vao, const MyEngine::IndexBuffer* ibo, const MyEngine::Shader* shader, float line_width = 1.0f) const;
 	void DrawPoints(const MyEngine::VertexArray * vao, const MyEngine::IndexBuffer * ibo, const MyEngine::Shader * shader, float point_size = 1.0f) const;

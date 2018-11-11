@@ -6,8 +6,8 @@
 class ModuleTime : public Module
 {
 public:
-	bool Init();
-	UpdateState Update();
+	bool Init() override;
+	UpdateState Update() override;
 
 	float DeltaTime() { return (float)deltaTime/1000.f; }
 	unsigned int DeltaTimeMS() { return deltaTime; }

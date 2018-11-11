@@ -44,10 +44,10 @@ public:
 	ModuleInput();
 	virtual ~ModuleInput();
 
-	bool Init();
-	UpdateState PreUpdate();
-	UpdateState PostUpdate();
-	bool CleanUp();
+	bool Init() override;
+	UpdateState PreUpdate() override;
+	UpdateState PostUpdate() override;
+	bool CleanUp() override;
 
 	void ManageDropFile(const char* file);
 

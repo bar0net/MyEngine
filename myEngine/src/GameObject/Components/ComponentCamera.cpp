@@ -1,7 +1,9 @@
 #include "ComponentCamera.h"
 
 #include "_Vendor/MathGeoLib/Math/float3.h"
+
 #include "Application.h"
+#include "Globals.h"
 #include "GL_Buffers/Shader.h"
 #include "GL_Buffers/UniformBuffer.h"
 #include "Module/ModuleRenderer.h"
@@ -9,19 +11,21 @@
 
 Camera::Camera() : Component("Camera")
 {
+	componentType = ComponentType::CAMERA;
 	ubo = new MyEngine::UniformBuffer;
 	UpdateFrustum();
 }
 
 Camera::Camera(ProjectionType type, float nearPlane, float farPlane, float fov) :
-	type(type), nearPlane(nearPlane), farPlane(farPlane), fov(fov), Component("Camera")
+	projectionType(type), nearPlane(nearPlane), farPlane(farPlane), fov(fov), Component("Camera")
 {
+	componentType = ComponentType::CAMERA;
 	UpdateFrustum();
 }
 
 Camera::~Camera()
 {
-	delete ubo;
+	DELETE(ubo);
 }
 
 void Camera::Update() 
@@ -36,7 +40,7 @@ void Camera::Update()
 
 void Camera::UpdateFrustum()
 {
-	if (type == ProjectionType::Orthographic) frustum.type = FrustumType::OrthographicFrustum;
+	if (projectionType == ProjectionType::Orthographic) frustum.type = FrustumType::OrthographicFrustum;
 	else frustum.type = FrustumType::PerspectiveFrustum;
 
 	frustum.pos = math::float3::zero;

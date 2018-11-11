@@ -6,9 +6,9 @@
 class CameraControl : public Component
 {
 public:
-	CameraControl() : Component("CameraControl") {};
+	CameraControl() : Component("CameraControl") { componentType = ComponentType::CAMERA_CONTROL; };
 
-	void Update();
+	void Update() override;
 
 	bool enabled = false;
 	bool mouse_enabled = false;

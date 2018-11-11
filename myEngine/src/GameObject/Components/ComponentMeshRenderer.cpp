@@ -21,6 +21,7 @@ MeshRenderer::MeshRenderer(const std::vector<Model>& models, MyEngine::Shader* s
 {
 	meshes.clear();
 	meshes.reserve(models.size());
+	componentType = ComponentType::MESH_RENDERER;
 
 	float mins[3] = { INFINITY,  INFINITY,  INFINITY };
 	float maxs[3] = { -INFINITY, -INFINITY, -INFINITY };
@@ -62,14 +63,12 @@ MeshRenderer::~MeshRenderer()
 
 	for (unsigned int i = 0; i < meshes.size(); ++i)
 	{
-		delete meshes[i]->vbo;
-		delete meshes[i]->ibo;
-		delete meshes[i]->vao;
-		delete meshes[i];
+		DELETE(meshes[i]->vbo);
+		DELETE(meshes[i]->ibo);
+		DELETE(meshes[i]->vao);
+		DELETE(meshes[i]);
 	}
 	meshes.clear();
-
-	//delete shader;
 }
 
 void MeshRenderer::Update()
