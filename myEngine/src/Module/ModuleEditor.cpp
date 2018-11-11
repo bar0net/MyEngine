@@ -31,6 +31,8 @@
 #include "GameObject/Components/ComponentCamera.h"
 #include "GameObject/Components/ComponentMeshRenderer.h"
 
+#include "Editor/PanelTexture.h"
+
 #define DELETE(x) if(x != nullptr) { delete x; } x = nullptr
 
 #define GLSL_VERSION "#version 130"
@@ -71,6 +73,7 @@ bool ModuleEditor::Init()
 	panel_console = new PanelConsole();
 	panel_editor = new PanelEditor();
 	panel_scene = new PanelScene();
+	panel_texture = new PanelTexture();
 
 	return true;
 }
@@ -101,6 +104,7 @@ bool ModuleEditor::CleanUp()
 	DELETE(panel_console);
 	DELETE(panel_editor);
 	DELETE(panel_scene);
+	DELETE(panel_texture);
 
 	DELETE(renderTexture);
 	DELETE(frameBuffer);
@@ -174,10 +178,12 @@ UpdateState ModuleEditor::Update()
 	if (!MainMenuBar()) return UpdateState::Update_End;
 	CreateDockSpace();
 
-	if (scene_window)	panel_scene->Draw(scene_window, renderTexture->ID(), (CameraControl*)editor_camera->components["CameraControl"]);
+	if (scene_window)	panel_scene->Draw(scene_window, renderTexture->ID(), (CameraControl*)editor_camera->components["CameraControl"], scene_width, scene_height);
 	if (config_window)	panel_editor->Draw(config_window, shader_grid, grid_color);
 	if (debug_window)	panel_performance->Draw(debug_window, scene_width, scene_height);
 	if (console_window) panel_console->Draw(console_window);
+	bool enabled = true;
+	panel_texture->Draw(enabled);
 
 	if (inspect_window)
 	{
@@ -318,32 +324,32 @@ void ModuleEditor::CreateDockSpace()
 
 bool ModuleEditor::MainMenuBar()
 {
+
+	ImGui::BeginMainMenuBar();
+	if (ImGui::BeginMenu("File"))
 	{
-		ImGui::BeginMainMenuBar();
-		if (ImGui::BeginMenu("File"))
-		{
-			if (ImGui::MenuItem("Quit")) return false;
-			ImGui::EndMenu();
-		}
-
-		if (ImGui::BeginMenu("Windows"))
-		{
-			ImGui::MenuItem("Configuration", NULL, &config_window);
-			ImGui::MenuItem("Console", NULL, &console_window);
-			ImGui::MenuItem("Debug Tools", NULL, &debug_window);
-			ImGui::MenuItem("Inspector", NULL, &inspect_window);
-			ImGui::MenuItem("Scene", NULL, &scene_window);
-			ImGui::EndMenu();
-		}
-
-		if (ImGui::BeginMenu("Help"))
-		{
-			ImGui::MenuItem("Github");
-			ImGui::MenuItem("About");
-			ImGui::EndMenu();
-		}
-		ImGui::EndMainMenuBar();
+		if (ImGui::MenuItem("Quit")) return false;
+		ImGui::EndMenu();
 	}
+
+	if (ImGui::BeginMenu("Windows"))
+	{
+		ImGui::MenuItem("Configuration", NULL, &config_window);
+		ImGui::MenuItem("Console", NULL, &console_window);
+		ImGui::MenuItem("Debug Tools", NULL, &debug_window);
+		ImGui::MenuItem("Inspector", NULL, &inspect_window);
+		ImGui::MenuItem("Scene", NULL, &scene_window);
+		ImGui::EndMenu();
+	}
+
+	if (ImGui::BeginMenu("Help"))
+	{
+		ImGui::MenuItem("Github");
+		ImGui::MenuItem("About");
+		ImGui::EndMenu();
+	}
+	ImGui::EndMainMenuBar();
+
 
 	return true;
 }
@@ -435,26 +441,26 @@ void ModuleEditor::PanelMeshRenderer(MeshRenderer * component) const
 		for (unsigned int i = 0; i < component->meshes.size(); ++i)
 		{
 			ImGui::Text("SubMesh (%i)", i);
-			ImGui::Text("Numer of Triangles: %d", component->meshes[i].num_triangles);
+			ImGui::Text("Numer of Triangles: %d", component->meshes[i]->num_triangles);
 			std::string s = "Display Texture " + std::to_string(i);
-			ImGui::Checkbox(s.c_str(), &component->meshes[i].display_texture);
-			if (component->meshes[i].display_texture)
-				ImGui::Image((ImTextureID)component->meshes[i].textureID, ImVec2(75, 75),ImVec2(0,0), ImVec2(1,1), ImVec4(1,1,1,1));
+			ImGui::Checkbox(s.c_str(), &component->meshes[i]->display_texture);
+			if (component->meshes[i]->display_texture)
+				ImGui::Image((ImTextureID)component->meshes[i]->textureID, ImVec2(75, 75),ImVec2(0,0), ImVec2(1,1), ImVec4(1,1,1,1));
 			else
-				ImGui::Image((ImTextureID)component->meshes[i].textureID, ImVec2(75, 75), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0.6F, 0.6F, 0.6F, 1));
+				ImGui::Image((ImTextureID)component->meshes[i]->textureID, ImVec2(75, 75), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0.6F, 0.6F, 0.6F, 1));
 			
 			ImGui::SameLine();
 
 			std::string popupID = std::string("MeshAlbedo") + std::to_string(i);
 			std::string albedoID = std::string("Albedo (") + std::to_string(i) + std::string(")");
 
-			bool open_albedo = ImGui::ColorButton(albedoID.c_str(), *(ImVec4*)&component->meshes[i].albedo, 0, ImVec2(10,75));
+			bool open_albedo = ImGui::ColorButton(albedoID.c_str(), *(ImVec4*)&component->meshes[i]->albedo, 0, ImVec2(10,75));
 			ImGui::SameLine(); ImGui::Text("Albedo");
 
 			if (open_albedo) ImGui::OpenPopup(popupID.c_str());
 			if (ImGui::BeginPopup(popupID.c_str()))
 			{
-				ImGui::ColorPicker4(albedoID.c_str(), component->meshes[i].albedo);
+				ImGui::ColorPicker4(albedoID.c_str(), component->meshes[i]->albedo);
 				ImGui::EndPopup();
 			}
 

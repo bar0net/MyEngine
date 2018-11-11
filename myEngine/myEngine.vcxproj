@@ -230,6 +230,7 @@
     <ClInclude Include="src\Module\Editor\PanelEditor.h" />
     <ClInclude Include="src\Module\Editor\PanelPerformance.h" />
     <ClInclude Include="src\Module\Editor\PanelScene.h" />
+    <ClInclude Include="src\Module\Editor\PanelTexture.h" />
     <ClInclude Include="src\Module\ModuleModelLoader.h" />
     <ClInclude Include="src\Module\ModuleScene.h" />
     <ClInclude Include="src\Module\ModuleTexture.h" />

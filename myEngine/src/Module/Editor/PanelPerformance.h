@@ -28,7 +28,7 @@ public:
 		delete avg_ms_array;
 	}
 
-	void Draw(bool& enabled, unsigned int scene_width, unsigned int scene_height)
+	void Draw(bool& enabled, float scene_width, float scene_height)
 	{
 		ImGui::Begin("Debug Tools", &enabled);
 
@@ -45,7 +45,7 @@ public:
 			ImGui::PlotHistogram("", MovingArray::Get, fps, fps->size, 1, "", 0, 120, ImVec2(0, 50));
 			ImGui::Text("Average ms/frame: %ims - FPS: %i", avg_ms / (avg_ms_array->size), (int)(1000.0F * avg_ms_array->size / avg_ms));
 			ImGui::Text("Window: %ipx x %ipx", App->renderer->width, App->renderer->height);
-			ImGui::Text("Scene View: %ipx x %ipx", scene_width, scene_height);
+			ImGui::Text("Scene View: %ipx x %ipx", (int)scene_width, (int)scene_height);
 
 			bool vsyncEnabled = App->renderer->vsyncEnabled;
 			ImGui::Checkbox("VSync", &vsyncEnabled);

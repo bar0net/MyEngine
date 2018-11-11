@@ -67,6 +67,12 @@ void MyEngine::LogSystem::Log(LogLevel level, const char* file, int line, const 
 		case 'i':
 			s = s.substr(0, i) + std::to_string(va_arg(args, int)) + s.substr(i + 2);
 			break;
+
+		case 'f':
+			float x = va_arg(args, float);
+			s = s.substr(0, i) + std::to_string(x) + s.substr(i + 2);
+			break;
+
 		}
 	}
 	

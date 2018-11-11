@@ -3,8 +3,9 @@
 
 #include "Module.h"
 
-#include <unordered_set>
+#include <string>
 #include <unordered_map>
+#include <unordered_set>
 
 namespace MyEngine
 {
@@ -12,6 +13,8 @@ namespace MyEngine
 	class Texture2D;
 	class RenderBuffer;
 }
+
+struct Mesh;
 
 class ModuleTexture : public Module
 {
@@ -23,12 +26,15 @@ public:
 	bool CleanUp();
 
 	unsigned int LoadTexture(const char* filename);
-	void UnLoadTexture(unsigned int id);
+	void AssignTexture(unsigned int textureID, Mesh* mesh);
+	void DeleteTexture(unsigned int id);
+
 	void BindTexture(unsigned int textureID);
 
 	unsigned int checkers;
-	std::unordered_map<const char*, unsigned int> file2texture;
-
+	std::unordered_map<std::string, unsigned int> file2texture;
+	std::unordered_map<unsigned int, std::unordered_set<Mesh*>> texture2mesh;
+	//std::unordered_map<unsigned int, MyEngine::Texture2D*> id2buffer;
 };
 
 #endif // !_MODULE_TEXTURE_H

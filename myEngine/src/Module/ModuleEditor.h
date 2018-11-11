@@ -27,6 +27,8 @@ class Camera;
 class CameraControl;
 class MeshRenderer;
 
+class PanelTexture;
+
 class ModuleEditor : public Module
 {
 public:
@@ -83,6 +85,7 @@ private:
 	PanelConsole* panel_console;
 	PanelEditor* panel_editor;
 	PanelScene* panel_scene;
+	PanelTexture* panel_texture;
 
 	bool debug_window = true;
 	bool config_window = true;

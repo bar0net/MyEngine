@@ -11,7 +11,6 @@
 
 #define MAX_KEYS 300
 #define MOUSE_KEYS 3
-#define MOUSE_SENSITIVITY 0.3F
 
 ModuleInput::ModuleInput() : Module()
 {
@@ -46,6 +45,7 @@ UpdateState ModuleInput::PreUpdate()
 {
 	static SDL_Event event;
 
+	mouse_wheel = 0;
 	const Uint8* keys = SDL_GetKeyboardState(nullptr);
 	for (unsigned int i = 0; i < MAX_KEYS; ++i)
 	{
@@ -98,6 +98,10 @@ UpdateState ModuleInput::PreUpdate()
 			else if (event.button.button == SDL_BUTTON_MIDDLE)	mouse[2] = KeyState::KEY_UP;
 			break;
 
+		case SDL_MOUSEWHEEL:
+			mouse_wheel = event.wheel.y;
+			break;
+
 		case SDL_DROPFILE:
 			char* drop_file = event.drop.file;
 			LOG("Drop file detected");
@@ -145,8 +149,8 @@ void ModuleInput::GetMouseMovement(float * x, float * y)
 	int curr_y;
 
 	SDL_GetMouseState(&curr_x, &curr_y);
-	*x = ((curr_x - mouse_x) * MOUSE_SENSITIVITY);
-	*y = ((curr_y - mouse_y) * MOUSE_SENSITIVITY);
+	*x = ((curr_x - mouse_x) * mouse_senitivity);
+	*y = ((curr_y - mouse_y) * mouse_senitivity);
 }
 
 void ModuleInput::GetMousePosition(int * x, int * y)

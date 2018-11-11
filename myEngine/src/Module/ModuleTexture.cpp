@@ -14,6 +14,8 @@
 #include "GL_Buffers/Texture2D.h"
 #include "GL_Buffers/RenderBuffer.h"
 
+#include "GameObject/Components/ComponentMeshRenderer.h"
+
 ModuleTexture::ModuleTexture()
 {
 }
@@ -38,7 +40,7 @@ bool ModuleTexture::CleanUp()
 	LOGINFO("Deleting all remaining loaded textures (%i textures)", file2texture.size());
 
 
-	for (std::unordered_map<const char*, unsigned int>::iterator it = file2texture.begin(); it != file2texture.end(); ++it)
+	for (std::unordered_map<std::string, unsigned int>::iterator it = file2texture.begin(); it != file2texture.end(); ++it)
 	{
 		glDeleteTextures(1, &(it->second));
 	}
@@ -47,31 +49,6 @@ bool ModuleTexture::CleanUp()
 
 	return true;
 }
-
-/*
-void ModuleTexture::InitViewTexture(unsigned int width, unsigned int height, unsigned int& frameBuffer, unsigned int& textureID, unsigned int& depthBuffer)
-{
-	glGenFramebuffers(1, &frameBuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-
-	GLCall(glGenTextures(1, &textureID));
-	GLCall(glBindTexture(GL_TEXTURE_2D, textureID));
-	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
-	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
-	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0));
-
-	GLCall(glGenRenderbuffers(1, &depthBuffer));
-	GLCall(glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer));
-	GLCall(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height));
-
-	GLCall(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer));
-
-	GLCall(glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, textureID, 0));
-
-	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
-	GLCall(glDrawBuffers(1, DrawBuffers));
-}
-*/
 
 
 unsigned int ModuleTexture::LoadTexture(const char* filename)
@@ -132,7 +109,16 @@ unsigned int ModuleTexture::LoadTexture(const char* filename)
 	return 0;
 }
 
-void ModuleTexture::UnLoadTexture(const unsigned int id)
+void ModuleTexture::AssignTexture(unsigned int textureID, Mesh * mesh)
+{
+	if (mesh->textureID != 0) texture2mesh[textureID].erase(mesh);
+
+	texture2mesh[textureID].insert(mesh);
+	mesh->textureID = textureID;
+}
+
+
+void ModuleTexture::DeleteTexture(const unsigned int id)
 {
 	if (id == 0)
 	{
@@ -140,8 +126,22 @@ void ModuleTexture::UnLoadTexture(const unsigned int id)
 		return;
 	}
 
+	if (texture2mesh.find(id) == texture2mesh.end())
+	{
+		LOGWARNING("Trying to unload texture with id %i, but it's not registered", id);
+		return;
+	}
 
-	for (std::unordered_map<const char*, unsigned int>::iterator it = file2texture.begin(); it != file2texture.end(); ++it)
+	// Assign all meshes that display the texture to checkers
+	std::unordered_set<Mesh*>* set = &texture2mesh[id];
+	for (auto it = set->begin(); it != set->end(); ++it)
+	{
+		AssignTexture(checkers, *it);
+	}
+	texture2mesh.erase(id);
+	
+
+	for (std::unordered_map<std::string, unsigned int>::iterator it = file2texture.begin(); it != file2texture.end(); ++it)
 	{
 		if (it->second == id)
 		{

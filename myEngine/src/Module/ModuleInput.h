@@ -27,7 +27,8 @@ enum class KeyCode
 	Q = 20,
 	S = 22,
 	U = 24,
-	W = 26
+	W = 26,
+	LSHIFT = 225
 };
 
 enum class MouseButton
@@ -59,12 +60,19 @@ public:
 	bool GetMouseButtonUp(MouseButton button) { return mouse[(int)button] == KeyState::KEY_UP; }
 	void GetMouseMovement(float* x, float* y);
 	void GetMousePosition(int* x, int* y);
+	float GetMouseWheel() { return wheel_sensitivity * (float)mouse_wheel; };
 
+
+private:
 	KeyState* keyboard;
 	KeyState* mouse;
 	int mouse_x = 0;
 	int mouse_y = 0;
-	float mouse_wheel = 0;
+	int mouse_wheel = 0;
+
+public:
+	float mouse_senitivity = 0.2F;
+	float wheel_sensitivity = 5.0f;
 };
 
 #endif // !_MODEL_INPUT_H

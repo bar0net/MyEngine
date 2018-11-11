@@ -506,6 +506,9 @@
     <ClInclude Include="src\GameObject\Components\ComponentMeshRenderer.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="src\Module\Editor\PanelTexture.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="files\default.fs" />
