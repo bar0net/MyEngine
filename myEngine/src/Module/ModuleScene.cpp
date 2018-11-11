@@ -49,6 +49,23 @@ UpdateState ModuleScene::Update()
 	return UpdateState::Update_Continue;
 }
 
+UpdateState ModuleScene::PostUpdate()
+{
+	while (!removeStack.empty())
+	{
+		GameObject* go = removeStack.top();
+
+		LOGINFO("Deleting gameObject %s.", go->GetName());
+		go->CleanUp();
+		gameObjects.erase(go->GetName());
+		delete go; go = nullptr;
+
+		removeStack.pop();
+	}
+
+	return UpdateState::Update_Continue;
+}
+
 bool ModuleScene::CleanUp()
 {
 	for (std::unordered_map<std::string, GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it)
@@ -99,4 +116,27 @@ GameObject * ModuleScene::Find(const char * name)
 			return it->second;
 	}
 	return nullptr;
+}
+
+void ModuleScene::DeleteGameObject(const char * name)
+{
+	assert(name);
+	
+	if (gameObjects.find(name) == gameObjects.end())
+	{
+		LOGWARNING("Trying to delete gameObject %s, but it doesn't exist.", name);
+		return;
+	}
+	removeStack.push(gameObjects[name]);
+}
+
+void ModuleScene::DeleteGameObject(GameObject * gameObject)
+{
+	assert(gameObject);
+	if (gameObjects.find(gameObject->GetName()) == gameObjects.end())
+	{
+		LOGWARNING("Trying to delete gameObject %s, but it is not registered.", gameObject->GetName());
+	}
+
+	removeStack.push(gameObject);
 }

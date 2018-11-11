@@ -22,7 +22,7 @@ void CameraControl::Update()
 	if (App->input->GetKey(KeyCode::S))	gameObject->Translate(-gameObject->Front() * velocity * App->time->DeltaTime() * ratio);
 	if (App->input->GetMouseWheel() != 0) 
 		gameObject->Translate(gameObject->Front() * velocity * App->time->DeltaTime() * ratio * App->input->GetMouseWheel());
-	LOGINFO("%i", (int)(1000 * App->input->GetMouseWheel()) );
+
 
 	if (App->input->GetKey(KeyCode::D)) gameObject->Translate( gameObject->Right() * velocity * App->time->DeltaTime() * ratio);
 	if (App->input->GetKey(KeyCode::A)) gameObject->Translate(-gameObject->Right() * velocity * App->time->DeltaTime() * ratio);

@@ -35,7 +35,8 @@ public:
 	MeshRenderer(const std::vector<Model>& models, MyEngine::Shader* shader);
 	virtual ~MeshRenderer();
 
-	void Update();
+	void Update() override;
+	void CleanUp() override;
 
 	std::vector<Mesh*> meshes;
 	MyEngine::Shader *shader;

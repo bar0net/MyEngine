@@ -45,6 +45,7 @@ void GameObject::CleanUp()
 	{
 		it->second->CleanUp();
 		delete(it->second);
+		it->second = nullptr;
 	}
 
 	components.clear();

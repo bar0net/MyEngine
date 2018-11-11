@@ -148,23 +148,31 @@ UpdateState ModuleEditor::Update()
 	{
 		if (inspect_object != nullptr && inspect_object->GetName() != "Camera")
 		{
-			MeshRenderer* mr = (MeshRenderer*)inspect_object->components["MeshRenderer"];
-			if (mr != nullptr)
+			if (inspect_object->components.find("MeshRenderer") != inspect_object->components.end())
 			{
-				//TODO: Improve this.
-				// Look for a better solution to position the camera!
-				float ratio = mr->dimensions[0] * inspect_object->scale[0];
-				if (ratio < mr->dimensions[1]) ratio = mr->dimensions[1] * inspect_object->scale[1];
-				if (ratio < mr->dimensions[2]) ratio = mr->dimensions[2] * inspect_object->scale[2];
-				
-				float3 p =
+				MeshRenderer* mr = (MeshRenderer*)inspect_object->components["MeshRenderer"];
+				if (mr != nullptr)
 				{
-					mr->center[0] * inspect_object->scale[0],
-					(mr->center[1]* inspect_object->scale[1] + 0.5F*ratio) ,
-					(mr->center[2]* inspect_object->scale[2] + 0.5F*ratio) 
-				};
+					//TODO: Improve this.
+					// Look for a better solution to position the camera!
+					float ratio = mr->dimensions[0] * inspect_object->scale[0];
+					if (ratio < mr->dimensions[1]) ratio = mr->dimensions[1] * inspect_object->scale[1];
+					if (ratio < mr->dimensions[2]) ratio = mr->dimensions[2] * inspect_object->scale[2];
 
-				editor_camera->SetPosition(p.x, p.y + 2.0F, p.z + 10.0F);
+					float3 p =
+					{
+						mr->center[0] * inspect_object->scale[0],
+						(mr->center[1] * inspect_object->scale[1] + 0.5F*ratio) ,
+						(mr->center[2] * inspect_object->scale[2] + 0.5F*ratio)
+					};
+
+					editor_camera->SetPosition(p.x, p.y + 2.0F, p.z + 10.0F);
+					editor_camera->SetRotation(0, 0, 0);
+				}
+			}
+			else
+			{
+				editor_camera->SetPosition(inspect_object->position.x, inspect_object->position.y, inspect_object->position.z);
 				editor_camera->SetRotation(0, 0, 0);
 			}
 		}
@@ -344,8 +352,8 @@ bool ModuleEditor::MainMenuBar()
 
 	if (ImGui::BeginMenu("Help"))
 	{
-		ImGui::MenuItem("Github");
-		ImGui::MenuItem("About");
+		ImGui::MenuItem("Github"); // TODO: Add browser command
+		ImGui::MenuItem("About"); // TODO: Add info popup panel
 		ImGui::EndMenu();
 	}
 	ImGui::EndMainMenuBar();
@@ -380,6 +388,22 @@ void ModuleEditor::PanelObjects()
 	if (this->inspect_object != nullptr)
 	{
 		ImGui::TextColored(ImVec4(0.3F, 0.5F, 0.8F, 1.0F), inspect_object->GetName());
+		ImGui::SameLine(0.0F, 10.0F);
+
+		bool delete_object = false;
+		if (inspect_object != this->editor_camera)
+		{
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8F, 0.2F, 0.2F, 1.0F));
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.85F, 0.2F, 0.2F, 1.0F));
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.85F, 0.2F, 0.2F, 1.0F));
+			if (ImGui::SmallButton("Delete")) 
+			{ 
+				App->scene->DeleteGameObject(inspect_object); 
+				delete_object = true;
+			}
+			ImGui::PopStyleColor(3);
+		}
+
 		float pos[3] = { this->inspect_object->position.x, this->inspect_object->position.y, this->inspect_object->position.z };
 		if (ImGui::DragFloat3("Position", pos, 2)) this->inspect_object->SetPosition(pos[0], pos[1], pos[2]);			
 
@@ -398,8 +422,9 @@ void ModuleEditor::PanelObjects()
 			else if (it->first == "MeshRenderer") PanelMeshRenderer((MeshRenderer*)it->second);
 			else ImGui::Text(it->first);
 		}
-	}
 
+		if (delete_object) inspect_object = nullptr;
+	}
 }
 
 void ModuleEditor::PanelCamera(Camera* component) const

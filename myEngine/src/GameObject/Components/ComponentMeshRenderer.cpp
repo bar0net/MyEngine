@@ -77,19 +77,12 @@ void MeshRenderer::Update()
 	this->shader->Bind();
 	this->shader->SetUniform4x4("model", *gameObject->ModelMatrix());
 
-	/*if (this->gameObject->transformChanged)
-	{
-		this->gameObject->transformChanged = false;
-	}*/
-
 	for (Mesh* mesh : meshes)
 	{
 		unsigned int texture;
 
-		if (mesh->display_texture)
-			texture = mesh->textureID;
-		else
-			texture = App->texture->checkers;
+		if (mesh->display_texture) texture = mesh->textureID;
+		else texture = App->texture->checkers;
 
 		shader->SetUniform4("albedo", mesh->albedo[0], mesh->albedo[1], mesh->albedo[2], mesh->albedo[3]);
 
@@ -114,5 +107,15 @@ void MeshRenderer::Update()
 		default:
 			break;
 		}
+	}
+}
+
+void MeshRenderer::CleanUp()
+{
+	LOGINFO("Mesh Rendederer Clean up.");
+	
+	for (Mesh* mesh : meshes)
+	{
+		App->texture->AssignTexture(App->texture->checkers, mesh);
 	}
 }

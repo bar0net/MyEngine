@@ -39,7 +39,8 @@ public:
 	virtual math::float4x4* ModelMatrix() { return &transform; }
 	virtual void SetModelMatrix(math::float4x4* transform);
 
-	void AddComponent(Component* component);
+	virtual void AddComponent(Component* component);
+	virtual void RemoveComponent() {}; // TODO: Implement remove component
 
 	const char* GetName() { return name.c_str(); }
 
