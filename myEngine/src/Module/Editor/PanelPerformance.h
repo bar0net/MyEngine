@@ -34,8 +34,8 @@ public:
 
 		fps->push((unsigned int)App->time->FPS());
 		avg_ms -= (*avg_ms_array)[0];
-		avg_ms_array->push(App->time->DeltaTimeMS());
-		avg_ms += App->time->DeltaTimeMS();
+		avg_ms_array->push(App->time->RealDeltaTimeMS());
+		avg_ms += App->time->RealDeltaTimeMS();
 
 		if (ImGui::CollapsingHeader("Performance"))
 		{

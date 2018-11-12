@@ -17,28 +17,28 @@ void CameraControl::Update()
 	else ratio = 1.0F;
 
 	// Keyboard Translations
-	if (App->input->GetKey(KeyCode::Q)) gameObject->Translate( gameObject->Up() * velocity * App->time->DeltaTime() * ratio);
-	if (App->input->GetKey(KeyCode::E)) gameObject->Translate(-gameObject->Up() * velocity * App->time->DeltaTime() * ratio);
+	if (App->input->GetKey(KeyCode::Q)) gameObject->Translate( gameObject->Up() * velocity * App->time->RealDeltaTime() * ratio);
+	if (App->input->GetKey(KeyCode::E)) gameObject->Translate(-gameObject->Up() * velocity * App->time->RealDeltaTime() * ratio);
 
-	if (App->input->GetKey(KeyCode::W))	gameObject->Translate( gameObject->Front() * velocity * App->time->DeltaTime() * ratio);
-	if (App->input->GetKey(KeyCode::S))	gameObject->Translate(-gameObject->Front() * velocity * App->time->DeltaTime() * ratio);
+	if (App->input->GetKey(KeyCode::W))	gameObject->Translate( gameObject->Front() * velocity * App->time->RealDeltaTime() * ratio);
+	if (App->input->GetKey(KeyCode::S))	gameObject->Translate(-gameObject->Front() * velocity * App->time->RealDeltaTime() * ratio);
 
-	if (App->input->GetKey(KeyCode::D)) gameObject->Translate( gameObject->Right() * velocity * App->time->DeltaTime() * ratio);
-	if (App->input->GetKey(KeyCode::A)) gameObject->Translate(-gameObject->Right() * velocity * App->time->DeltaTime() * ratio);
+	if (App->input->GetKey(KeyCode::D)) gameObject->Translate( gameObject->Right() * velocity * App->time->RealDeltaTime() * ratio);
+	if (App->input->GetKey(KeyCode::A)) gameObject->Translate(-gameObject->Right() * velocity * App->time->RealDeltaTime() * ratio);
 
 	// Keyboard Rotations
-	if (App->input->GetKey(KeyCode::J)) gameObject->Rotate(0, angularVelocity * App->time->DeltaTime() * ratio, 0);
-	if (App->input->GetKey(KeyCode::L)) gameObject->Rotate(0, -angularVelocity * App->time->DeltaTime() * ratio, 0);
+	if (App->input->GetKey(KeyCode::J)) gameObject->Rotate(0, angularVelocity * App->time->RealDeltaTime() * ratio, 0);
+	if (App->input->GetKey(KeyCode::L)) gameObject->Rotate(0, -angularVelocity * App->time->RealDeltaTime() * ratio, 0);
 
-	if (App->input->GetKey(KeyCode::I))	gameObject->Rotate( angularVelocity * App->time->DeltaTime() * ratio, 0, 0);
-	if (App->input->GetKey(KeyCode::K)) gameObject->Rotate(-angularVelocity * App->time->DeltaTime() * ratio, 0, 0);
+	if (App->input->GetKey(KeyCode::I))	gameObject->Rotate( angularVelocity * App->time->RealDeltaTime() * ratio, 0, 0);
+	if (App->input->GetKey(KeyCode::K)) gameObject->Rotate(-angularVelocity * App->time->RealDeltaTime() * ratio, 0, 0);
 
-	if (App->input->GetKey(KeyCode::U))	gameObject->Rotate(0, 0, angularVelocity * App->time->DeltaTime() * ratio);
-	if (App->input->GetKey(KeyCode::O)) gameObject->Rotate(0, 0, -angularVelocity * App->time->DeltaTime() * ratio);
+	if (App->input->GetKey(KeyCode::U))	gameObject->Rotate(0, 0, angularVelocity * App->time->RealDeltaTime() * ratio);
+	if (App->input->GetKey(KeyCode::O)) gameObject->Rotate(0, 0, -angularVelocity * App->time->RealDeltaTime() * ratio);
 
 	// Mouse Translations
 	if (App->input->GetMouseWheel() != 0) 
-		gameObject->Translate(gameObject->Front() * velocity * App->time->DeltaTime() * ratio * App->input->GetMouseWheel());
+		gameObject->Translate(gameObject->Front() * velocity * App->time->RealDeltaTime() * ratio * App->input->GetMouseWheel());
 
 	if (mouse_enabled && App->input->GetMouseButton(MouseButton::MOUSE_LEFT) && !App->input->GetMouseButton(MouseButton::MOUSE_RIGHT) && !App->input->GetKey(KeyCode::LALT))
 	{
