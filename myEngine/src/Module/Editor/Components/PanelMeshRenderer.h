@@ -32,31 +32,39 @@ public:
 			static int selected_mesh = -1;
 			for (unsigned int i = 0; i < component->meshes.size(); ++i)
 			{
+				std::string strTextureButton = "Change\nTexture\nMesh" + std::to_string(i);
+				
+				std::string popupID = std::string("MeshAlbedo") + std::to_string(i);
+				std::string albedoID = std::string("Albedo (") + std::to_string(i) + std::string(")");
+				std::string popupTextureID = std::string("TextureMenu") + std::to_string(i);
+
+
 				ImGui::Text("SubMesh (%i)", i);
 				ImGui::Text("Numer of Triangles: %d", component->meshes[i]->num_triangles);
-				std::string s = "Display Texture " + std::to_string(i);
-				ImGui::Checkbox(s.c_str(), &component->meshes[i]->display_texture);
 
-				ImVec4 tint(1,1,1,1);
+				std::string strCheckbox = "Display Textures for Mesh " + std::to_string(i);
+				ImGui::Checkbox(strCheckbox.c_str(), &component->meshes[i]->display_texture);
+
+				ImVec4 tint(1, 1, 1, 1);
 				if (!component->meshes[i]->display_texture) tint = { 0.6F, 0.6F, 0.6F, 1 };
-				/*
-				if (component->meshes[i]->display_texture)
-					ImGui::Image((ImTextureID)component->meshes[i]->textureID, ImVec2(75, 75), ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, 1));
-				else
-					ImGui::Image((ImTextureID)component->meshes[i]->textureID, ImVec2(75, 75), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0.6F, 0.6F, 0.6F, 1));
-				*/
 
-				if (ImGui::ImageButton((ImTextureID)component->meshes[i]->textureID, ImVec2(75, 75), ImVec2(0, 0), ImVec2(1, 1), -1, ImVec4(0, 0, 0, 0), tint))
+				ImGui::Image((ImTextureID)component->meshes[i]->textureID, ImVec2(75, 75), ImVec2(0, 0), ImVec2(1, 1), tint);
+
+				/*if (ImGui::ImageButton((ImTextureID)component->meshes[i]->textureID, ImVec2(75, 75), ImVec2(0, 0), ImVec2(1, 1), -1, ImVec4(0, 0, 0, 0), tint))
 				{
-					ImGui::OpenPopup("Select Texture");
 					selected_mesh = i;
+					open_textures = true;
+				}*/
+
+
+				ImGui::SameLine();
+				bool open_textures = false;
+				if (ImGui::Button(strTextureButton.c_str(), ImVec2(50, 75)))
+				{
+					open_textures = true;
 				}
 
 				ImGui::SameLine();
-
-				std::string popupID = std::string("MeshAlbedo") + std::to_string(i);
-				std::string albedoID = std::string("Albedo (") + std::to_string(i) + std::string(")");
-
 				bool open_albedo = ImGui::ColorButton(albedoID.c_str(), *(ImVec4*)&component->meshes[i]->albedo, 0, ImVec2(10, 75));
 				ImGui::SameLine(); ImGui::Text("Albedo");
 
@@ -67,24 +75,26 @@ public:
 					ImGui::EndPopup();
 				}
 
-				ImGui::Separator();
-			}		
-
-			if (ImGui::BeginPopup("Select Texture") && selected_mesh > -1)
-			{
-				for (auto it = App->texture->file2texture.begin(); it != App->texture->file2texture.end(); ++it)
+				if (open_textures) ImGui::OpenPopup(popupTextureID.c_str());
+				if (ImGui::BeginPopup(popupTextureID.c_str()))
 				{
-					if (ImGui::ImageButton((ImTextureID)it->second->ID(), ImVec2(10, 10)))
+					for (auto it = App->texture->file2texture.begin(); it != App->texture->file2texture.end(); ++it)
 					{
-						component->meshes[selected_mesh]->textureID = it->second->ID();
-						ImGui::CloseCurrentPopup();
+						if (ImGui::ImageButton((ImTextureID)it->second->ID(), ImVec2(10, 10)))
+						{
+							component->meshes[i]->textureID = it->second->ID();
+							ImGui::CloseCurrentPopup();
+						}
+						ImGui::SameLine();
+						ImGui::Text(it->first.c_str());
 					}
-					ImGui::SameLine();
-					ImGui::Text(it->first.c_str());
+					ImGui::EndPopup();
 				}
 
-				ImGui::EndPopup();
-			}
+				ImGui::Separator();
+			}	
+
+
 		}
 
 	}

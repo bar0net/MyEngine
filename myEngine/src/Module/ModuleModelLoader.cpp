@@ -33,6 +33,10 @@ bool ModuleModelLoader::Load(const char * filename, std::vector<Model>& models, 
 
 	LOGINFO("Loading 3D Model: %s", filename);
 
+	std::string folder(filename);
+	if (folder.find_first_of("\\") == std::string::npos) folder = "";
+	else folder = folder.substr(0, folder.find_last_of("\\")+1);
+
 	const aiScene* scene = aiImportFile(filename, aiProcess_Triangulate);
 
 	if (scene == NULL) 
@@ -56,14 +60,36 @@ bool ModuleModelLoader::Load(const char * filename, std::vector<Model>& models, 
 	{
 		aiString path;
 		scene->mMaterials[i]->GetTexture(aiTextureType_DIFFUSE, 0, &path, (aiTextureMapping*)aiTextureMapping_UV, 0);
-		
-		unsigned int textureID = App->texture->LoadTexture(path.C_Str());
+
+		unsigned int textureID = App->texture->LoadTexture(  (folder + path.C_Str()).c_str() );
 		materials.emplace_back( textureID );
 	}
 
-	for (unsigned int i = 0; i < scene->mNumMeshes; ++i)
+	std::unordered_map<std::string, unsigned int> vertex2index;
+	ParseNode(scene->mRootNode, aiMatrix4x4(), scene, models, &materials, &vertex2index);
+
+	LOGINFO("%s Loaded successfully.", filename);
+	
+	//delete v;
+	return true;
+}
+
+
+void ModuleModelLoader::ParseNode(const aiNode* const node, aiMatrix4x4 transform, const aiScene* const scene, std::vector<Model>& models, 
+	const std::vector<unsigned int>* const materials, std::unordered_map<std::string, unsigned int>* vertex2index)
+{
+	assert(scene && vertex2index);
+
+	if (node == nullptr) return;
+
+	transform = transform * node->mTransformation;
+	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
-		LOGINFO("Loading mesh %i of %i", i, scene->mNumMeshes);
+		ParseNode(node->mChildren[i], transform, scene, models, materials, vertex2index);
+	}
+
+	for (unsigned int i = 0; i < node->mNumMeshes; ++i)
+	{
 		Model m;
 
 		switch (scene->mMeshes[i]->mPrimitiveTypes)
@@ -84,56 +110,51 @@ bool ModuleModelLoader::Load(const char * filename, std::vector<Model>& models, 
 			break;
 		}
 
-		std::unordered_map<std::string, unsigned int> vertex2index;
+		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+		ParseMesh(mesh, &transform, &m, vertex2index);
 
-		ParseMesh(scene->mMeshes[i], scene->mRootNode->mChildren[i], &m, &vertex2index);
-
-		m.textureID = materials[scene->mMeshes[i]->mMaterialIndex];
+		m.textureID = (*materials)[scene->mMeshes[i]->mMaterialIndex];
 		m.layout.Push<float>(m.poylygon);
-		if (scene->mMeshes[i]->mNumUVComponents[0] > 0)
-			m.layout.Push<float>(scene->mMeshes[i]->mNumUVComponents[0]);
-		m.num_triangles = scene->mMeshes[i]->mNumFaces;
-		
+		if (mesh->mNumUVComponents[0] > 0)
+			m.layout.Push<float>(mesh->mNumUVComponents[0]);
+		m.num_triangles = mesh->mNumFaces;
+
 		models.emplace_back(m);
 	}
-
-	LOGINFO("%s Loaded successfully.", filename);
-
-	return true;
 }
 
-
-void ModuleModelLoader::ParseMesh(const aiMesh* const mesh, const aiNode* const node, Model* model, std::unordered_map<std::string, unsigned int>* vertex2index)
+void ModuleModelLoader::ParseMesh(const aiMesh* const mesh, const aiMatrix4x4* transform, Model* model, std::unordered_map<std::string, unsigned int>* vertex2index)
 {
-	assert(mesh && node && model && vertex2index);
+	assert(mesh && transform && model && vertex2index);
 	unsigned int num_uvw_coord = mesh->mNumUVComponents[0];
 
 	for (unsigned int j = 0; j < mesh->mNumVertices; ++j)
 	{
-		aiVector3D v = node->mTransformation * mesh->mVertices[j];
+		aiVector3D v = *transform * mesh->mVertices[j];
 
 		float* vertex = (float*)&v;
 		float* uvw = (float*)&mesh->mTextureCoords[0][j];
-		std::string s;
-
-		for (unsigned int k = 0; k < 3; ++k)  s += std::to_string(vertex[k]);
-		for (unsigned int k = 0; k < num_uvw_coord; ++k) s += std::to_string(uvw[k]);
-
-		if (vertex2index->find(s) == vertex2index->end())
+		
+		for (unsigned int k = 0; k < 3; ++k)
 		{
-			for (unsigned int k = 0; k < 3; ++k)
-			{
-				model->vertices.push_back(vertex[k]);
-				if (vertex[k] < model->mins[k]) model->mins[k] = vertex[k];
-				if (vertex[k] > model->maxs[k]) model->maxs[k] = vertex[k];
-			}
-			for (unsigned int k = 0; k < num_uvw_coord; ++k) model->vertices.push_back(uvw[k]);
-			model->indices.push_back(vertex2index->size());
-			(*vertex2index)[s] = vertex2index->size();
+			model->vertices.push_back(vertex[k]);
+			if (vertex[k] < model->mins[k]) model->mins[k] = vertex[k];
+			if (vertex[k] > model->maxs[k]) model->maxs[k] = vertex[k];
 		}
-		else
+
+		for (unsigned int k = 0; k < num_uvw_coord; ++k) model->vertices.push_back(uvw[k]);
+	}
+
+	for (unsigned int i = 0; i < mesh->mNumFaces; ++i)
+	{
+		if (mesh->mFaces[i].mNumIndices > 3)
 		{
-			model->indices.push_back((*vertex2index)[s]);
+			LOGWARNING("Mesh with more than 3 vertices per element.");
+		}
+
+		for (unsigned int j = 0; j < mesh->mFaces[i].mNumIndices; ++j)
+		{
+			model->indices.push_back(mesh->mFaces[i].mIndices[j]);
 		}
 	}
 }

@@ -47,7 +47,6 @@ bool ModuleScene::Start()
 
 UpdateState ModuleScene::Update()
 {
-	MyEngine::Globals::active_texture;
 	glGetIntegerv(GL_TEXTURE_BINDING_2D, (GLint*)&MyEngine::Globals::active_texture);
 	for (std::unordered_map<std::string, GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it)
 		it->second->Update();
@@ -112,6 +111,7 @@ void ModuleScene::NewModel(const char * file)
 	{
 		LOGERROR("Could not load %s.", file);
 	}
+	models.clear();
 }
 
 GameObject * ModuleScene::Find(const char * name)

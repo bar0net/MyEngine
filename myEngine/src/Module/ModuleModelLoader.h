@@ -9,9 +9,12 @@
 
 #include "GL_Buffers/VertexBufferLayout.h"
 #include "_Vendor/MathGeoLib/Math/float4x4.h"
+#include "assimp/cimport.h"
+
 
 class aiMesh;
 class aiNode;
+class aiScene;
 
 namespace MyEngine
 {
@@ -44,7 +47,9 @@ public:
 	static bool Load(const char * filename, std::vector<Model>& models, math::float4x4* transform);
 
 private:
-	static void ParseMesh(const aiMesh* const mesh, const aiNode* const node, Model* model, std::unordered_map<std::string, unsigned int>* vertex2index);
+	static void ParseNode(const aiNode* const node, aiMatrix4x4 transform, const aiScene* const scene, std::vector<Model>& models, 
+						const std::vector<unsigned int>* const materials, std::unordered_map<std::string, unsigned int>* vertex2index);
+	static void ParseMesh(const aiMesh* const mesh, const aiMatrix4x4* transform, Model* model, std::unordered_map<std::string, unsigned int>* vertex2index);
 
 };
 

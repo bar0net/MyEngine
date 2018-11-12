@@ -148,6 +148,11 @@ void ModuleInput::ManageDropFile(const char* file)
 		LOGDEBUG("PNG file detected.");
 		App->texture->LoadTexture(file);
 	}
+	else if (file_type == "dds")
+	{
+		LOGDEBUG("PNG file detected.");
+		App->texture->LoadTexture(file);
+	}
 
 }
 
