@@ -1,7 +1,7 @@
 # MyEngine (Provisional name)
 
 ## Introduction
-MyEngine is a 3D game engine (work-in-progress) developed from scratch.
+MyEngine is a 3D game engine (work-in-progress) developed from scratch by Jordi Tudela Alcacer.
 
 ## Features
 
