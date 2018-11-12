@@ -32,8 +32,8 @@ namespace MyEngine
 		void SetUniform1(const char* name, int value) const;
 
 		//void AddTexture2D(unsigned int textureID);
-		void EnableTexture2D(unsigned int textureID);
-		void DisableTexture2D();
+		void EnableTexture2D(unsigned int textureID) const;
+		void DisableTexture2D() const;
 		void RemoveTexture2D(unsigned int textureID);
 
 		unsigned int program = 0;

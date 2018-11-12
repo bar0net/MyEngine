@@ -1,10 +1,13 @@
 #ifndef _MYENGINE_RENDERER_H
 #define _MYENGINE_RENDERER_H
 
+
 #include "Module.h"
 
 #include <unordered_map>
 #include <vector>
+
+//#include "_Vendor/MathGeoLib/Math/float4x4.h"
 
 namespace MyEngine 
 {
@@ -15,16 +18,34 @@ namespace MyEngine
 	class Shader;
 }
 
+namespace math
+{
+	class float4x4;
+}
+
+
+
+struct Mesh
+{
+	MyEngine::VertexBuffer *vbo = nullptr;
+	MyEngine::IndexBuffer *ibo = nullptr;
+	MyEngine::VertexArray *vao = nullptr;
+	unsigned int num_triangles = 0;
+	unsigned int textureID = 0;
+	bool display_texture = true;
+	unsigned int polygon = 3;
+	float albedo[4] = { 1.0F, 1.0F, 1.0F, 1.0F };
+};
+
+
 struct DrawCall
 {
 public:
-	DrawCall(const MyEngine::VertexArray* vao, const MyEngine::IndexBuffer* ibo, const MyEngine::Shader* shader, unsigned int type, float size = 0) :
-		vao(vao), ibo(ibo), shader(shader), type(type), size(size) { }
+	DrawCall(const Mesh* mesh, math::float4x4* transform, const MyEngine::Shader* shader, float size = 0);
 
-	const MyEngine::VertexArray* vao = nullptr;
-	const MyEngine::IndexBuffer* ibo = nullptr;
+	const Mesh* mesh = nullptr;
+	math::float4x4* transform = nullptr;
 	const MyEngine::Shader* shader = nullptr;
-	unsigned int type = 0;
 	float size = 0;
 };
 
@@ -43,9 +64,10 @@ public:
 
 	void Render();
 
-	void Draw(const MyEngine::VertexArray* vao, const MyEngine::IndexBuffer* ibo, const MyEngine::Shader* shader);
-	void DrawLines(const MyEngine::VertexArray* vao, const MyEngine::IndexBuffer* ibo, const MyEngine::Shader* shader, float line_width = 1.0f);
-	void DrawPoints(const MyEngine::VertexArray * vao, const MyEngine::IndexBuffer * ibo, const MyEngine::Shader * shader, float point_size = 1.0f);
+	void Draw(const Mesh* mesh, math::float4x4* transform, const MyEngine::Shader* shader, float size = 0);
+	//void Draw(const MyEngine::VertexArray* vao, const MyEngine::IndexBuffer* ibo, const MyEngine::Shader* shader);
+	//void DrawLines(const MyEngine::VertexArray* vao, const MyEngine::IndexBuffer* ibo, const MyEngine::Shader* shader, float line_width = 1.0f);
+	//void DrawPoints(const MyEngine::VertexArray * vao, const MyEngine::IndexBuffer * ibo, const MyEngine::Shader * shader, float point_size = 1.0f);
 
 	MyEngine::Shader* CreateShader(const char* name, const char* vShader_file, const char* fShader_file);
 	MyEngine::Shader* GetShader(const char* name);

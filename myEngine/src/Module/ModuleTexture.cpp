@@ -9,6 +9,7 @@
 #include "Globals.h"
 
 #include "Utils/Render_Utils.h"
+#include "Module/ModuleRenderer.h"
 
 #include "GL_Buffers/FrameBuffer.h"
 #include "GL_Buffers/RenderBuffer.h"

@@ -10,7 +10,7 @@
 class PanelEditor
 {
 public:
-	void Draw(bool& enabled, MyEngine::Shader* shader_grid, float* grid_color)
+	void Draw(bool& enabled, Mesh* grid_mesh, float* grid_color)
 	{
 		ImGui::Begin("Configuration", &enabled);
 
@@ -32,7 +32,14 @@ public:
 		if (ImGui::BeginPopup("GridColorPicker"))
 		{
 			if (ImGui::ColorPicker4("Grid Color", grid_color))
-				shader_grid->SetUniform4("albedo", grid_color[0], grid_color[1], grid_color[2], grid_color[3]);
+			{
+				grid_mesh->albedo[0] = grid_color[0];
+				grid_mesh->albedo[1] = grid_color[1];
+				grid_mesh->albedo[2] = grid_color[2];
+				grid_mesh->albedo[3] = grid_color[3];
+				//grid_mesh->albedo = { grid_color[0], grid_color[1], grid_color[2], grid_color[3] };
+				//shader_grid->SetUniform4("albedo", grid_color[0], grid_color[1], grid_color[2], grid_color[3]);
+			}
 			ImGui::EndPopup();
 		}
 

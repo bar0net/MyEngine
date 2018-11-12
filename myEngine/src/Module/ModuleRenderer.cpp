@@ -87,23 +87,53 @@ bool ModuleRenderer::CleanUp()
 
 void ModuleRenderer::Render()
 {
+	float4x4 identity = float4x4::identity;
 	for (std::vector<DrawCall>::iterator it = drawCalls.begin(); it != drawCalls.end(); ++it)
 	{
-		it->shader->Bind();
-		it->vao->Bind();
-		it->ibo->Bind();
+		unsigned int texture = 0;
 
-		if (showWireframe)	it->ibo->DrawWires();
+		if (it->mesh->textureID == 0) it->shader->DisableTexture2D();
 		else
 		{
-			if (it->type == 1) it->ibo->DrawPoints(it->size);
-			if (it->type == 2) it->ibo->DrawLines(it->size);
-			if (it->type == 3) it->ibo->Draw();
+			if (it->mesh->display_texture) texture = it->mesh->textureID;
+			else texture = App->texture->checkers;
+
+			if (MyEngine::Globals::active_texture != texture)
+			{
+				it->shader->DisableTexture2D();
+				it->shader->EnableTexture2D(texture);
+			}
+		}
+		
+		if (it->transform) it->shader->SetUniform4x4("model", *(it->transform));
+		else it->shader->SetUniform4x4("model", identity);
+
+
+		it->shader->SetUniform4("albedo", it->mesh->albedo[0], it->mesh->albedo[1], it->mesh->albedo[2], it->mesh->albedo[3]);
+
+		it->shader->Bind();
+		it->mesh->vao->Bind();
+		it->mesh->ibo->Bind();
+
+		if (showWireframe)	it->mesh->ibo->DrawWires();
+		else
+		{
+			if (it->mesh->polygon == 1) it->mesh->ibo->DrawPoints(it->size);
+			if (it->mesh->polygon == 2) it->mesh->ibo->DrawLines(it->size);
+			if (it->mesh->polygon == 3) it->mesh->ibo->Draw();
 		}
 	}
 	drawCalls.clear();
 }
 
+void ModuleRenderer::Draw(const Mesh * mesh, math::float4x4* transform, const MyEngine::Shader * shader, float size)
+{
+	assert(mesh && shader);
+
+	drawCalls.emplace_back(mesh, transform, shader, size);
+}
+
+/*
 void ModuleRenderer::Draw(const MyEngine::VertexArray* vao, const MyEngine::IndexBuffer * ibo, const MyEngine::Shader * shader)
 {
 	assert(vao && ibo && shader);
@@ -124,6 +154,7 @@ void ModuleRenderer::DrawPoints(const MyEngine::VertexArray * vao, const MyEngin
 
 	drawCalls.push_back(DrawCall(vao, ibo, shader, 1, point_size));
 }
+*/
 
 MyEngine::Shader* ModuleRenderer::CreateShader(const char* name, const char* vShader_file, const char* fShader_file)
 {
@@ -191,3 +222,6 @@ void ModuleRenderer::UpdateClearColor(float r, float g, float b, float a)
 	MyEngine::RenderUtils::ChangeClearColor(r, g, b, a);
 	clearColor[0] = r; clearColor[1] = g; clearColor[2] = b; clearColor[3] = a;
 }
+
+DrawCall::DrawCall(const Mesh * mesh, math::float4x4 * transform, const MyEngine::Shader * shader, float size) :
+mesh(mesh), transform(transform), shader(shader), size(size) { }

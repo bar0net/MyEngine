@@ -73,11 +73,12 @@ MeshRenderer::~MeshRenderer()
 
 void MeshRenderer::Update()
 {
-	this->shader->Bind();
-	this->shader->SetUniform4x4("model", *gameObject->ModelMatrix());
+	//this->shader->Bind();
+	//this->shader->SetUniform4x4("model", *gameObject->ModelMatrix());
 
 	for (Mesh* mesh : meshes)
 	{
+		/*
 		unsigned int texture;
 
 		if (mesh->display_texture) texture = mesh->textureID;
@@ -104,7 +105,9 @@ void MeshRenderer::Update()
 			break;
 		default:
 			break;
-		}
+		}*/
+
+		App->renderer->Draw(mesh, gameObject->ModelMatrix(), shader);
 	}
 }
 

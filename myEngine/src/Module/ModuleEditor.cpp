@@ -114,8 +114,9 @@ UpdateState ModuleEditor::PreUpdate()
 {
 	if (panel_editor->show_grid)
 	{
-		App->renderer->DrawLines(vao_gizmo, ibo_gizmo, shader_gizmo, 2.5F);
-		App->renderer->DrawLines(vao_grid, ibo_grid, shader_grid,2);
+		//App->renderer->DrawLines(vao_gizmo, ibo_gizmo, shader_gizmo, 2.5F);
+		//App->renderer->DrawLines(vao_grid, ibo_grid, shader_grid,2);
+		App->renderer->Draw(grid_mesh, nullptr, shader_grid, 2.0F);
 	}
 
 	return UpdateState::Update_Continue;
@@ -183,7 +184,7 @@ UpdateState ModuleEditor::Update()
 	CreateDockSpace();
 
 	if (scene_window)	panel_scene->Draw(scene_window, renderTexture->ID(), (CameraControl*)editor_camera->components[ComponentType::CAMERA_CONTROL][0], scene_width, scene_height);
-	if (config_window)	panel_editor->Draw(config_window, shader_grid, grid_color);
+	if (config_window)	panel_editor->Draw(config_window, grid_mesh, grid_color);
 	if (debug_window)	panel_performance->Draw(debug_window, scene_width, scene_height);
 	if (console_window) panel_console->Draw(console_window);
 	if (hierarchy_window) PanelHierarchy::Draw(&hierarchy_window, inspect_object);
@@ -277,13 +278,25 @@ void ModuleEditor::CreateGrid()
 	MyEngine::VertexBufferLayout grid_layout;
 	grid_layout.Push<float>(3);
 
+
 	shader_grid = App->renderer->CreateShader("grid", "default.vs", "default.fs");
 	shader_grid->SetUniform4("albedo", grid_color[0], grid_color[1], grid_color[2], grid_color[3]);
 	shader_grid->SetUniform4x4("model", identity);
-	vbo_grid = new MyEngine::VertexBuffer(&grid);
-	vao_grid = new MyEngine::VertexArray();
-	vao_grid->AddBuffer(*vbo_grid, grid_layout);
-	ibo_grid = new MyEngine::IndexBuffer(&grid_index);
+	
+	grid_mesh = new Mesh();
+	grid_mesh->vbo = new MyEngine::VertexBuffer(&grid);
+	grid_mesh->vao = new MyEngine::VertexArray();
+	grid_mesh->vao->AddBuffer(*grid_mesh->vbo, grid_layout);
+	grid_mesh->ibo = new MyEngine::IndexBuffer(&grid_index);
+	grid_mesh->polygon = 2;
+
+
+	//vbo_grid = new MyEngine::VertexBuffer(&grid);
+	//vao_grid = new MyEngine::VertexArray();
+	//vao_grid->AddBuffer(*vbo_grid, grid_layout);
+	//ibo_grid = new MyEngine::IndexBuffer(&grid_index);
+
+
 }
 
 void ModuleEditor::CreateGizmo()

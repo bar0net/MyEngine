@@ -26,6 +26,7 @@ class GameObject;
 class Camera;
 class CameraControl;
 class MeshRenderer;
+struct Mesh;
 
 class PanelTexture;
 
@@ -63,6 +64,7 @@ public:
 	MyEngine::IndexBuffer* ibo_grid = nullptr;
 	MyEngine::VertexBuffer* vbo_grid = nullptr;
 	MyEngine::Shader* shader_grid = nullptr;
+	Mesh* grid_mesh;
 
 	// ===== Origin Gizmo =====
 	MyEngine::VertexArray* vao_gizmo = nullptr;

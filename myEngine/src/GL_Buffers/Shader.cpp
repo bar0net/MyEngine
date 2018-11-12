@@ -156,9 +156,9 @@ namespace MyEngine
 		GLCall(glUniform1i(glGetUniformLocation(program, name), value));
 	}
 
-	void Shader::EnableTexture2D(unsigned int textureID)
+	void Shader::EnableTexture2D(unsigned int textureID) const
 	{
-			Bind();
+		Bind();
 		if (Globals::active_texture != textureID)
 		{
 			GLCall(glActiveTexture(GL_TEXTURE1));
@@ -171,7 +171,7 @@ namespace MyEngine
 		}
 	}
 
-	void Shader::DisableTexture2D()
+	void Shader::DisableTexture2D() const
 	{
 		if (Globals::active_texture != 0)
 		{

@@ -15,18 +15,7 @@ namespace MyEngine
 	class VertexBufferLayout;
 	class VertexArray;
 }
-
-struct Mesh
-{
-	MyEngine::VertexBuffer *vbo;
-	MyEngine::IndexBuffer *ibo;
-	MyEngine::VertexArray *vao;
-	unsigned int num_triangles;
-	unsigned int textureID;
-	bool display_texture = true;
-	unsigned int polygon = 3;
-	float albedo[4] = { 1.0F, 1.0F, 1.0F, 1.0F };
-};
+struct Mesh;
 
 class MeshRenderer : public Component
 {

@@ -30,7 +30,7 @@ namespace MyEngine
 	};
 
 
-	static unsigned long int frequency;
+	static Uint64 frequency;
 	class uChrono
 	{
 	public:
