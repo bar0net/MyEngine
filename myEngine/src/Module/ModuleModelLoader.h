@@ -48,8 +48,8 @@ public:
 
 private:
 	static void ParseNode(const aiNode* const node, aiMatrix4x4 transform, const aiScene* const scene, std::vector<Model>& models, 
-						const std::vector<unsigned int>* const materials, std::unordered_map<std::string, unsigned int>* vertex2index);
-	static void ParseMesh(const aiMesh* const mesh, const aiMatrix4x4* transform, Model* model, std::unordered_map<std::string, unsigned int>* vertex2index);
+						const std::vector<unsigned int>* const materials);
+	static void ParseMesh(const aiMesh* const mesh, const aiMatrix4x4* transform, Model* model);
 
 };
 

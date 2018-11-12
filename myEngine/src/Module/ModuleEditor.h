@@ -40,6 +40,7 @@ public:
 	
 	void ProcessEvent(void* event) const;
 	GameObject* GetInspectedObject();
+	void SetRenderTexture();
 
 private:
 	void FrameStart();

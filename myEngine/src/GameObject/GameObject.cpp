@@ -61,8 +61,7 @@ void GameObject::CleanUp()
 		for (std::vector<Component*>::iterator jt = it->second.begin(); jt != it->second.end(); ++jt)
 		{
 			(*jt)->CleanUp();
-			delete(*jt);
-			*jt = nullptr;
+			RELEASE(*jt);
 		}
 		it->second.clear();
 	}

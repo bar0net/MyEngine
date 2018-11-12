@@ -52,9 +52,8 @@ bool ModuleModelLoader::Load(const char * filename, std::vector<Model>& models, 
 	std::vector<unsigned int> materials;
 	materials.reserve(scene->mNumMaterials);
 
-	float* v = new float[16];
-	v = &scene->mRootNode->mTransformation[0][0];
-	transform->Set(v);
+	transform->Set(&scene->mRootNode->mTransformation[0][0]);
+
 
 	for (unsigned int i = 0; i < scene->mNumMaterials; ++i)
 	{
@@ -65,27 +64,26 @@ bool ModuleModelLoader::Load(const char * filename, std::vector<Model>& models, 
 		materials.emplace_back( textureID );
 	}
 
-	std::unordered_map<std::string, unsigned int> vertex2index;
-	ParseNode(scene->mRootNode, aiMatrix4x4(), scene, models, &materials, &vertex2index);
+	ParseNode(scene->mRootNode, aiMatrix4x4(), scene, models, &materials);
 
 	LOGINFO("%s Loaded successfully.", filename);
 	
-	//delete v;
+	aiReleaseImport(scene);
 	return true;
 }
 
 
 void ModuleModelLoader::ParseNode(const aiNode* const node, aiMatrix4x4 transform, const aiScene* const scene, std::vector<Model>& models, 
-	const std::vector<unsigned int>* const materials, std::unordered_map<std::string, unsigned int>* vertex2index)
+	const std::vector<unsigned int>* const materials)
 {
-	assert(scene && vertex2index);
+	assert(scene);
 
 	if (node == nullptr) return;
 
 	transform = transform * node->mTransformation;
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
-		ParseNode(node->mChildren[i], transform, scene, models, materials, vertex2index);
+		ParseNode(node->mChildren[i], transform, scene, models, materials);
 	}
 
 	for (unsigned int i = 0; i < node->mNumMeshes; ++i)
@@ -111,9 +109,9 @@ void ModuleModelLoader::ParseNode(const aiNode* const node, aiMatrix4x4 transfor
 		}
 
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		ParseMesh(mesh, &transform, &m, vertex2index);
+		ParseMesh(mesh, &transform, &m);
 
-		m.textureID = (*materials)[scene->mMeshes[i]->mMaterialIndex];
+		m.textureID = (*materials)[mesh->mMaterialIndex];
 		m.layout.Push<float>(m.poylygon);
 		if (mesh->mNumUVComponents[0] > 0)
 			m.layout.Push<float>(mesh->mNumUVComponents[0]);
@@ -123,9 +121,9 @@ void ModuleModelLoader::ParseNode(const aiNode* const node, aiMatrix4x4 transfor
 	}
 }
 
-void ModuleModelLoader::ParseMesh(const aiMesh* const mesh, const aiMatrix4x4* transform, Model* model, std::unordered_map<std::string, unsigned int>* vertex2index)
+void ModuleModelLoader::ParseMesh(const aiMesh* const mesh, const aiMatrix4x4* transform, Model* model)
 {
-	assert(mesh && transform && model && vertex2index);
+	assert(mesh && transform && model);
 	unsigned int num_uvw_coord = mesh->mNumUVComponents[0];
 
 	for (unsigned int j = 0; j < mesh->mNumVertices; ++j)

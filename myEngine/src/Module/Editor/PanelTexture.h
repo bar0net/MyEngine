@@ -23,7 +23,8 @@ public:
 			
 			if (App->texture->checkers == it->second->ID()) continue;
 			ImGui::SameLine();
-			if (ImGui::Button("Delete")) toDelete = it->second->ID();
+			std::string s = "Delete Texture " + std::to_string(it->second->ID());
+			if (ImGui::Button(s.c_str())) toDelete = it->second->ID();
 		}
 
 		if (toDelete > 0) App->texture->DeleteTexture(toDelete);

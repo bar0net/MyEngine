@@ -85,7 +85,10 @@ UpdateState ModuleInput::PreUpdate()
 
 		case SDL_WINDOWEVENT:
 			if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED && (int)event.window.windowID == MyEngine::WindowUtils::WindowID(App->renderer->data))
+			{
 				App->renderer->ResizedWindow();
+				App->editor->SetRenderTexture();
+			}
 			break;
 
 		case SDL_MOUSEBUTTONDOWN:

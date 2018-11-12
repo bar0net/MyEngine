@@ -24,8 +24,8 @@ public:
 
 	~PanelPerfomance()
 	{
-		delete fps;
-		delete avg_ms_array;
+		RELEASE(fps);
+		RELEASE(avg_ms_array);
 	}
 
 	void Draw(bool& enabled, float scene_width, float scene_height)

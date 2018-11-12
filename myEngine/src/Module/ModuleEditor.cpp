@@ -59,15 +59,8 @@ bool ModuleEditor::Init()
 
 	// Set Up Render to Texture
 	frameBuffer = new MyEngine::FrameBuffer();
-	renderTexture = new MyEngine::Texture2D(App->renderer->width, App->renderer->height);
 	renderBuffer = new MyEngine::RenderBuffer();
-	
-	renderBuffer->SetStorage(App->renderer->width, App->renderer->height, GL_DEPTH_COMPONENT);
-	frameBuffer->SetRenderBuffer(renderBuffer->ID(), GL_DEPTH_ATTACHMENT);
-	frameBuffer->SetTexture(renderTexture->ID(), 0, GL_COLOR_ATTACHMENT0);
-
-	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
-	GLCall(glDrawBuffers(1, DrawBuffers));
+	SetRenderTexture();
 
 	// Create Panels
 	panel_performance = new PanelPerfomance();
@@ -164,8 +157,8 @@ UpdateState ModuleEditor::Update()
 					float3 p =
 					{
 						 mr->center[0] * scale[0] + position[0],
-						(mr->center[1] * scale[1] + 0.5F*ratio + position[1]) ,
-						(mr->center[2] * scale[2] + 0.5F*ratio + position[2])
+						(mr->center[1]  + 0.5F * mr->dimensions[1]) * scale[1] + position[1],
+						(mr->center[2]  + 0.5F * mr->dimensions[2]) * scale[2] + position[2]
 					};
 
 					editor_camera->SetPosition(p.x, p.y + 2.0F, p.z + 10.0F);
@@ -223,6 +216,21 @@ void ModuleEditor::ProcessEvent(void* event) const
 GameObject* ModuleEditor::GetInspectedObject()
 {
 	return inspect_object;
+}
+
+void ModuleEditor::SetRenderTexture()
+{
+	RELEASE(renderTexture);
+	//RELEASE(renderBuffer);
+
+	renderTexture = new MyEngine::Texture2D(App->renderer->width, App->renderer->height);
+
+	renderBuffer->SetStorage(App->renderer->width, App->renderer->height, GL_DEPTH_COMPONENT);
+	frameBuffer->SetRenderBuffer(renderBuffer->ID(), GL_DEPTH_ATTACHMENT);
+	frameBuffer->SetTexture(renderTexture->ID(), 0, GL_COLOR_ATTACHMENT0);
+
+	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
+	GLCall(glDrawBuffers(1, DrawBuffers));
 }
 
 void ModuleEditor::CreateGrid()

@@ -161,6 +161,8 @@ void ModuleRenderer::ResizedWindow()
 	MyEngine::WindowUtils::WindowSize(data, &width, &height);
 	MyEngine::RenderUtils::ModifyViewportSize(width, height);
 
+	//
+
 	// TODO: Revamp this section to support various active cameras
 	Camera* c = (Camera*)App->scene->gameObjects["Camera"]->components[ComponentType::CAMERA][0];
 	assert(c);

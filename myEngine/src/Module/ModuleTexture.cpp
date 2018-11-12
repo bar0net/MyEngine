@@ -97,6 +97,7 @@ unsigned int ModuleTexture::LoadTexture(const char* filename)
 
 		file2texture[name.c_str()]->UnBind();
 
+		ilDeleteImages(1, &imageID);
 		LOGINFO("Texture %s loaded successfully.", filename);
 		return file2texture[name.c_str()]->ID();
 	}
@@ -146,7 +147,7 @@ void ModuleTexture::DeleteTexture(const unsigned int id)
 	{
 		if (it->second->ID() == id)
 		{
-			LOGINFO("Unloading texture %s (id: %i).", it->first, id);
+			LOGINFO("Unloading texture %s (id: %i).", it->first.c_str(), id);
 			RELEASE(it->second);
 			file2texture.erase(it->first);
 			return;

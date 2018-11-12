@@ -65,7 +65,7 @@ void CameraControl::Update()
 			float3 obj_pos = App->editor->GetInspectedObject()->Position();
 
 			model.SetTranslatePart(model.TranslatePart() - obj_pos);
-			if (worldYorbit)	model = float4x4::RotateY(-x * ratio) * model;
+			if (worldYorbit)	model = float4x4::RotateY(-x * ratio * 0.05F) * model;
 			else				model = float4x4::RotateAxisAngle(gameObject->Up(), 0.1F) * model;
 			model.SetTranslatePart(model.TranslatePart() + obj_pos);
 

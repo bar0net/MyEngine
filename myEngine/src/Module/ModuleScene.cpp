@@ -81,7 +81,9 @@ bool ModuleScene::CleanUp()
 
 	// Delete all gameobjects
 	for (std::unordered_map<std::string, GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it)
-		delete(it->second);
+	{
+		RELEASE((it->second));
+	}
 	gameObjects.clear();
 
 	return true;
@@ -110,6 +112,12 @@ void ModuleScene::NewModel(const char * file)
 	else
 	{
 		LOGERROR("Could not load %s.", file);
+	}
+
+	for (unsigned int i = 0; i < models.size(); ++i)
+	{
+		models[i].vertices.clear();
+		models[i].indices.clear();
 	}
 	models.clear();
 }
