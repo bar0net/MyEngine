@@ -154,15 +154,18 @@ UpdateState ModuleEditor::Update()
 				{
 					//TODO: Improve this.
 					// Look for a better solution to position the camera!
-					float ratio = mr->dimensions[0] * inspect_object->scale[0];
-					if (ratio < mr->dimensions[1]) ratio = mr->dimensions[1] * inspect_object->scale[1];
-					if (ratio < mr->dimensions[2]) ratio = mr->dimensions[2] * inspect_object->scale[2];
+					float3 scale = inspect_object->Scale();
+					float3 position = inspect_object->Position();
+
+					float ratio = mr->dimensions[0] * scale[0];
+					if (ratio < mr->dimensions[1]) ratio = mr->dimensions[1] * scale[1];
+					if (ratio < mr->dimensions[2]) ratio = mr->dimensions[2] * scale[2];
 
 					float3 p =
 					{
-						mr->center[0] * inspect_object->scale[0] + inspect_object->position[0],
-						(mr->center[1] * inspect_object->scale[1] + 0.5F*ratio + inspect_object->position[1]) ,
-						(mr->center[2] * inspect_object->scale[2] + 0.5F*ratio + inspect_object->position[2])
+						 mr->center[0] * scale[0] + position[0],
+						(mr->center[1] * scale[1] + 0.5F*ratio + position[1]) ,
+						(mr->center[2] * scale[2] + 0.5F*ratio + position[2])
 					};
 
 					editor_camera->SetPosition(p.x, p.y + 2.0F, p.z + 10.0F);
@@ -171,7 +174,7 @@ UpdateState ModuleEditor::Update()
 			}
 			else
 			{
-				editor_camera->SetPosition(inspect_object->position.x, inspect_object->position.y, inspect_object->position.z);
+				editor_camera->SetPosition(inspect_object->Position());
 				editor_camera->SetRotation(0, 0, 0);
 			}
 		}

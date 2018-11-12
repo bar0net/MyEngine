@@ -17,13 +17,13 @@ public:
 		{
 			ImGui::Text("Bounding Box");
 			ImGui::Text("Local Center: (%f, %f, %f)",
-				component->center[0] * component->GetGameObject()->scale[0],
-				component->center[1] * component->GetGameObject()->scale[1],
-				component->center[2] * component->GetGameObject()->scale[2]);
+				component->center[0] * component->GetGameObject()->Scale().x,
+				component->center[1] * component->GetGameObject()->Scale().y,
+				component->center[2] * component->GetGameObject()->Scale().z);
 			ImGui::Text("Width: %f, Height: %f, Depth: %f",
-				component->dimensions[0] * component->GetGameObject()->scale[0],
-				component->dimensions[1] * component->GetGameObject()->scale[1],
-				component->dimensions[2] * component->GetGameObject()->scale[2]);
+				component->dimensions[0] * component->GetGameObject()->Scale().x,
+				component->dimensions[1] * component->GetGameObject()->Scale().y,
+				component->dimensions[2] * component->GetGameObject()->Scale().z);
 			ImGui::Separator();
 
 			for (unsigned int i = 0; i < component->meshes.size(); ++i)

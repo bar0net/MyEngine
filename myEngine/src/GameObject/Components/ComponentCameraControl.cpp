@@ -30,16 +30,8 @@ void CameraControl::Update()
 	if (App->input->GetKey(KeyCode::J)) gameObject->Rotate(0, angularVelocity * App->time->DeltaTime() * ratio, 0);
 	if (App->input->GetKey(KeyCode::L)) gameObject->Rotate(0, -angularVelocity * App->time->DeltaTime() * ratio, 0);
 
-	if (gameObject->Up().y < 0)
-	{
-		if (App->input->GetKey(KeyCode::I))	gameObject->Rotate(-angularVelocity * App->time->DeltaTime() * ratio, 0, 0);
-		if (App->input->GetKey(KeyCode::K)) gameObject->Rotate( angularVelocity * App->time->DeltaTime() * ratio, 0, 0);
-	}
-	else 
-	{
-		if (App->input->GetKey(KeyCode::I))	gameObject->Rotate( angularVelocity * App->time->DeltaTime() * ratio, 0, 0);
-		if (App->input->GetKey(KeyCode::K)) gameObject->Rotate(-angularVelocity * App->time->DeltaTime() * ratio, 0, 0);
-	}
+	if (App->input->GetKey(KeyCode::I))	gameObject->Rotate( angularVelocity * App->time->DeltaTime() * ratio, 0, 0);
+	if (App->input->GetKey(KeyCode::K)) gameObject->Rotate(-angularVelocity * App->time->DeltaTime() * ratio, 0, 0);
 
 	if (App->input->GetKey(KeyCode::U))	gameObject->Rotate(0, 0, angularVelocity * App->time->DeltaTime() * ratio);
 	if (App->input->GetKey(KeyCode::O)) gameObject->Rotate(0, 0, -angularVelocity * App->time->DeltaTime() * ratio);
@@ -70,7 +62,7 @@ void CameraControl::Update()
 			App->input->GetMouseMovement(&x, &y);
 
 			float4x4 model = *(gameObject->ModelMatrix());
-			float3 obj_pos = App->editor->GetInspectedObject()->position;
+			float3 obj_pos = App->editor->GetInspectedObject()->Position();
 
 			model.SetTranslatePart(model.TranslatePart() - obj_pos);
 			if (worldYorbit)	model = float4x4::RotateY(-x * ratio) * model;

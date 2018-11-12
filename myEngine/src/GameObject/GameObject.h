@@ -6,6 +6,7 @@
 
 #include "_Vendor/MathGeoLib/Math/float4x4.h"
 #include "_Vendor/MathGeoLib/Math/float3.h"
+#include "_Vendor/MathGeoLib/Math/Quat.h"
 
 #include "Components/Component.h"
 
@@ -29,7 +30,12 @@ public:
 	virtual math::float3 Right();
 	virtual math::float3 Front();
 
+	virtual float3 Position() { return position; }
+	virtual float3 Rotation() { return rotation.ToEulerZYX().zyx() * RAD2DEG; };
+	virtual float3 Scale() { return scale; }
+
 	virtual void SetPosition(float x, float y, float z);
+	virtual void SetPosition(float3 position);
 	virtual void SetRotation(float x, float y, float z);
 	virtual void SetScale(float x, float y, float z);
 
@@ -46,16 +52,18 @@ public:
 
 	const char* GetName() const { return name.c_str(); }
 
-	math::float3 position = math::float3::zero;
-	math::float3 rotation = math::float3::zero;
-	math::float3 scale = math::float3::one;
 	bool transformChanged = false;
 
 	std::unordered_map<ComponentType, std::vector<Component*>> components;
 
 private:
-	math::float4x4 transform = math::float4x4::identity;
 	std::string name;
+
+	math::float3 position = math::float3::zero;
+	math::Quat rotation = math::Quat::identity;
+	math::float3 scale = math::float3::one;
+
+	math::float4x4 transform = math::float4x4::identity;
 };
 
 #endif // !_GAME_OBJECT_H

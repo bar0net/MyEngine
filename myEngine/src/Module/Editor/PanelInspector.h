@@ -38,13 +38,14 @@ public:
 				ImGui::PopStyleColor(3);
 			}
 
-			float pos[3] = { inspect_object->position.x, inspect_object->position.y, inspect_object->position.z };
+			float pos[3] = { inspect_object->Position()[0], inspect_object->Position()[1], inspect_object->Position()[2] };
 			if (ImGui::DragFloat3("Position", pos, 2)) inspect_object->SetPosition(pos[0], pos[1], pos[2]);
 
-			float rot[3] = { inspect_object->rotation.x, inspect_object->rotation.y, inspect_object->rotation.z };
+			float3 rotation = inspect_object->Rotation();
+			float rot[3] = { rotation.x, rotation.y, rotation.z };
 			if (ImGui::DragFloat3("Rotation", rot, 2)) inspect_object->SetRotation(rot[0], rot[1], rot[2]);
 
-			float scale[3] = { inspect_object->scale.x, inspect_object->scale.y, inspect_object->scale.z };
+			float scale[3] = { inspect_object->Scale().x, inspect_object->Scale().y, inspect_object->Scale().z };
 			if (ImGui::DragFloat3("Scale", scale, 2)) inspect_object->SetScale(scale[0], scale[1], scale[2]);
 
 
