@@ -8,6 +8,8 @@
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleModelLoader.h"
 
+#include "Utils/Chrono.h"
+
 Application::Application()
 {
 	modules.push_back(renderer = new ModuleRenderer());

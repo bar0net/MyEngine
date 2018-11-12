@@ -239,6 +239,7 @@
     <ClInclude Include="src\Module\ModuleModelLoader.h" />
     <ClInclude Include="src\Module\ModuleScene.h" />
     <ClInclude Include="src\Module\ModuleTexture.h" />
+    <ClInclude Include="src\Utils\Chrono.h" />
     <ClInclude Include="src\Utils\MovingArray.h" />
     <ClInclude Include="src\Module\ModuleEditor.h" />
     <ClInclude Include="src\Module\ModuleInput.h" />
