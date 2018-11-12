@@ -1,6 +1,8 @@
 #include "ModuleEditor.h"
 
 #include <assert.h>
+#include <windows.web.h>
+#include <shellapi.h>
 #include "GL/glew.h"
 
 #include "_Vendor/imgui-docking/imgui.h"
@@ -27,15 +29,12 @@
 #include "ModuleScene.h"
 #include "ModuleInput.h"
 
-#include "GameObject/GameObject.h"
-#include "GameObject/Components/ComponentCamera.h"
-#include "GameObject/Components/ComponentMeshRenderer.h"
-
 #include "Editor/PanelTexture.h"
 #include "Editor/PanelInspector.h"
 #include "Editor/PanelHierarchy.h"
 
-#define DELETE(x) if(x != nullptr) { delete x; } x = nullptr
+#define RELEASE(x) if(x != nullptr) { delete x; } x = nullptr
+#define OpenURL(x) ShellExecute(NULL, "open", x, NULL, NULL, SW_SHOWNORMAL)
 
 #define GLSL_VERSION "#version 130"
 #define GRID_LENGTH 100
@@ -101,19 +100,19 @@ bool ModuleEditor::CleanUp()
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
 
-	DELETE(panel_performance);
-	DELETE(panel_console);
-	DELETE(panel_editor);
-	DELETE(panel_scene);
+	RELEASE(panel_performance);
+	RELEASE(panel_console);
+	RELEASE(panel_editor);
+	RELEASE(panel_scene);
 
-	DELETE(renderTexture);
-	DELETE(frameBuffer);
-	DELETE(renderBuffer);
+	RELEASE(renderTexture);
+	RELEASE(frameBuffer);
+	RELEASE(renderBuffer);
 	
-	DELETE(vbo_grid);		DELETE(vbo_gizmo);
-	DELETE(ibo_grid);		DELETE(ibo_gizmo);
-	DELETE(shader_grid);	DELETE(shader_gizmo);
-	DELETE(vao_grid);		DELETE(vao_gizmo);
+	RELEASE(vbo_grid);		RELEASE(vbo_gizmo);
+	RELEASE(ibo_grid);		RELEASE(ibo_gizmo);
+	RELEASE(shader_grid);	RELEASE(shader_gizmo);
+	RELEASE(vao_grid);		RELEASE(vao_gizmo);
 
 	return true;
 }
@@ -336,21 +335,26 @@ bool ModuleEditor::MainMenuBar()
 
 	if (ImGui::BeginMenu("Windows"))
 	{
-		ImGui::MenuItem("Configuration", NULL, &config_window);
 		ImGui::MenuItem("Console", NULL, &console_window);
-		ImGui::MenuItem("Debug Tools", NULL, &debug_window);
 		ImGui::MenuItem("Hierarchy", NULL, &hierarchy_window);
 		ImGui::MenuItem("Inspector", NULL, &inspect_window);
 		ImGui::MenuItem("Scene", NULL, &scene_window);
+		ImGui::Separator();
+		ImGui::MenuItem("Configuration", NULL, &config_window);
+		ImGui::MenuItem("Debug Tools", NULL, &debug_window);
+		ImGui::MenuItem("Textures", NULL, &texture_window);
+
 		ImGui::EndMenu();
 	}
 
 	if (ImGui::BeginMenu("Help"))
 	{
-		ImGui::MenuItem("Github"); // TODO: Add browser command
+		if (ImGui::MenuItem("Github")) { OpenURL("https://github.com/bar0net/MyEngine"); }
 		ImGui::MenuItem("About"); // TODO: Add info popup panel
 		ImGui::EndMenu();
 	}
+
+
 	ImGui::EndMainMenuBar();
 
 
