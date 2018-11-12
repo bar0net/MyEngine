@@ -39,10 +39,7 @@ public:
 	bool CleanUp() override;
 	
 	void ProcessEvent(void* event) const;
-
-	MyEngine::FrameBuffer* frameBuffer;
-	MyEngine::RenderBuffer* renderBuffer;
-	MyEngine::Texture2D* renderTexture;
+	GameObject* GetInspectedObject();
 
 private:
 	void FrameStart();
@@ -55,6 +52,10 @@ private:
 	bool MainMenuBar();
 
 public:
+	MyEngine::FrameBuffer* frameBuffer = nullptr;
+	MyEngine::RenderBuffer* renderBuffer = nullptr;
+	MyEngine::Texture2D* renderTexture = nullptr;
+
 	// ===== Grid =====
 	float grid_color[4] = { 1.0f,1.0f,1.0f,1.0f };
 	MyEngine::VertexArray* vao_grid = nullptr;
@@ -68,8 +69,6 @@ public:
 	MyEngine::VertexBuffer* vbo_gizmo = nullptr;
 	MyEngine::Shader* shader_gizmo = nullptr;
 
-
-
 private:
 	ImGuiIO* io = nullptr;
 	float scene_width = 0;
@@ -78,10 +77,10 @@ private:
 	GameObject* inspect_object = nullptr;
 
 	// Panels
-	PanelPerfomance* panel_performance;
-	PanelConsole* panel_console;
-	PanelEditor* panel_editor;
-	PanelScene* panel_scene;
+	PanelPerfomance* panel_performance = nullptr;
+	PanelConsole* panel_console = nullptr;
+	PanelEditor* panel_editor = nullptr;
+	PanelScene* panel_scene = nullptr;
 
 	bool debug_window = true;
 	bool config_window = true;

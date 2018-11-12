@@ -23,6 +23,8 @@
 bool ModuleScene::Init() 
 {
 	NewModel("BakerHouse.fbx");
+	gameObjects["Model"]->SetScale(0.01F, 0.01F, 0.01F);
+	gameObjects["Model"]->SetRotation(90.0F, 0.0F, 0.0F);
 
 	gameObjects["Camera"] = new GameObject("Camera");
 	gameObjects["Camera"]->SetPosition(0.0F, 1.0F, 10.0F);

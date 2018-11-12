@@ -14,6 +14,7 @@ public:
 		{
 			ImGui::InputFloat("Velocity", &component->velocity);
 			ImGui::InputFloat("Angular Velocity", &component->angularVelocity);
+			ImGui::Checkbox("Use World Y as orbit axis", &component->worldYorbit);
 		}
 	}
 };

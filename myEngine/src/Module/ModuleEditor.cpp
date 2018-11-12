@@ -160,9 +160,9 @@ UpdateState ModuleEditor::Update()
 
 					float3 p =
 					{
-						mr->center[0] * inspect_object->scale[0],
-						(mr->center[1] * inspect_object->scale[1] + 0.5F*ratio) ,
-						(mr->center[2] * inspect_object->scale[2] + 0.5F*ratio)
+						mr->center[0] * inspect_object->scale[0] + inspect_object->position[0],
+						(mr->center[1] * inspect_object->scale[1] + 0.5F*ratio + inspect_object->position[1]) ,
+						(mr->center[2] * inspect_object->scale[2] + 0.5F*ratio + inspect_object->position[2])
 					};
 
 					editor_camera->SetPosition(p.x, p.y + 2.0F, p.z + 10.0F);
@@ -215,6 +215,11 @@ void ModuleEditor::ProcessEvent(void* event) const
 {
 	assert(event);
 	ImGui_ImplSDL2_ProcessEvent((SDL_Event*)event);
+}
+
+GameObject* ModuleEditor::GetInspectedObject()
+{
+	return inspect_object;
 }
 
 void ModuleEditor::CreateGrid()

@@ -74,8 +74,10 @@ void GameObject::SetModelMatrix(math::float4x4 * transform)
 	this->transform = *transform;
 
 	this->position = transform->TranslatePart();
-	this->rotation = transform->ToEulerZYX();
+	this->rotation = transform->ToEulerZYX() * RAD2DEG;
 	this->scale = transform->GetScale();
+
+	transformChanged = true;
 }
 
 void GameObject::AddComponent(Component* const component)
