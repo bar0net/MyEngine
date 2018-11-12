@@ -124,6 +124,7 @@ UpdateState ModuleEditor::PreUpdate()
 
 void ModuleEditor::FrameStart()
 {
+	App->renderer->Render();
 	frameBuffer->UnBind();
 	MyEngine::RenderUtils::ClearViewport();
 

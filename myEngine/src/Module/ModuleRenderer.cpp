@@ -65,6 +65,7 @@ UpdateState ModuleRenderer::Update()
 
 UpdateState ModuleRenderer::PostUpdate()
 {
+	Render();
 	MyEngine::WindowUtils::SwapWindow(data);
 
 	return UpdateState::Update_Continue;
@@ -84,36 +85,44 @@ bool ModuleRenderer::CleanUp()
 	return true;
 }
 
-void ModuleRenderer::Draw(const MyEngine::VertexArray* vao, const MyEngine::IndexBuffer * ibo, const MyEngine::Shader * shader) const
+void ModuleRenderer::Render()
 {
-	assert(vao && ibo && shader);
-	
-	shader->Bind();
-	vao->Bind();
-	ibo->Bind();
+	for (std::vector<DrawCall>::iterator it = drawCalls.begin(); it != drawCalls.end(); ++it)
+	{
+		it->shader->Bind();
+		it->vao->Bind();
+		it->ibo->Bind();
 
-	if (showWireframe)	ibo->DrawWires();
-	else ibo->Draw();
+		if (showWireframe)	it->ibo->DrawWires();
+		else
+		{
+			if (it->type == 1) it->ibo->DrawPoints(it->size);
+			if (it->type == 2) it->ibo->DrawLines(it->size);
+			if (it->type == 3) it->ibo->Draw();
+		}
+	}
+	drawCalls.clear();
 }
 
-void ModuleRenderer::DrawLines(const MyEngine::VertexArray * vao, const MyEngine::IndexBuffer * ibo, const MyEngine::Shader * shader, float line_width) const
+void ModuleRenderer::Draw(const MyEngine::VertexArray* vao, const MyEngine::IndexBuffer * ibo, const MyEngine::Shader * shader)
 {
 	assert(vao && ibo && shader);
 
-	shader->Bind();
-	vao->Bind();
-	ibo->Bind();
-	ibo->DrawLines(line_width);
+	drawCalls.push_back(DrawCall(vao, ibo, shader, 3));
 }
 
-void ModuleRenderer::DrawPoints(const MyEngine::VertexArray * vao, const MyEngine::IndexBuffer * ibo, const MyEngine::Shader * shader, float point_size) const
+void ModuleRenderer::DrawLines(const MyEngine::VertexArray * vao, const MyEngine::IndexBuffer * ibo, const MyEngine::Shader * shader, float line_width)
 {
 	assert(vao && ibo && shader);
 
-	shader->Bind();
-	vao->Bind();
-	ibo->Bind();
-	ibo->DrawPoints(point_size);
+	drawCalls.push_back(DrawCall(vao, ibo, shader, 2, line_width));
+}
+
+void ModuleRenderer::DrawPoints(const MyEngine::VertexArray * vao, const MyEngine::IndexBuffer * ibo, const MyEngine::Shader * shader, float point_size)
+{
+	assert(vao && ibo && shader);
+
+	drawCalls.push_back(DrawCall(vao, ibo, shader, 1, point_size));
 }
 
 MyEngine::Shader* ModuleRenderer::CreateShader(const char* name, const char* vShader_file, const char* fShader_file)
@@ -161,9 +170,6 @@ void ModuleRenderer::ResizedWindow()
 	MyEngine::WindowUtils::WindowSize(data, &width, &height);
 	MyEngine::RenderUtils::ModifyViewportSize(width, height);
 
-	//
-
-	// TODO: Revamp this section to support various active cameras
 	Camera* c = (Camera*)App->scene->gameObjects["Camera"]->components[ComponentType::CAMERA][0];
 	assert(c);
 	c->UpdateFrustum();

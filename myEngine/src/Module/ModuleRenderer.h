@@ -4,6 +4,7 @@
 #include "Module.h"
 
 #include <unordered_map>
+#include <vector>
 
 namespace MyEngine 
 {
@@ -13,6 +14,19 @@ namespace MyEngine
 	class VertexArray;
 	class Shader;
 }
+
+struct DrawCall
+{
+public:
+	DrawCall(const MyEngine::VertexArray* vao, const MyEngine::IndexBuffer* ibo, const MyEngine::Shader* shader, unsigned int type, float size = 0) :
+		vao(vao), ibo(ibo), shader(shader), type(type), size(size) { }
+
+	const MyEngine::VertexArray* vao = nullptr;
+	const MyEngine::IndexBuffer* ibo = nullptr;
+	const MyEngine::Shader* shader = nullptr;
+	unsigned int type = 0;
+	float size = 0;
+};
 
 
 class ModuleRenderer : 	public Module
@@ -27,9 +41,11 @@ public:
 	UpdateState PostUpdate() override;
 	bool CleanUp() override;
 
-	void Draw(const MyEngine::VertexArray* vao, const MyEngine::IndexBuffer* ibo, const MyEngine::Shader* shader) const;
-	void DrawLines(const MyEngine::VertexArray* vao, const MyEngine::IndexBuffer* ibo, const MyEngine::Shader* shader, float line_width = 1.0f) const;
-	void DrawPoints(const MyEngine::VertexArray * vao, const MyEngine::IndexBuffer * ibo, const MyEngine::Shader * shader, float point_size = 1.0f) const;
+	void Render();
+
+	void Draw(const MyEngine::VertexArray* vao, const MyEngine::IndexBuffer* ibo, const MyEngine::Shader* shader);
+	void DrawLines(const MyEngine::VertexArray* vao, const MyEngine::IndexBuffer* ibo, const MyEngine::Shader* shader, float line_width = 1.0f);
+	void DrawPoints(const MyEngine::VertexArray * vao, const MyEngine::IndexBuffer * ibo, const MyEngine::Shader * shader, float point_size = 1.0f);
 
 	MyEngine::Shader* CreateShader(const char* name, const char* vShader_file, const char* fShader_file);
 	MyEngine::Shader* GetShader(const char* name);
@@ -40,8 +56,10 @@ public:
 	void UpdateClearColor() const;
 	void UpdateClearColor(float r, float g, float b, float a);
 
+public:
 	MyEngine::WindowData* data = nullptr;
 	std::unordered_map<const char*, MyEngine::Shader*> shaders;
+	std::vector<DrawCall> drawCalls;
 
 	int width = 1280;
 	int height = 720;

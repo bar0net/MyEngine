@@ -12,9 +12,9 @@
 #include "assimp/cimport.h"
 
 
-class aiMesh;
-class aiNode;
-class aiScene;
+struct aiMesh;
+struct aiNode;
+struct aiScene;
 
 namespace MyEngine
 {
