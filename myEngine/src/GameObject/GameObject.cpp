@@ -142,17 +142,17 @@ void GameObject::Rotate(float x, float y, float z)
 	transformChanged = true;
 }
 
-math::float3 GameObject::Up()
+math::float3 GameObject::Up() const
 {
 	return (transform * math::float4::unitY).Float3Part();
 }
 
-math::float3 GameObject::Right()
+math::float3 GameObject::Right() const
 {
 	return (transform * math::float4::unitX).Float3Part();
 }
 
-math::float3 GameObject::Front()
+math::float3 GameObject::Front() const
 {
 	return -(transform * math::float4::unitZ).Float3Part();
 }

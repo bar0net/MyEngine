@@ -7,10 +7,11 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "GL_Buffers/Texture2D.h"
+
 namespace MyEngine
 {
 	class FrameBuffer;
-	class Texture2D;
 	class RenderBuffer;
 }
 
@@ -32,7 +33,7 @@ public:
 	void BindTexture(unsigned int textureID);
 
 	unsigned int checkers;
-	std::unordered_map<std::string, unsigned int> file2texture;
+	std::unordered_map<std::string, MyEngine::Texture2D*> file2texture;
 	std::unordered_map<unsigned int, std::unordered_set<Mesh*>> texture2mesh;
 	//std::unordered_map<unsigned int, MyEngine::Texture2D*> id2buffer;
 };

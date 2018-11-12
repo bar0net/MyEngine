@@ -63,10 +63,10 @@ MeshRenderer::~MeshRenderer()
 
 	for (unsigned int i = 0; i < meshes.size(); ++i)
 	{
-		DELETE(meshes[i]->vbo);
-		DELETE(meshes[i]->ibo);
-		DELETE(meshes[i]->vao);
-		DELETE(meshes[i]);
+		RELEASE(meshes[i]->vbo);
+		RELEASE(meshes[i]->ibo);
+		RELEASE(meshes[i]->vao);
+		RELEASE(meshes[i]);
 	}
 	meshes.clear();
 }
@@ -89,7 +89,6 @@ void MeshRenderer::Update()
 		{
 			shader->DisableTexture2D();
 			shader->EnableTexture2D(texture);
-			MyEngine::Globals::active_texture = texture;
 		}
 
 		switch (mesh->polygon)

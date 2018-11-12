@@ -6,6 +6,9 @@
 #include "GameObject/GameObject.h"
 #include "GameObject/Components/ComponentMeshRenderer.h"
 
+#include "Application.h"
+#include "Module/ModuleTexture.h"
+
 class PanelMeshRenderer
 {
 public:
@@ -26,16 +29,28 @@ public:
 				component->dimensions[2] * component->GetGameObject()->Scale().z);
 			ImGui::Separator();
 
+			static int selected_mesh = -1;
 			for (unsigned int i = 0; i < component->meshes.size(); ++i)
 			{
 				ImGui::Text("SubMesh (%i)", i);
 				ImGui::Text("Numer of Triangles: %d", component->meshes[i]->num_triangles);
 				std::string s = "Display Texture " + std::to_string(i);
 				ImGui::Checkbox(s.c_str(), &component->meshes[i]->display_texture);
+
+				ImVec4 tint(1,1,1,1);
+				if (!component->meshes[i]->display_texture) tint = { 0.6F, 0.6F, 0.6F, 1 };
+				/*
 				if (component->meshes[i]->display_texture)
 					ImGui::Image((ImTextureID)component->meshes[i]->textureID, ImVec2(75, 75), ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, 1));
 				else
 					ImGui::Image((ImTextureID)component->meshes[i]->textureID, ImVec2(75, 75), ImVec2(0, 0), ImVec2(1, 1), ImVec4(0.6F, 0.6F, 0.6F, 1));
+				*/
+
+				if (ImGui::ImageButton((ImTextureID)component->meshes[i]->textureID, ImVec2(75, 75), ImVec2(0, 0), ImVec2(1, 1), -1, ImVec4(0, 0, 0, 0), tint))
+				{
+					ImGui::OpenPopup("Select Texture");
+					selected_mesh = i;
+				}
 
 				ImGui::SameLine();
 
@@ -53,8 +68,25 @@ public:
 				}
 
 				ImGui::Separator();
+			}		
+
+			if (ImGui::BeginPopup("Select Texture") && selected_mesh > -1)
+			{
+				for (auto it = App->texture->file2texture.begin(); it != App->texture->file2texture.end(); ++it)
+				{
+					if (ImGui::ImageButton((ImTextureID)it->second->ID(), ImVec2(10, 10)))
+					{
+						component->meshes[selected_mesh]->textureID = it->second->ID();
+						ImGui::CloseCurrentPopup();
+					}
+					ImGui::SameLine();
+					ImGui::Text(it->first.c_str());
+				}
+
+				ImGui::EndPopup();
 			}
 		}
+
 	}
 };
 

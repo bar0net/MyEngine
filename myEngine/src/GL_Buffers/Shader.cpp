@@ -156,46 +156,28 @@ namespace MyEngine
 		GLCall(glUniform1i(glGetUniformLocation(program, name), value));
 	}
 
-	/*void Shader::AddTexture2D(unsigned int textureID)
-	{
-		if (textures.find(textureID) != textures.end())
-		{
-			LOGWARNING("Texture %i already loaded in shader.", textureID);
-			return;
-		}
-
-		this->Bind();
-
-		GLCall(glActiveTexture(GL_TEXTURE0 + textures.size()));
-		GLCall(glBindTexture(GL_TEXTURE_2D, textureID));
-		
-		std::string uniformName = std::string("texture") + std::to_string(textures.size());
-		GLCall(int location = glGetUniformLocation(program, uniformName.c_str()));
-
-		if (location == -1)
-			LOGWARNING("Cannot find Uniform %s in this shader.", uniformName);
-
-		GLCall(glUniform1i(location, textures.size()));
-		textures.insert(textureID);
-	}*/
-
 	void Shader::EnableTexture2D(unsigned int textureID)
 	{
-		Bind();
+			Bind();
+		if (Globals::active_texture != textureID)
+		{
+			GLCall(glActiveTexture(GL_TEXTURE1));
+			GLCall(glBindTexture(GL_TEXTURE_2D, textureID));
+			Globals::active_texture = textureID;
 
-		GLCall(glActiveTexture(GL_TEXTURE1));
-		GLCall(glBindTexture(GL_TEXTURE_2D, textureID));
-
-		GLCall(int location = glGetUniformLocation(program, "texture0"));
-		if (location == -1) LOGWARNING("Cannot find Uniform texture0 in this shader.");
-
-		GLCall(glUniform1i(location, 1));
+			GLCall(int location = glGetUniformLocation(program, "texture0"));
+			if (location == -1) LOGWARNING("Cannot find Uniform texture0 in this shader.");
+			else GLCall(glUniform1i(location, 1));
+		}
 	}
 
 	void Shader::DisableTexture2D()
 	{
-		GLCall(glBindTexture(GL_TEXTURE_2D, 0));
-		
+		if (Globals::active_texture != 0)
+		{
+			GLCall(glBindTexture(GL_TEXTURE_2D, 0));
+			Globals::active_texture = 0;
+		}
 	}
 
 	void Shader::RemoveTexture2D(unsigned int textureID)

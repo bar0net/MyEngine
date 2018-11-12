@@ -2,7 +2,7 @@
 
 #define MYENGINE_VERSION "0.1.0"
 
-#define DELETE(x) if(x!=nullptr) { delete x; } x = nullptr
+#define RELEASE(x) if(x!=nullptr) { delete x; } x = nullptr
 
 namespace MyEngine
 {

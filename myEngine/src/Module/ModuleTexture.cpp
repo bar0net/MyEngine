@@ -11,10 +11,11 @@
 #include "Utils/Render_Utils.h"
 
 #include "GL_Buffers/FrameBuffer.h"
-#include "GL_Buffers/Texture2D.h"
 #include "GL_Buffers/RenderBuffer.h"
 
 #include "GameObject/Components/ComponentMeshRenderer.h"
+
+// TODO: Migrate all texture uses to Texture2D class.
 
 ModuleTexture::ModuleTexture()
 {
@@ -40,9 +41,9 @@ bool ModuleTexture::CleanUp()
 	LOGINFO("Deleting all remaining loaded textures (%i textures)", file2texture.size());
 
 
-	for (std::unordered_map<std::string, unsigned int>::iterator it = file2texture.begin(); it != file2texture.end(); ++it)
+	for (std::unordered_map<std::string, MyEngine::Texture2D*>::iterator it = file2texture.begin(); it != file2texture.end(); ++it)
 	{
-		glDeleteTextures(1, &(it->second));
+		RELEASE(it->second);
 	}
 
 	file2texture.clear();
@@ -56,7 +57,7 @@ unsigned int ModuleTexture::LoadTexture(const char* filename)
 	assert(filename);
 	if (file2texture.find(filename) != file2texture.end())
 	{
-		return file2texture[filename];
+		return file2texture[filename]->ID();
 	}
 
 	LOGINFO("Loading Texture %s", filename);
@@ -70,10 +71,11 @@ unsigned int ModuleTexture::LoadTexture(const char* filename)
 
 	if (ilLoadImage(filename))
 	{
-
-		GLuint textureID;
-		GLCall(glGenTextures(1, &textureID));
-		GLCall(glBindTexture(GL_TEXTURE_2D, textureID));
+		std::string name(filename);
+		if (name.find_last_of("/") != std::string::npos)
+			name = name.substr(name.find_last_of("/") + 1);
+		if (name.find_last_of("\\") != std::string::npos)
+			name = name.substr(name.find_last_of("\\") + 1);
 
 		ILinfo ImageInfo;
 		iluGetImageInfo(&ImageInfo);
@@ -89,20 +91,17 @@ unsigned int ModuleTexture::LoadTexture(const char* filename)
 		int width = ilGetInteger(IL_IMAGE_WIDTH);
 		int height = ilGetInteger(IL_IMAGE_HEIGHT);
 
-		GLCall(glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_FORMAT), width, height, 0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, data));
+		file2texture[name.c_str()] = new MyEngine::Texture2D(width, height, ilGetInteger(IL_IMAGE_FORMAT), ilGetInteger(IL_IMAGE_FORMAT), (char*)data);
+		file2texture[name.c_str()]->SetParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		file2texture[name.c_str()]->SetParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-		// Texture Interpolation
-		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-
-		file2texture[filename] = textureID;
+		file2texture[name.c_str()]->UnBind();
 
 		LOGINFO("Texture %s loaded successfully.", filename);
-		return textureID;
+		return file2texture[name.c_str()]->ID();
 	}
 
 	ilDeleteImages(1, &imageID);
-	GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 
 	error = ilGetError();
 	LOGERROR("Image load failed (%s) - IL reports error: %i - %s", filename, (int)error, iluErrorString(error));
@@ -128,26 +127,28 @@ void ModuleTexture::DeleteTexture(const unsigned int id)
 
 	if (texture2mesh.find(id) == texture2mesh.end())
 	{
-		LOGWARNING("Trying to unload texture with id %i, but it's not registered", id);
-		return;
+		LOGDEBUG("Texture %i is not assigned to any mesh.", id);
+	}
+	else
+	{
+		// Assign all meshes that display the texture to checkers
+		std::unordered_set<Mesh*>* set = &texture2mesh[id];
+		LOGDEBUG("Texture %i is assigned to %i meshes.", id, set->size());
+
+		for (auto it = set->begin(); it != set->end(); ++it)
+		{
+			AssignTexture(checkers, *it);
+		}
+		texture2mesh.erase(id);
 	}
 
-	// Assign all meshes that display the texture to checkers
-	std::unordered_set<Mesh*>* set = &texture2mesh[id];
-	for (auto it = set->begin(); it != set->end(); ++it)
+	for (std::unordered_map<std::string, MyEngine::Texture2D*>::iterator it = file2texture.begin(); it != file2texture.end(); ++it)
 	{
-		AssignTexture(checkers, *it);
-	}
-	texture2mesh.erase(id);
-	
-
-	for (std::unordered_map<std::string, unsigned int>::iterator it = file2texture.begin(); it != file2texture.end(); ++it)
-	{
-		if (it->second == id)
+		if (it->second->ID() == id)
 		{
 			LOGINFO("Unloading texture %s (id: %i).", it->first, id);
+			RELEASE(it->second);
 			file2texture.erase(it->first);
-			glDeleteTextures(1, &id);
 			return;
 		}
 	}
@@ -157,7 +158,11 @@ void ModuleTexture::DeleteTexture(const unsigned int id)
 
 void ModuleTexture::BindTexture(unsigned int textureID)
 {
-	GLCall(glBindTexture(GL_TEXTURE_2D, textureID));
+	if (MyEngine::Globals::active_texture != textureID)
+	{
+		GLCall(glBindTexture(GL_TEXTURE_2D, textureID));
+		MyEngine::Globals::active_texture = textureID;
+	}
 }
 
 

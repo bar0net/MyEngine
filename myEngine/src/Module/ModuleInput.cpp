@@ -1,10 +1,12 @@
 #include "ModuleInput.h"
 
+#include <algorithm>
 #include "SDL.h"
 
 #include "ModuleEditor.h"
 #include "ModuleRenderer.h"
 #include "ModuleScene.h"
+#include "ModuleTexture.h"
 
 #include "Application.h"
 #include "Utils/Window_Utils.h"
@@ -131,16 +133,22 @@ bool ModuleInput::CleanUp()
 
 void ModuleInput::ManageDropFile(const char* file)
 {
-	unsigned int len = strlen(file);
 
-	if (file[len - 4] != '.') return;
-	if (file[len - 3] != 'f') return;
-	if (file[len - 2] != 'b') return;
-	if (file[len - 1] != 'x') return;
+	std::string str(file);
+	std::string file_type = str.substr(str.find_last_of(".") + 1);
+	std::transform(file_type.begin(), file_type.end(), file_type.begin(), ::tolower);
 
-	LOGDEBUG("FBX file Droped!");
+	if (file_type == "fbx")
+	{
+		LOGDEBUG("FBX file detected.");
+		App->scene->NewModel(file);
+	}
+	else if (file_type == "png")
+	{
+		LOGDEBUG("PNG file detected.");
+		App->texture->LoadTexture(file);
+	}
 
-	App->scene->NewModel(file);
 }
 
 void ModuleInput::GetMouseMovement(float * x, float * y)

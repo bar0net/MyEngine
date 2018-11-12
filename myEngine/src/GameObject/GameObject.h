@@ -26,13 +26,13 @@ public:
 	virtual void CleanUp();
 	virtual void End();
 
-	virtual math::float3 Up();
-	virtual math::float3 Right();
-	virtual math::float3 Front();
+	virtual math::float3 Up() const;
+	virtual math::float3 Right() const;
+	virtual math::float3 Front() const;
 
-	virtual float3 Position() { return position; }
-	virtual float3 Rotation() { return rotation.ToEulerZYX().zyx() * RAD2DEG; };
-	virtual float3 Scale() { return scale; }
+	virtual float3 Position() const { return position; }
+	virtual float3 Rotation() const { return rotation.ToEulerZYX().zyx() * RAD2DEG; };
+	virtual float3 Scale() const { return scale; }
 
 	virtual void SetPosition(float x, float y, float z);
 	virtual void SetPosition(float3 position);
@@ -47,8 +47,8 @@ public:
 	virtual void SetModelMatrix(math::float4x4* transform);
 
 	virtual void AddComponent(Component* component);
-	bool HasComponent(ComponentType type) const;
-	virtual void RemoveComponent() {}; // TODO: Implement remove component
+	bool HasComponent(ComponentType type) const { return components.find(type) != components.end(); }
+	virtual void RemoveComponent(Component* component) {}; // TODO: Implement remove component
 
 	const char* GetName() const { return name.c_str(); }
 

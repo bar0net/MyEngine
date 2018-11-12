@@ -25,7 +25,7 @@ Camera::Camera(ProjectionType type, float nearPlane, float farPlane, float fov) 
 
 Camera::~Camera()
 {
-	DELETE(ubo);
+	RELEASE(ubo);
 }
 
 void Camera::Update() 

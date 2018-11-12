@@ -6,6 +6,7 @@
 #include "ModuleModelLoader.h"
 
 #include "Application.h"
+#include "Globals.h"
 
 #include "ModuleTexture.h"
 #include "ModuleModelLoader.h"
@@ -19,6 +20,7 @@
 #include "GL_Buffers/Shader.h"
 
 //#include "../Utils/Shader.h"
+#include "GL/glew.h"
 
 bool ModuleScene::Init() 
 {
@@ -45,6 +47,8 @@ bool ModuleScene::Start()
 
 UpdateState ModuleScene::Update()
 {
+	MyEngine::Globals::active_texture;
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, (GLint*)&MyEngine::Globals::active_texture);
 	for (std::unordered_map<std::string, GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it)
 		it->second->Update();
 

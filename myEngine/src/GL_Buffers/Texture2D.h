@@ -8,7 +8,7 @@ namespace MyEngine
 	class Texture2D : public GLBuffer
 	{
 	public:
-		Texture2D(unsigned int width, unsigned int height, unsigned int input_format = 0x1908, unsigned int store_format = 0x1908);
+		Texture2D(unsigned int width, unsigned int height, unsigned int input_format = 0x1908, unsigned int store_format = 0x1908, char* data = nullptr);
 		virtual ~Texture2D();
 		unsigned int ID() { return textureID; }
 
