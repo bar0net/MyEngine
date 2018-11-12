@@ -42,11 +42,11 @@ public:
 			ImGui::Text("Frames per second");
 			ImGui::PushItemWidth(ImGui::GetWindowWidth() - 25);
 			ImGui::PlotHistogram("", MovingArray::Get, fps, fps->size, 1, "", 0, 120, ImVec2(0, 50));
+			ImGui::Text("Average ms/frame: %ims - FPS: %i", avg_ms / (avg_ms_array->size), (int)(1000.0F * avg_ms_array->size / avg_ms));
 		}
 
 		if (ImGui::CollapsingHeader("Renderer"))
 		{
-			ImGui::Text("Average ms/frame: %ims - FPS: %i", avg_ms / (avg_ms_array->size), (int)(1000.0F * avg_ms_array->size / avg_ms));
 			ImGui::Text("Window: %ipx x %ipx", App->renderer->width, App->renderer->height);
 			ImGui::Text("Scene View: %ipx x %ipx", (int)scene_width, (int)scene_height);
 

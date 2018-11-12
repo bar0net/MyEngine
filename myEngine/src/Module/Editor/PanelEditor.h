@@ -26,7 +26,7 @@ public:
 		}
 
 		// Grid Color
-		bool open_gridcolor = ImGui::ColorButton("GridColorButton", *(ImVec4*)&grid_color);
+		bool open_gridcolor = ImGui::ColorButton("GridColorButton", ImVec4(grid_color[0], grid_color[1], grid_color[2], grid_color[3]));
 		ImGui::SameLine(); ImGui::Text("Grid Color");
 		if (open_gridcolor) ImGui::OpenPopup("GridColorPicker");
 		if (ImGui::BeginPopup("GridColorPicker"))

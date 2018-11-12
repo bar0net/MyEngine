@@ -355,16 +355,33 @@ bool ModuleEditor::MainMenuBar()
 		ImGui::EndMenu();
 	}
 
+	bool show_about = false;
 	if (ImGui::BeginMenu("Help"))
 	{
 		if (ImGui::MenuItem("Github")) { OpenURL("https://github.com/bar0net/MyEngine"); }
-		ImGui::MenuItem("About"); // TODO: Add info popup panel
+		if (ImGui::MenuItem("Report bug")) { OpenURL("https://github.com/bar0net/MyEngine/issues"); }
+
+		if (ImGui::MenuItem("About")) 
+		{
+			show_about = true;
+		}
 		ImGui::EndMenu();
 	}
-
-
+	
 	ImGui::EndMainMenuBar();
 
+	if (show_about) ImGui::OpenPopup("AboutPopup");
+	if (ImGui::BeginPopup("AboutPopup"))
+	{
+		ImGui::Text("MyEngine (Provisional name)");
+		ImGui::Text("Developed by Jordi Tudela Alcacer");
+		ImGui::Text("Under MIT License, 2018.");
+		ImGui::Separator();
+		std::string s = std::string("version ") + std::string(MYENGINE_VERSION);
+		ImGui::Text(s.c_str());
+		ImGui::EndPopup();
+	}
+	
 
 	return true;
 }

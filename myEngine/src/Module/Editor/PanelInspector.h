@@ -23,10 +23,10 @@ public:
 		if (inspect_object != nullptr)
 		{
 			ImGui::TextColored(ImVec4(0.3F, 0.5F, 0.8F, 1.0F), inspect_object->GetName());
-			ImGui::SameLine(0.0F, 10.0F);
 
 			if (inspect_object != editor_camera)
 			{
+				ImGui::SameLine(0.0F, 10.0F);
 				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8F, 0.2F, 0.2F, 1.0F));
 				ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.85F, 0.2F, 0.2F, 1.0F));
 				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.85F, 0.2F, 0.2F, 1.0F));
