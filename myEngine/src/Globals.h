@@ -7,6 +7,7 @@
 #define RAD2DEG 57.2957795F
 
 #define RELEASE(x) if(x!=nullptr) { delete x; } x = nullptr
+#define RELEASE_ARRAY(x) if(x!=nullptr) { delete[] x; } x = nullptr
 
 namespace MyEngine
 {

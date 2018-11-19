@@ -1,4 +1,5 @@
 #include "MovingArray.h"
+
 #include <cstring>
 #include <assert.h>
 

@@ -25,8 +25,8 @@ ModuleInput::ModuleInput() : Module()
 
 ModuleInput::~ModuleInput()
 {
-	delete[] keyboard;
-	delete[] mouse;
+	RELEASE_ARRAY(keyboard);
+	RELEASE_ARRAY(mouse);
 }
 
 bool ModuleInput::Init()
