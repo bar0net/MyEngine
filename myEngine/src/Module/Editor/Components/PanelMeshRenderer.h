@@ -30,7 +30,7 @@ public:
 			ImGui::Separator();
 
 			static int selected_mesh = -1;
-			for (unsigned int i = 0; i < component->meshes.size(); ++i)
+			for (unsigned int i = 0U; i < component->meshes.size(); ++i)
 			{
 				std::string strTextureButton = "Change\nTexture\nMesh" + std::to_string(i);
 				

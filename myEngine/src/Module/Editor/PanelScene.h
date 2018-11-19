@@ -22,8 +22,8 @@ public:
 		ImGui::Begin("Scene", &enabled, ImGuiWindowFlags_NoScrollbar);
 		ImVec2 size = ImGui::GetContentRegionAvail();
 		ImVec2 imgSize = size;
-		float x_space = 0;
-		float y_space = 0;
+		float x_space = 0.0F;
+		float y_space = 0.0F;
 
 		if (size.x * App->renderer->height < size.y * App->renderer->width)
 		{

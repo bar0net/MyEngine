@@ -49,7 +49,7 @@ UpdateState ModuleInput::PreUpdate()
 
 	mouse_wheel = 0;
 	const Uint8* keys = SDL_GetKeyboardState(nullptr);
-	for (unsigned int i = 0; i < MAX_KEYS; ++i)
+	for (unsigned int i = 0U; i < MAX_KEYS; ++i)
 	{
 		if (keys[i] == 1)
 		{
@@ -65,7 +65,7 @@ UpdateState ModuleInput::PreUpdate()
 		}
 	}
 
-	for (unsigned int i = 0; i < MOUSE_KEYS; ++i) 
+	for (unsigned int i = 0U; i < MOUSE_KEYS; ++i) 
 	{
 		if (mouse[i] == KeyState::KEY_DOWN)		
 			mouse[i] = KeyState::KEY_REPEAT;

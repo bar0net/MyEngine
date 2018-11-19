@@ -55,7 +55,7 @@ bool ModuleModelLoader::Load(const char * filename, std::vector<Model>& models, 
 	transform->Set(&scene->mRootNode->mTransformation[0][0]);
 
 
-	for (unsigned int i = 0; i < scene->mNumMaterials; ++i)
+	for (unsigned int i = 0U; i < scene->mNumMaterials; ++i)
 	{
 		aiString path;
 		scene->mMaterials[i]->GetTexture(aiTextureType_DIFFUSE, 0, &path, (aiTextureMapping*)aiTextureMapping_UV, 0);
@@ -81,12 +81,12 @@ void ModuleModelLoader::ParseNode(const aiNode* const node, aiMatrix4x4 transfor
 	if (node == nullptr) return;
 
 	transform = transform * node->mTransformation;
-	for (unsigned int i = 0; i < node->mNumChildren; i++)
+	for (unsigned int i = 0U; i < node->mNumChildren; i++)
 	{
 		ParseNode(node->mChildren[i], transform, scene, models, materials);
 	}
 
-	for (unsigned int i = 0; i < node->mNumMeshes; ++i)
+	for (unsigned int i = 0U; i < node->mNumMeshes; ++i)
 	{
 		Model m;
 
@@ -126,31 +126,31 @@ void ModuleModelLoader::ParseMesh(const aiMesh* const mesh, const aiMatrix4x4* t
 	assert(mesh && transform && model);
 	unsigned int num_uvw_coord = mesh->mNumUVComponents[0];
 
-	for (unsigned int j = 0; j < mesh->mNumVertices; ++j)
+	for (unsigned int j = 0U; j < mesh->mNumVertices; ++j)
 	{
 		aiVector3D v = *transform * mesh->mVertices[j];
 
 		float* vertex = (float*)&v;
 		float* uvw = (float*)&mesh->mTextureCoords[0][j];
 		
-		for (unsigned int k = 0; k < 3; ++k)
+		for (unsigned int k = 0U; k < 3U; ++k)
 		{
 			model->vertices.push_back(vertex[k]);
 			if (vertex[k] < model->mins[k]) model->mins[k] = vertex[k];
 			if (vertex[k] > model->maxs[k]) model->maxs[k] = vertex[k];
 		}
 
-		for (unsigned int k = 0; k < num_uvw_coord; ++k) model->vertices.push_back(uvw[k]);
+		for (unsigned int k = 0U; k < num_uvw_coord; ++k) model->vertices.push_back(uvw[k]);
 	}
 
-	for (unsigned int i = 0; i < mesh->mNumFaces; ++i)
+	for (unsigned int i = 0U; i < mesh->mNumFaces; ++i)
 	{
 		if (mesh->mFaces[i].mNumIndices > 3)
 		{
 			LOGWARNING("Mesh with more than 3 vertices per element.");
 		}
 
-		for (unsigned int j = 0; j < mesh->mFaces[i].mNumIndices; ++j)
+		for (unsigned int j = 0U; j < mesh->mFaces[i].mNumIndices; ++j)
 		{
 			model->indices.push_back(mesh->mFaces[i].mIndices[j]);
 		}

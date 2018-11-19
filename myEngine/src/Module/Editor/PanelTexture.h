@@ -14,7 +14,7 @@ public:
 	{
 		ImGui::Begin("Textures", &enabled);
 
-		unsigned int toDelete = 0;
+		unsigned int toDelete = 0U;
 		for (std::unordered_map<std::string, MyEngine::Texture2D*>::iterator it = App->texture->file2texture.begin(); it != App->texture->file2texture.end(); ++it)
 		{
 			ImGui::Image((ImTextureID)(it->second->ID()), ImVec2(30, 30)); 

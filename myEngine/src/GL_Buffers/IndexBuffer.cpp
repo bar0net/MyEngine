@@ -33,7 +33,7 @@ namespace MyEngine {
 		if (Globals::active_ibo == 0) return;
 
 		GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
-		Globals::active_ibo = 0;
+		Globals::active_ibo = 0U;
 	}
 
 	void IndexBuffer::Draw() const

@@ -29,9 +29,9 @@ struct Model
 	std::vector<unsigned int> indices;
 	MyEngine::VertexBufferLayout layout;
 
-	unsigned int num_triangles = 0;
-	unsigned int textureID = 0;
-	unsigned int poylygon = 3;
+	unsigned int num_triangles = 0U;
+	unsigned int textureID = 0U;
+	unsigned int poylygon = 3U;
 
 	float mins[3] = {  INFINITY,  INFINITY,  INFINITY };
 	float maxs[3] = { -INFINITY, -INFINITY, -INFINITY };

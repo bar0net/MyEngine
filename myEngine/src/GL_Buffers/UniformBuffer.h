@@ -18,7 +18,7 @@ namespace MyEngine
 
 		void SetUniform4x4(unsigned int offset, math::float4x4* data) const;
 
-		unsigned int ubo = 0;
+		unsigned int ubo = 0U;
 	};
 }
 #endif //!_MYENGINE_UNIFORMBUFFER_H

@@ -24,7 +24,7 @@ unsigned int& MovingArray::operator[](unsigned int x)
 void MovingArray::push(unsigned int x)
 {
 	values[idx] = x;
-	if (++idx == size) idx = 0;
+	if (++idx == size) idx = 0u;
 }
 
 float MovingArray::Get(void* data, int x)

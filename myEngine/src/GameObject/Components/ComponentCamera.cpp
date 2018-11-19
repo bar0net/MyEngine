@@ -50,7 +50,7 @@ void Camera::UpdateFrustum()
 	frustum.nearPlaneDistance = nearPlane;
 	frustum.farPlaneDistance = farPlane;
 
-	frustum.horizontalFov = (3.14159258F * fov / 180.0F);
+	frustum.horizontalFov = (MYENGINE_PI * fov / 180.0F);
 	frustum.verticalFov = 2.0F * atan(tan( frustum.horizontalFov / 2.0F) * ((float)App->renderer->height / (float)App->renderer->width));
 
 	if (gameObject != nullptr)

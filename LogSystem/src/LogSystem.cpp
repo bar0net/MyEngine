@@ -48,7 +48,7 @@ void MyEngine::LogSystem::Log(LogLevel level, const char* file, int line, const 
 	va_list args;
 	va_start(args, message);
 
-	unsigned int i = 0;
+	unsigned int i = 0u;
 	while (true)
 	{
 		i = s.find('%', i+1);

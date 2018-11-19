@@ -16,7 +16,7 @@ namespace MyEngine
 		void Bind() const;
 		void UnBind() const;
 
-		unsigned int vbo = 0;
+		unsigned int vbo = 0U;
 	};
 }
 

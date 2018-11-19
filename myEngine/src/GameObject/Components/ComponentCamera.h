@@ -31,9 +31,9 @@ public:
 	bool projectionChanged = true;
 
 	ProjectionType projectionType = ProjectionType::Prespective;
-	float nearPlane = 0.5f;
-	float farPlane = 1000.0f;
-	float fov = 90;
+	float nearPlane = 0.5F;
+	float farPlane = 1000.0F;
+	float fov = 90.0F;
 
 private:
 	math::Frustum frustum;

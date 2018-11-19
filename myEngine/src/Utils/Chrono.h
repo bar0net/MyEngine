@@ -13,7 +13,7 @@ namespace MyEngine
 
 		void Start() 
 		{ 
-			end_time = 0;
+			end_time = 0U;
 			start_time = SDL_GetTicks(); 
 		}
 
@@ -21,12 +21,12 @@ namespace MyEngine
 
 		unsigned int Stop()
 		{
-			if (end_time == 0) end_time = SDL_GetTicks();
+			if (end_time == 0U) end_time = SDL_GetTicks();
 			return (end_time - start_time);
 		}
 
-		unsigned int start_time = 0;
-		unsigned int end_time = 0;
+		unsigned int start_time = 0U;
+		unsigned int end_time = 0U;
 	};
 
 
@@ -39,7 +39,7 @@ namespace MyEngine
 
 		void Start()
 		{
-			end_time = 0;
+			end_time = 0U;
 			start_time = SDL_GetPerformanceCounter();
 		}
 
@@ -52,8 +52,8 @@ namespace MyEngine
 			return (float)(end_time - start_time) * 1000.0F / (float)frequency;
 		}
 
-		Uint64 start_time = 0;
-		Uint64 end_time = 0;
+		Uint64 start_time = 0U;
+		Uint64 end_time = 0U;
 
 	};
 }

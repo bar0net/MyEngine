@@ -93,7 +93,7 @@ void ModuleScene::NewModel(const char * file)
 {
 	std::string name = "Model";
 	std::string root = "Model ";
-	unsigned int count = 0;
+	unsigned int count = 0U;
 	float4x4 transform;
 
 	while (App->scene->gameObjects.find(name.c_str()) != App->scene->gameObjects.end())
@@ -114,7 +114,7 @@ void ModuleScene::NewModel(const char * file)
 		LOGERROR("Could not load %s.", file);
 	}
 
-	for (unsigned int i = 0; i < models.size(); ++i)
+	for (unsigned int i = 0U; i < models.size(); ++i)
 	{
 		models[i].vertices.clear();
 		models[i].indices.clear();

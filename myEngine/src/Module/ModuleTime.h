@@ -32,12 +32,12 @@ private:
 	bool running = false;
 	float timeScale = 1.0F;
 
-	unsigned int startTime = 0;
-	unsigned int lastTime = 0;
-	unsigned int deltaTime = 0;
+	unsigned int startTime = 0U;
+	unsigned int lastTime = 0U;
+	unsigned int deltaTime = 0U;
 
-	unsigned int runtime = 0;
-	unsigned int unscaledRuntime = 0;
+	unsigned int runtime = 0U;
+	unsigned int unscaledRuntime = 0U;
 };
 
 

@@ -31,12 +31,11 @@ namespace MyEngine
 		void SetUniform4(const char* name, float x, float y, float z, float w) const;
 		void SetUniform1(const char* name, int value) const;
 
-		//void AddTexture2D(unsigned int textureID);
 		void EnableTexture2D(unsigned int textureID) const;
 		void DisableTexture2D() const;
 		void RemoveTexture2D(unsigned int textureID);
 
-		unsigned int program = 0;
+		unsigned int program = 0U;
 
 	private:
 		const char* ReadFile(const char* filename) const;

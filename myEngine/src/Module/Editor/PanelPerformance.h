@@ -84,7 +84,7 @@ public:
 private:
 	MovingArray * fps = nullptr;
 	MovingArray* avg_ms_array = nullptr;
-	unsigned int avg_ms = 0;
+	unsigned int avg_ms = 0U;
 };
 
 #endif // !_PANEL_PERFORMANCE_H

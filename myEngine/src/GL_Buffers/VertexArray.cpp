@@ -32,7 +32,7 @@ void MyEngine::VertexArray::UnBind() const
 	if (Globals::active_vao == 0) return;
 
 	GLCall(glBindVertexArray(0));
-	Globals::active_vao = 0;
+	Globals::active_vao = 0U;
 }
 
 void MyEngine::VertexArray::AddBuffer(const VertexBuffer& vbo, const VertexBufferLayout& layout)
@@ -40,11 +40,11 @@ void MyEngine::VertexArray::AddBuffer(const VertexBuffer& vbo, const VertexBuffe
 	this->Bind();
 	vbo.Bind();
 	const std::vector<VertexBufferElement>& elements = layout.Elements();
-	unsigned int offset = 0;
-	for (unsigned int i = 0; i < elements.size(); i++)
+	unsigned int offset = 0U;
+	for (unsigned int i = 0U; i < elements.size(); i++)
 	{
 		const VertexBufferElement& element = elements[i];
-		if (element.count == 0) continue;
+		if (element.count == 0U) continue;
 
 		GLCall(glEnableVertexAttribArray(i));
 		GLCall( glVertexAttribPointer(i, element.count, element.type, element.normalized ? GL_TRUE : GL_FALSE, layout.Stride(), (const void*)offset) );

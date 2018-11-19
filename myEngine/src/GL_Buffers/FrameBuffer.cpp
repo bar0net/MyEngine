@@ -31,7 +31,7 @@ void MyEngine::FrameBuffer::UnBind() const
 	if (Globals::active_framebuffer != bufferID) return;
 
 	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
-	Globals::active_framebuffer = 0;
+	Globals::active_framebuffer = 0U;
 }
 
 void MyEngine::FrameBuffer::SetTexture(unsigned int textureID, unsigned int slot, unsigned int type) const

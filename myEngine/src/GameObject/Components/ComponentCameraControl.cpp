@@ -42,8 +42,8 @@ void CameraControl::Update()
 
 	if (mouse_enabled && App->input->GetMouseButton(MouseButton::MOUSE_LEFT) && !App->input->GetMouseButton(MouseButton::MOUSE_RIGHT) && !App->input->GetKey(KeyCode::LALT))
 	{
-		float x = 0;
-		float y = 0;
+		float x = 0.0F;
+		float y = 0.0F;
 		App->input->GetMouseMovement(&x, &y);
 		gameObject->Translate(-x * gameObject->Right() * ratio + y * gameObject->Up() * ratio);
 	}
@@ -57,8 +57,8 @@ void CameraControl::Update()
 		}
 		else
 		{
-			float x = 0;
-			float y = 0;
+			float x = 0.0F;
+			float y = 0.0F;
 			App->input->GetMouseMovement(&x, &y);
 
 			float4x4 model = *(gameObject->ModelMatrix());
@@ -76,9 +76,9 @@ void CameraControl::Update()
 	// Mouse Rotations
 	else if (mouse_enabled && !App->input->GetMouseButton(MouseButton::MOUSE_LEFT) && App->input->GetMouseButton(MouseButton::MOUSE_RIGHT))
 	{
-		float x = 0;
-		float y = 0;
+		float x = 0.0F;
+		float y = 0.0F;
 		App->input->GetMouseMovement(&x, &y);
-		gameObject->Rotate(-y * ratio, -x * ratio, 0);
+		gameObject->Rotate(-y * ratio, -x * ratio, 0.0F);
 	}
 }

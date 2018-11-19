@@ -37,7 +37,7 @@ namespace MyEngine {
 		if (Globals::active_ubo != ubo) return;
 
 		GLCall(glBindBuffer(GL_UNIFORM_BUFFER, 0));
-		Globals::active_ubo = 0;
+		Globals::active_ubo = 0U;
 	}
 
 

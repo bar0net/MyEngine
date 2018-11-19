@@ -30,10 +30,10 @@ struct Mesh
 	MyEngine::VertexBuffer *vbo = nullptr;
 	MyEngine::IndexBuffer *ibo = nullptr;
 	MyEngine::VertexArray *vao = nullptr;
-	unsigned int num_triangles = 0;
-	unsigned int textureID = 0;
+	unsigned int num_triangles = 0U;
+	unsigned int textureID = 0U;
 	bool display_texture = true;
-	unsigned int polygon = 3;
+	unsigned int polygon = 3U;
 	float albedo[4] = { 1.0F, 1.0F, 1.0F, 1.0F };
 };
 
@@ -46,7 +46,7 @@ public:
 	const Mesh* mesh = nullptr;
 	math::float4x4* transform = nullptr;
 	const MyEngine::Shader* shader = nullptr;
-	float size = 0;
+	float size = 0.0F;
 };
 
 

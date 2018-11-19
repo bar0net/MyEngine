@@ -19,8 +19,8 @@ namespace MyEngine {
 		void DrawPoints(float point_size) const;
 		void DrawWires() const;
 
-		unsigned int ibo = 0;
-		unsigned int elements = 0;
+		unsigned int ibo = 0U;
+		unsigned int elements = 0U;
 	};
 }
 

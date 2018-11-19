@@ -20,7 +20,7 @@ namespace MyEngine
 
 		void AddBuffer(const VertexBuffer& vbo, const VertexBufferLayout& layout);
 
-		unsigned int vao = 0;
+		unsigned int vao = 0U;
 	
 	private:
 		std::queue<unsigned int> assignedAttribs;

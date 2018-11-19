@@ -107,7 +107,7 @@ unsigned int ModuleTexture::LoadTexture(const char* filename)
 
 	error = ilGetError();
 	LOGERROR("Image load failed (%s) - IL reports error: %i - %s", filename, (int)error, iluErrorString(error));
-	return 0;
+	return 0U;
 }
 
 void ModuleTexture::AssignTexture(unsigned int textureID, Mesh * mesh)
@@ -121,7 +121,7 @@ void ModuleTexture::AssignTexture(unsigned int textureID, Mesh * mesh)
 
 void ModuleTexture::DeleteTexture(const unsigned int id)
 {
-	if (id == 0)
+	if (id == 0U)
 	{
 		LOGWARNING("Trying to unload texture with id 0.");
 		return;

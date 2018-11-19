@@ -19,7 +19,7 @@ class PanelConsole
 private:
 	void AddConsoleButton(const char* text, bool& active, MyEngine::LogLevel type)
 	{
-		unsigned int i = 0;
+		unsigned int i = 0U;
 		if (active)
 		{
 			switch (type)
@@ -115,7 +115,7 @@ public:
 	}
 
 private:
-	unsigned int prev_log_size = 0;
+	unsigned int prev_log_size = 0U;
 	bool show_info = true;
 	bool show_debug = true;
 	bool show_warning = true;

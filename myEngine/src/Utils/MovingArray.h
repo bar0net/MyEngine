@@ -9,8 +9,8 @@ public:
 	void push(unsigned int x);
 
 	unsigned int* values;
-	unsigned int idx = 0;
-	unsigned int size;
+	unsigned int idx = 0U;
+	unsigned int size = 0U;
 
 public:
 	static float Get(void* data, int x); 

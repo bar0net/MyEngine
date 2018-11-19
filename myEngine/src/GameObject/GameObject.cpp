@@ -155,3 +155,8 @@ math::float3 GameObject::Front() const
 {
 	return -(transform * math::float4::unitZ).Float3Part();
 }
+
+float3 GameObject::Rotation() const
+{
+	return rotation.ToEulerZYX().zyx() * RAD2DEG;
+}

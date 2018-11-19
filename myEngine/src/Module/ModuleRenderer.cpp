@@ -90,9 +90,9 @@ void ModuleRenderer::Render()
 	float4x4 identity = float4x4::identity;
 	for (std::vector<DrawCall>::iterator it = drawCalls.begin(); it != drawCalls.end(); ++it)
 	{
-		unsigned int texture = 0;
+		unsigned int texture = 0U;
 
-		if (it->mesh->textureID == 0) it->shader->DisableTexture2D();
+		if (it->mesh->textureID == 0U) it->shader->DisableTexture2D();
 		else
 		{
 			if (it->mesh->display_texture) texture = it->mesh->textureID;

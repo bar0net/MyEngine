@@ -33,7 +33,6 @@
 #include "Editor/PanelInspector.h"
 #include "Editor/PanelHierarchy.h"
 
-#define RELEASE(x) if(x != nullptr) { delete x; } x = nullptr
 #define OpenURL(x) ShellExecute(NULL, "open", x, NULL, NULL, SW_SHOWNORMAL)
 
 #define GLSL_VERSION "#version 130"
@@ -102,10 +101,8 @@ bool ModuleEditor::CleanUp()
 	RELEASE(frameBuffer);
 	RELEASE(renderBuffer);
 	
-	RELEASE(vbo_grid);		RELEASE(vbo_gizmo);
-	RELEASE(ibo_grid);		RELEASE(ibo_gizmo);
 	RELEASE(shader_grid);	RELEASE(shader_gizmo);
-	RELEASE(vao_grid);		RELEASE(vao_gizmo);
+	RELEASE(grid_mesh);		RELEASE(gizmo_mesh);
 
 	return true;
 }
@@ -114,9 +111,8 @@ UpdateState ModuleEditor::PreUpdate()
 {
 	if (panel_editor->show_grid)
 	{
-		//App->renderer->DrawLines(vao_gizmo, ibo_gizmo, shader_gizmo, 2.5F);
-		//App->renderer->DrawLines(vao_grid, ibo_grid, shader_grid,2);
 		App->renderer->Draw(grid_mesh, nullptr, shader_grid, 2.0F);
+		App->renderer->Draw(gizmo_mesh, nullptr, shader_gizmo, 4.0F);
 	}
 
 	return UpdateState::Update_Continue;
@@ -241,43 +237,45 @@ void ModuleEditor::CreateGrid()
 
 	std::vector<float> grid;
 	std::vector<unsigned int> grid_index;
-	unsigned int id = 0;
+	unsigned int id = 0U;
 
+	grid.reserve(2 * (GRID_LENGTH + 1) * 3 * 4);
+	grid_index.reserve(2 * (GRID_LENGTH + 1) * 4);
 	for (int i = -GRID_LENGTH; i <= GRID_LENGTH; ++i)
 	{
 		if (i == 0)
 		{
-			grid.push_back((float)-GRID_LENGTH); grid.push_back(0); grid.push_back((float)i);
-			grid.push_back(0); grid.push_back(0); grid.push_back((float)i);
-			grid_index.push_back(id++); grid_index.push_back(id++);
+			grid.emplace_back((float)-GRID_LENGTH); grid.emplace_back(0); grid.emplace_back((float)i);
+			grid.emplace_back(0);					grid.emplace_back(0); grid.emplace_back((float)i);
+			grid_index.emplace_back(id++); grid_index.emplace_back(id++);
 
-			grid.push_back((float)i); grid.push_back(0);  grid.push_back(-(float)GRID_LENGTH);
-			grid.push_back((float)i); grid.push_back(0);  grid.push_back(0);
-			grid_index.push_back(id++); grid_index.push_back(id++);
+			grid.emplace_back((float)i); grid.emplace_back(0);  grid.emplace_back(-(float)GRID_LENGTH);
+			grid.emplace_back((float)i); grid.emplace_back(0);  grid.emplace_back(0);
+			grid_index.emplace_back(id++); grid_index.emplace_back(id++);
 
-			grid.push_back(GIZMO_LENGTH); grid.push_back(0); grid.push_back((float)i);
-			grid.push_back((float)GRID_LENGTH); grid.push_back(0); grid.push_back((float)i);
-			grid_index.push_back(id++); grid_index.push_back(id++);
+			grid.emplace_back(GIZMO_LENGTH);		grid.emplace_back(0); grid.emplace_back((float)i);
+			grid.emplace_back((float)GRID_LENGTH);	grid.emplace_back(0); grid.emplace_back((float)i);
+			grid_index.emplace_back(id++); grid_index.emplace_back(id++);
 
-			grid.push_back((float)i); grid.push_back(0);  grid.push_back(GIZMO_LENGTH);
-			grid.push_back((float)i); grid.push_back(0);  grid.push_back((float)GRID_LENGTH);
-			grid_index.push_back(id++); grid_index.push_back(id++);
+			grid.emplace_back((float)i); grid.emplace_back(0);  grid.emplace_back(GIZMO_LENGTH);
+			grid.emplace_back((float)i); grid.emplace_back(0);  grid.emplace_back((float)GRID_LENGTH);
+			grid_index.emplace_back(id++); grid_index.emplace_back(id++);
 
 		}
 		else
 		{
-			grid.push_back((float)-GRID_LENGTH); grid.push_back(0); grid.push_back((float)i);
-			grid.push_back((float)GRID_LENGTH); grid.push_back(0); grid.push_back((float)i);
-			grid_index.push_back(id++); grid_index.push_back(id++);
+			grid.emplace_back((float)-GRID_LENGTH);		grid.emplace_back(0); grid.emplace_back((float)i);
+			grid.emplace_back((float)GRID_LENGTH);		grid.emplace_back(0); grid.emplace_back((float)i);
+			grid_index.emplace_back(id++); grid_index.emplace_back(id++);
 
-			grid.push_back((float)i); grid.push_back(0);  grid.push_back(-(float)GRID_LENGTH);
-			grid.push_back((float)i); grid.push_back(0);  grid.push_back((float)GRID_LENGTH);
-			grid_index.push_back(id++); grid_index.push_back(id++);
+			grid.emplace_back((float)i); grid.emplace_back(0);  grid.emplace_back(-(float)GRID_LENGTH);
+			grid.emplace_back((float)i); grid.emplace_back(0);  grid.emplace_back((float)GRID_LENGTH);
+			grid_index.emplace_back(id++); grid_index.emplace_back(id++);
 		}
 	}
+
 	MyEngine::VertexBufferLayout grid_layout;
 	grid_layout.Push<float>(3);
-
 
 	shader_grid = App->renderer->CreateShader("grid", "default.vs", "default.fs");
 	shader_grid->SetUniform4("albedo", grid_color[0], grid_color[1], grid_color[2], grid_color[3]);
@@ -289,14 +287,6 @@ void ModuleEditor::CreateGrid()
 	grid_mesh->vao->AddBuffer(*grid_mesh->vbo, grid_layout);
 	grid_mesh->ibo = new MyEngine::IndexBuffer(&grid_index);
 	grid_mesh->polygon = 2;
-
-
-	//vbo_grid = new MyEngine::VertexBuffer(&grid);
-	//vao_grid = new MyEngine::VertexArray();
-	//vao_grid->AddBuffer(*vbo_grid, grid_layout);
-	//ibo_grid = new MyEngine::IndexBuffer(&grid_index);
-
-
 }
 
 void ModuleEditor::CreateGizmo()
@@ -318,10 +308,13 @@ void ModuleEditor::CreateGizmo()
 
 	shader_gizmo = App->renderer->CreateShader("gizmo", "gizmo.vs", "gizmo.fs");
 	shader_gizmo->SetUniform4x4("model", identity);
-	vbo_gizmo = new MyEngine::VertexBuffer(&gizmo);
-	vao_gizmo = new MyEngine::VertexArray();
-	vao_gizmo->AddBuffer(*vbo_gizmo, gizmo_layout);
-	ibo_gizmo = new MyEngine::IndexBuffer(&gizmo_index);
+
+	gizmo_mesh = new Mesh();
+	gizmo_mesh->vbo = new MyEngine::VertexBuffer(&gizmo);
+	gizmo_mesh->vao = new MyEngine::VertexArray();
+	gizmo_mesh->vao->AddBuffer(*gizmo_mesh->vbo, gizmo_layout);
+	gizmo_mesh->ibo = new MyEngine::IndexBuffer(&gizmo_index);
+	gizmo_mesh->polygon = 2;
 }
 
 // ====================================

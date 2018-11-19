@@ -10,8 +10,6 @@
 
 #include "Components/Component.h"
 
-#define DEG2RAD 0.0174532925F
-#define RAD2DEG 57.2957795F
 
 class GameObject
 {
@@ -31,7 +29,7 @@ public:
 	virtual math::float3 Front() const;
 
 	virtual float3 Position() const { return position; }
-	virtual float3 Rotation() const { return rotation.ToEulerZYX().zyx() * RAD2DEG; };
+	virtual float3 Rotation() const;
 	virtual float3 Scale() const { return scale; }
 
 	virtual void SetPosition(float x, float y, float z);

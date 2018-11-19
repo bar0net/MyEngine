@@ -60,22 +60,17 @@ public:
 
 	// ===== Grid =====
 	float grid_color[4] = { 1.0f,1.0f,1.0f,1.0f };
-	MyEngine::VertexArray* vao_grid = nullptr;
-	MyEngine::IndexBuffer* ibo_grid = nullptr;
-	MyEngine::VertexBuffer* vbo_grid = nullptr;
 	MyEngine::Shader* shader_grid = nullptr;
-	Mesh* grid_mesh;
+	Mesh* grid_mesh = nullptr;
 
 	// ===== Origin Gizmo =====
-	MyEngine::VertexArray* vao_gizmo = nullptr;
-	MyEngine::IndexBuffer* ibo_gizmo = nullptr;
-	MyEngine::VertexBuffer* vbo_gizmo = nullptr;
 	MyEngine::Shader* shader_gizmo = nullptr;
+	Mesh* gizmo_mesh = nullptr;
 
 private:
 	ImGuiIO* io = nullptr;
-	float scene_width = 0;
-	float scene_height = 0;
+	float scene_width = 0.0F;
+	float scene_height = 0.0F;
 
 	GameObject* inspect_object = nullptr;
 

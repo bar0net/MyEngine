@@ -67,7 +67,7 @@ namespace MyEngine
 		if (Globals::active_shader != program) return;
 
 		GLCall(glUseProgram(0));
-		Globals::active_shader = 0;
+		Globals::active_shader = 0U;
 	}
 
 
@@ -104,7 +104,7 @@ namespace MyEngine
 		if (shaderData == nullptr) 
 		{
 			LOGERROR("Could not load %s", filename);
-			return 0;
+			return 0U;
 		}
 
 		unsigned shader = glCreateShader( (GLenum)type );
@@ -121,7 +121,7 @@ namespace MyEngine
 
 			const char* msg = infoLog.data();
 			LOGERROR("Could not compile shader: %s. << %s >>", filename, msg);
-			return 0;
+			return 0U;
 		}
 		else LOGINFO("Shader compiled: %s", filename);
 		
@@ -173,10 +173,10 @@ namespace MyEngine
 
 	void Shader::DisableTexture2D() const
 	{
-		if (Globals::active_texture != 0)
+		if (Globals::active_texture != 0U)
 		{
 			GLCall(glBindTexture(GL_TEXTURE_2D, 0));
-			Globals::active_texture = 0;
+			Globals::active_texture = 0U;
 		}
 	}
 

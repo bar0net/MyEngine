@@ -18,7 +18,7 @@ namespace MyEngine
 		void SetParameter(unsigned int parameter, unsigned int value) const;
 
 	private:
-		unsigned int textureID = 0;
+		unsigned int textureID = 0U;
 	};
 }
 

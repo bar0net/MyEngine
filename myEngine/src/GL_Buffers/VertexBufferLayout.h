@@ -17,9 +17,9 @@ namespace MyEngine
 
 	struct VertexBufferElement
 	{
-		unsigned int type;
-		unsigned int count;
-		bool normalized;
+		unsigned int type = 0U;
+		unsigned int count = 0U;
+		bool normalized = false;
 
 		static unsigned int SizeOfType(unsigned int type)
 		{
@@ -30,7 +30,7 @@ namespace MyEngine
 				case VBL_Unsigned_Int: return sizeof(unsigned int);
 			}
 			__debugbreak();
-			return 0;
+			return 0U;
 		}
 	};
 
@@ -69,7 +69,7 @@ namespace MyEngine
 
 	private:
 		std::vector<VertexBufferElement> elements;
-		unsigned int stride = 0;
+		unsigned int stride = 0U;
 	};
 
 }

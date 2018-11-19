@@ -15,11 +15,11 @@ namespace MyEngine
 		void Bind() const ;
 		void UnBind() const;
 
-		void SetTexture(unsigned int textureID, unsigned int slot = 0, unsigned int type = 0x8CE0) const;
-		void SetRenderBuffer(unsigned int renderID, unsigned int type = 0x8D00) const;
+		void SetTexture(unsigned int textureID, unsigned int slot = 0U, unsigned int type = 0x8CE0U) const;
+		void SetRenderBuffer(unsigned int renderID, unsigned int type = 0x8D00U) const;
 
 	public:
-		unsigned int bufferID = 0;
+		unsigned int bufferID = 0U;
 	};
 }
 

@@ -44,7 +44,7 @@ namespace MyEngine
 		if (Globals::active_texture == textureID)
 		{
 			GLCall(glBindTexture(GL_TEXTURE_2D, 0));
-			Globals::active_texture = 0;
+			Globals::active_texture = 0U;
 		}
 	}
 

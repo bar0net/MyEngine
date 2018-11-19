@@ -29,7 +29,7 @@ void MyEngine::RenderBuffer::UnBind() const
 	if (Globals::active_renderbuffer != renderID) return;
 
 	GLCall(glBindRenderbuffer(GL_RENDERBUFFER, 0));
-	Globals::active_renderbuffer = 0;
+	Globals::active_renderbuffer = 0U;
 }
 
 void MyEngine::RenderBuffer::SetStorage(unsigned int width, unsigned int height, unsigned int component)

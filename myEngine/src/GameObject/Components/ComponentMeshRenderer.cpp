@@ -26,7 +26,7 @@ MeshRenderer::MeshRenderer(const std::vector<Model>& models, MyEngine::Shader* s
 	float mins[3] = { INFINITY,  INFINITY,  INFINITY };
 	float maxs[3] = { -INFINITY, -INFINITY, -INFINITY };
 
-	for (unsigned int i = 0; i < models.size(); i++)
+	for (unsigned int i = 0U; i < models.size(); ++i)
 	{
 		Mesh* mesh = new Mesh;
 
@@ -39,14 +39,14 @@ MeshRenderer::MeshRenderer(const std::vector<Model>& models, MyEngine::Shader* s
 
 		meshes.emplace_back(mesh);
 
-		for (unsigned int j = 0; j < 3; j++)
+		for (unsigned int j = 0U; j < 3U; ++j)
 		{
 			if (models[i].maxs[j] > maxs[j]) maxs[j] = models[i].maxs[j];
 			if (models[i].mins[j] < mins[j]) mins[j] = models[i].mins[j];
 		}
 	}
 	
-	for (unsigned int i = 0; i < 3; i++)
+	for (unsigned int i = 0U; i < 3U; ++i)
 	{
 		center[i] = 0.5F * (maxs[i] + mins[i]);
 		dimensions[i] = (maxs[i] - mins[i]);
@@ -61,7 +61,7 @@ MeshRenderer::~MeshRenderer()
 {
 	LOGINFO("Destroying Mesh Renderer.");
 
-	for (unsigned int i = 0; i < meshes.size(); ++i)
+	for (unsigned int i = 0U; i < meshes.size(); ++i)
 	{
 		RELEASE(meshes[i]->vbo);
 		RELEASE(meshes[i]->ibo);
@@ -73,40 +73,8 @@ MeshRenderer::~MeshRenderer()
 
 void MeshRenderer::Update()
 {
-	//this->shader->Bind();
-	//this->shader->SetUniform4x4("model", *gameObject->ModelMatrix());
-
 	for (Mesh* mesh : meshes)
 	{
-		/*
-		unsigned int texture;
-
-		if (mesh->display_texture) texture = mesh->textureID;
-		else texture = App->texture->checkers;
-
-		shader->SetUniform4("albedo", mesh->albedo[0], mesh->albedo[1], mesh->albedo[2], mesh->albedo[3]);
-
-		if (MyEngine::Globals::active_texture != texture)
-		{
-			shader->DisableTexture2D();
-			shader->EnableTexture2D(texture);
-		}
-
-		switch (mesh->polygon)
-		{
-		case (1):
-			App->renderer->DrawPoints(mesh->vao, mesh->ibo, shader);
-			break;
-		case (2):
-			App->renderer->DrawLines(mesh->vao, mesh->ibo, shader);
-			break;
-		case (3):
-			App->renderer->Draw(mesh->vao, mesh->ibo, shader);
-			break;
-		default:
-			break;
-		}*/
-
 		App->renderer->Draw(mesh, gameObject->ModelMatrix(), shader);
 	}
 }
